@@ -332,17 +332,17 @@ function tintHelmet(color, initial) {
     const b = data[i+2];
     const brightness = (r * 0.299 + g * 0.587 + b * 0.114) / 255;
 
-    // Very bright pixels = facemask/hardware = keep white
-    if (brightness > 0.88) {
+    // Pure white pixels (>0.97) = facemask stripes/highlights = keep white
+    if (brightness > 0.97) {
       data[i]   = 255;
       data[i+1] = 255;
       data[i+2] = 255;
       continue;
     }
 
-    // Mid-range pixels = shell body = tint to team color
-    // Remap brightness so mid-tones stay rich, not washed out
-    const mapped = 0.3 + brightness * 0.7;
+    // Everything else gets team color — use brightness to preserve depth
+    // Boost intensity so color is rich and saturated, not washed
+    const mapped = Math.pow(brightness, 0.6); // gamma correction — deepens midtones
     data[i]   = Math.min(255, Math.round(tc.r * mapped));
     data[i+1] = Math.min(255, Math.round(tc.g * mapped));
     data[i+2] = Math.min(255, Math.round(tc.b * mapped));

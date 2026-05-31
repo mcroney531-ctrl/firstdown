@@ -115,7 +115,6 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 
 .helmet-stage { width: 240px; height: 180px; position: relative; margin-bottom: 0; display: flex; align-items: center; justify-content: center; }
 
-/* Silhouette + color overlay approach */
 .helmet-wrap {
   position: relative;
   width: 240px;
@@ -124,6 +123,7 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 }
 .team-card:hover .helmet-wrap { transform: scale(1.04) rotate(-2deg); }
 
+/* Base helmet — renders naturally */
 .helmet-base {
   position: absolute;
   inset: 0;
@@ -131,19 +131,21 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  /* Force to pure white silhouette */
-  filter: brightness(0) invert(1);
   z-index: 1;
 }
 
+/* Color layer — masked to helmet shape only, no rectangle */
 .helmet-color {
   position: absolute;
   inset: 0;
-  background-image: url('/helmet.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  /* Team color tint via multiply — white silhouette below absorbs the color */
+  -webkit-mask-image: url('/helmet.png');
+  mask-image: url('/helmet.png');
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
   mix-blend-mode: multiply;
   z-index: 2;
   transition: background-color 0.4s;

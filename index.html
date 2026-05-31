@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIRST & LEARN</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root { --green: #0c4230; --green-pale: #e8f2ee; --white: #ffffff; --off-white: #f7f9f8; }
+body { background: var(--white); color: var(--green); font-family: 'Barlow Condensed', sans-serif; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+body::after { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.015) 3px, rgba(0,0,0,0.015) 4px); pointer-events: none; z-index: 999; }
+
+/* HEADER */
+.hdr { display: flex; align-items: center; justify-content: space-between; padding: 14px 32px; background: var(--green); border-bottom: 3px solid rgba(255,255,255,0.15); position: relative; z-index: 10; flex-shrink: 0; }
+.hdr-left { display: flex; align-items: center; }
+.brand { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 4px; color: #fff; }
+.brand span { color: #a8d5c2; }
+.hdr-tag { font-size: 11px; letter-spacing: 3px; color: rgba(255,255,255,0.35); border-left: 1px solid rgba(255,255,255,0.15); padding-left: 20px; margin-left: 20px; }
+.live-bug { display: flex; align-items: center; gap: 7px; font-size: 11px; letter-spacing: 3px; color: #ff8080; font-weight: 700; }
+.live-dot { width: 7px; height: 7px; background: #ff8080; border-radius: 50%; animation: blink 1.2s ease-in-out infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* SCREENS */
+.screen { flex: 1; display: none; flex-direction: column; overflow: hidden; }
+.screen.active { display: flex; }
+.fade-overlay { position: fixed; inset: 0; background: #fff; z-index: 9998; opacity: 0; pointer-events: none; transition: opacity 0.45s ease; }
+.fade-overlay.covering { opacity: 1; pointer-events: all; }
+
+/* ══ WELCOME ══ */
+.welcome-stage { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; background: var(--off-white); }
+.welcome-bg { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(12,66,48,0.04) 0%, rgba(12,66,48,0.02) 100%); z-index: 0; }
+.yard-lines { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.yard-lines::before, .yard-lines::after { content: ''; position: absolute; left: -10%; right: -10%; height: 1px; background: rgba(12,66,48,0.09); }
+.yard-lines::before { top: 28%; } .yard-lines::after { top: 72%; }
+.yard-line-mid { position: absolute; left: -10%; right: -10%; top: 50%; height: 2px; background: rgba(12,66,48,0.11); z-index: 1; }
+.ez-glow-left  { position: absolute; left: 0; top: 0; bottom: 0; width: 10%; background: linear-gradient(90deg, rgba(12,66,48,0.06), transparent); z-index: 1; }
+.ez-glow-right { position: absolute; right: 0; top: 0; bottom: 0; width: 10%; background: linear-gradient(270deg, rgba(12,66,48,0.06), transparent); z-index: 1; }
+.hashes { position: absolute; inset: 0; z-index: 1; pointer-events: none; display: flex; justify-content: space-between; padding: 0 12%; }
+.hash-col { display: flex; flex-direction: column; justify-content: space-evenly; }
+.hash { width: 18px; height: 2px; background: rgba(12,66,48,0.07); }
+.welcome-content { position: relative; z-index: 10; display: flex; align-items: center; gap: 80px; max-width: 1000px; padding: 0 48px; }
+.welcome-title-block { flex-shrink: 0; text-align: center; animation: fadeUp 0.6s ease both; }
+.welcome-eyebrow { font-size: 11px; letter-spacing: 6px; color: rgba(12,66,48,0.5); text-transform: uppercase; margin-bottom: 12px; display: block; }
+.welcome-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(72px, 10vw, 110px); line-height: 0.88; letter-spacing: 4px; color: var(--green); }
+.welcome-title .accent { color: #1a7a55; }
+.welcome-rule { width: 60px; height: 3px; background: var(--green); margin: 20px auto; opacity: 0.2; }
+.welcome-tagline { font-size: 13px; letter-spacing: 4px; color: rgba(12,66,48,0.4); text-transform: uppercase; }
+.welcome-divider { width: 1px; height: 220px; background: linear-gradient(180deg, transparent, rgba(12,66,48,0.18), transparent); flex-shrink: 0; animation: fadeUp 0.6s 0.1s ease both; }
+.welcome-desc-block { flex: 1; max-width: 420px; animation: fadeUp 0.6s 0.18s ease both; }
+.desc-label { font-size: 10px; letter-spacing: 5px; color: rgba(12,66,48,0.45); text-transform: uppercase; margin-bottom: 16px; display: block; }
+.desc-body { font-family: 'Barlow', sans-serif; font-size: 15px; line-height: 1.75; color: rgba(12,66,48,0.6); margin-bottom: 20px; }
+.desc-rules { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
+.rule-item { display: flex; align-items: center; gap: 14px; }
+.rule-icon { font-family: 'Bebas Neue', sans-serif; font-size: 13px; color: #fff; background: var(--green); width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.rule-text { font-family: 'Barlow', sans-serif; font-size: 13px; color: rgba(12,66,48,0.55); line-height: 1.4; }
+.rule-text strong { color: var(--green); font-weight: 600; }
+.select-team-btn { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 5px; padding: 15px 48px; background: var(--green); color: #fff; border: none; cursor: pointer; position: relative; overflow: hidden; transition: all 0.2s; display: inline-block; }
+.select-team-btn::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent); transform: translateX(-100%); transition: transform 0.4s; }
+.select-team-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(12,66,48,0.22); }
+.select-team-btn:hover::before { transform: translateX(100%); }
+.select-team-btn:active { transform: translateY(0); }
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+/* ══ TEAM SELECT ══ */
+.ts-label { text-align: center; padding: 14px 0 6px; flex-shrink: 0; z-index: 10; position: relative; background: var(--off-white); border-bottom: 1px solid rgba(12,66,48,0.08); }
+.ts-label h2 { font-family: 'Bebas Neue', sans-serif; font-size: 12px; letter-spacing: 8px; color: rgba(12,66,48,0.35); }
+.stage { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; background: var(--off-white); }
+.bg-bleed { position: absolute; inset: 0; transition: background 0.5s ease; z-index: 0; }
+.field-hashes { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.field-hashes::before, .field-hashes::after { content: ''; position: absolute; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(12,66,48,0.07) 30%, rgba(12,66,48,0.07) 70%, transparent); }
+.field-hashes::before { top: 30%; } .field-hashes::after { top: 70%; }
+
+/* left panel */
+.left-panel { position: absolute; left: 40px; top: 50%; transform: translateY(-50%); z-index: 20; display: flex; flex-direction: column; gap: 10px; }
+.dropdown-label { font-size: 10px; letter-spacing: 3px; color: rgba(12,66,48,0.4); text-transform: uppercase; }
+.dropdown-wrapper { position: relative; }
+.pick-btn { font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: 2px; padding: 10px 18px; background: var(--white); border: 1px solid rgba(12,66,48,0.22); color: var(--green); cursor: pointer; display: flex; align-items: center; gap: 10px; transition: all 0.2s; white-space: nowrap; }
+.pick-btn:hover { background: var(--green-pale); border-color: var(--green); }
+.pick-btn svg { transition: transform 0.2s; flex-shrink: 0; }
+.pick-btn.open svg { transform: rotate(180deg); }
+.dropdown-menu { position: absolute; top: calc(100% + 5px); left: 0; width: 210px; max-height: 300px; overflow-y: auto; background: var(--white); border: 1px solid rgba(12,66,48,0.18); z-index: 100; display: none; box-shadow: 0 8px 24px rgba(12,66,48,0.1); scrollbar-width: thin; scrollbar-color: rgba(12,66,48,0.2) transparent; }
+.dropdown-menu.open { display: block; }
+.dropdown-menu::-webkit-scrollbar { width: 4px; }
+.dropdown-menu::-webkit-scrollbar-thumb { background: rgba(12,66,48,0.2); }
+.dd-item { padding: 9px 14px; font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: 2px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: background 0.15s; border-bottom: 1px solid rgba(12,66,48,0.05); color: var(--green); }
+.dd-item:hover { background: var(--green-pale); }
+.dd-item.active { font-weight: 700; }
+.dd-swatch { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+/* arrows */
+.arrow-btn { position: absolute; top: 50%; transform: translateY(-50%); z-index: 20; background: var(--white); border: 1px solid rgba(12,66,48,0.18); color: var(--green); width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; font-size: 22px; box-shadow: 0 2px 10px rgba(12,66,48,0.07); }
+.arrow-btn:hover { background: var(--green); color: #fff; border-color: var(--green); }
+.arrow-btn:active { transform: translateY(-50%) scale(0.95); }
+.arrow-prev { left: 150px; }
+.arrow-next { right: 40px; }
+
+/* ── TEAM CARD ── */
+.team-card-wrap { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; }
+.team-card { width: 280px; background: var(--white); border: 1px solid rgba(12,66,48,0.12); display: flex; flex-direction: column; align-items: center; padding: 28px 20px 24px; position: relative; overflow: hidden; box-shadow: 0 8px 40px rgba(12,66,48,0.1); }
+.card-top-bar { position: absolute; top: 0; left: 0; right: 0; height: 4px; transition: background 0.4s; }
+.card-corner { position: absolute; width: 14px; height: 14px; border-style: solid; transition: border-color 0.4s; }
+.card-corner.tl { top: 8px; left: 8px; border-width: 1px 0 0 1px; }
+.card-corner.tr { top: 8px; right: 8px; border-width: 1px 1px 0 0; }
+.card-corner.bl { bottom: 8px; left: 8px; border-width: 0 0 1px 1px; }
+.card-corner.br { bottom: 8px; right: 8px; border-width: 0 1px 1px 0; }
+
+/* ── HELMET TINT SYSTEM ── */
+.helmet-stage { width: 200px; height: 200px; position: relative; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; }
+
+.helmet-img {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  position: relative;
+  z-index: 1;
+  transition: transform 0.3s ease;
+}
+
+.team-card:hover .helmet-img { transform: scale(1.04) rotate(-2deg); }
+
+/* Color overlay using mix-blend-mode multiply */
+.helmet-tint {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  z-index: 2;
+  mix-blend-mode: multiply;
+  transition: background 0.4s;
+  pointer-events: none;
+}
+
+.city-name { font-family: 'Bebas Neue', sans-serif; font-size: 38px; letter-spacing: 3px; line-height: 1; text-align: center; color: var(--green); margin-bottom: 4px; transition: color 0.4s; }
+.team-counter { font-size: 10px; letter-spacing: 3px; color: rgba(12,66,48,0.28); margin-top: 10px; }
+
+/* bottom bar */
+.bottom-bar { flex-shrink: 0; padding: 18px 40px; background: var(--white); border-top: 2px solid rgba(12,66,48,0.08); display: flex; align-items: center; justify-content: center; gap: 32px; position: relative; z-index: 10; }
+.bottom-hint { font-size: 11px; letter-spacing: 2px; color: rgba(12,66,48,0.3); text-align: center; line-height: 1.5; }
+.start-game-btn { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 6px; padding: 16px 60px; background: var(--green); color: #fff; border: none; cursor: pointer; position: relative; overflow: hidden; transition: all 0.25s; }
+.start-game-btn::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent); transform: translateX(-100%); transition: transform 0.45s; }
+.start-game-btn::after { content: ''; position: absolute; inset: -4px; border: 2px solid rgba(12,66,48,0.25); animation: ring 2.4s ease-in-out infinite; pointer-events: none; }
+@keyframes ring { 0%{opacity:0.6;transform:scale(1)} 70%{opacity:0;transform:scale(1.04)} 100%{opacity:0;transform:scale(1.04)} }
+.start-game-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 36px rgba(12,66,48,0.28); }
+.start-game-btn:hover::before { transform: translateX(100%); }
+.start-game-btn:active { transform: translateY(-1px); }
+
+/* card slides */
+.slide-left  { animation: slideL 0.28s ease both; }
+.slide-right { animation: slideR 0.28s ease both; }
+@keyframes slideL { from{opacity:0;transform:translateX(36px)} to{opacity:1;transform:translateX(0)} }
+@keyframes slideR { from{opacity:0;transform:translateX(-36px)} to{opacity:1;transform:translateX(0)} }
+
+/* ══ GAME ══ */
+#screenGame { background: var(--off-white); align-items: center; justify-content: center; }
+.game-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; flex: 1; text-align: center; padding: 40px; }
+.game-placeholder-emoji { font-size: 72px; line-height: 1; animation: floatBall 3s ease-in-out infinite; }
+@keyframes floatBall { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+.game-placeholder-label { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 6px; color: rgba(12,66,48,0.28); }
+.game-team-badge { font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 4px; color: var(--green); opacity: 0.45; margin-top: 4px; }
+
+/* TICKER */
+.ticker { background: var(--green); padding: 6px 0; overflow: hidden; white-space: nowrap; flex-shrink: 0; }
+.ticker-inner { display: inline-flex; animation: tick 30s linear infinite; }
+.ticker-item { font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 3px; color: rgba(255,255,255,0.8); padding: 0 36px; }
+@keyframes tick { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+</style>
+</head>
+<body>
+
+<div class="fade-overlay" id="fadeOverlay"></div>
+
+<header class="hdr">
+  <div class="hdr-left">
+    <div class="brand">FIRST &amp; <span>LEARN</span></div>
+    <div class="hdr-tag">Training Series · Season 1</div>
+  </div>
+  <div class="live-bug"><span class="live-dot"></span>LIVE</div>
+</header>
+
+<!-- WELCOME -->
+<div class="screen active" id="screenWelcome">
+  <div class="welcome-stage">
+    <div class="welcome-bg"></div>
+    <div class="yard-lines"></div>
+    <div class="yard-line-mid"></div>
+    <div class="ez-glow-left"></div>
+    <div class="ez-glow-right"></div>
+    <div class="hashes">
+      <div class="hash-col"><div class="hash"></div><div class="hash"></div><div class="hash"></div><div class="hash"></div><div class="hash"></div><div class="hash"></div></div>
+      <div class="hash-col"><div class="hash"></div><div class="hash"></div><div class="hash"></div><div class="hash"></div><div class="hash"></div><div class="hash"></div></div>
+    </div>
+    <div class="welcome-content">
+      <div class="welcome-title-block">
+        <span class="welcome-eyebrow">Welcome to the Field</span>
+        <h1 class="welcome-title">FIRST<br>&amp;<br><span class="accent">LEARN</span></h1>
+        <div class="welcome-rule"></div>
+        <p class="welcome-tagline">10 Yards · 10 Modules · 3 Downs</p>
+      </div>
+      <div class="welcome-divider"></div>
+      <div class="welcome-desc-block">
+        <span class="desc-label">How It Works</span>
+        <p class="desc-body">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+        <div class="desc-rules">
+          <div class="rule-item">
+            <div class="rule-icon">10</div>
+            <div class="rule-text"><strong>10 modules.</strong> Each one moves you 1 yard down the field toward the end zone.</div>
+          </div>
+          <div class="rule-item">
+            <div class="rule-icon">3</div>
+            <div class="rule-text"><strong>3 downs per module.</strong> Answer correctly and advance. Use all three and you punt — restart the module.</div>
+          </div>
+          <div class="rule-item">
+            <div class="rule-icon">&#8594;</div>
+            <div class="rule-text"><strong>Score a touchdown</strong> to complete the training. Your team. Your drive. Your call.</div>
+          </div>
+        </div>
+        <button class="select-team-btn" id="selectTeamBtn">SELECT YOUR TEAM</button>
+      </div>
+    </div>
+  </div>
+  <div class="ticker"><div class="ticker-inner" id="welcomeTicker"></div></div>
+</div>
+
+<!-- TEAM SELECT -->
+<div class="screen" id="screenTeamSelect">
+  <div class="ts-label"><h2>— Team Select —</h2></div>
+  <div class="stage">
+    <div class="bg-bleed" id="bgBleed"></div>
+    <div class="field-hashes"></div>
+    <div class="left-panel">
+      <span class="dropdown-label">Quick Pick</span>
+      <div class="dropdown-wrapper">
+        <button class="pick-btn" id="pickBtn">
+          <span id="pickBtnLabel">Browse Teams</span>
+          <svg width="11" height="7" viewBox="0 0 11 7" fill="none"><path d="M1 1L5.5 6L10 1" stroke="#0c4230" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <div class="dropdown-menu" id="dropdownMenu"></div>
+      </div>
+    </div>
+    <button class="arrow-btn arrow-prev" id="prevBtn">&#8592;</button>
+    <div class="team-card-wrap" id="cardWrap">
+      <div class="team-card" id="teamCard">
+        <div class="card-top-bar" id="cardTopBar"></div>
+        <div class="card-corner tl" id="ccTL"></div>
+        <div class="card-corner tr" id="ccTR"></div>
+        <div class="card-corner bl" id="ccBL"></div>
+        <div class="card-corner br" id="ccBR"></div>
+        <div class="helmet-stage">
+          <img class="helmet-img" src="helmet.png" alt="helmet" id="helmetImg"/>
+          <div class="helmet-tint" id="helmetTint"></div>
+        </div>
+        <div class="city-name" id="cityName"></div>
+        <div class="team-counter" id="teamCounter"></div>
+      </div>
+    </div>
+    <button class="arrow-btn arrow-next" id="nextBtn">&#8594;</button>
+  </div>
+  <div class="bottom-bar">
+    <div class="bottom-hint">ARROWS OR QUICK PICK<br>TO SELECT YOUR TEAM</div>
+    <button class="start-game-btn" id="startGameBtn">START GAME</button>
+    <div class="bottom-hint" id="selectedHint">— CHOOSE YOUR CITY —</div>
+  </div>
+  <div class="ticker"><div class="ticker-inner" id="teamTicker"></div></div>
+</div>
+
+<!-- GAME -->
+<div class="screen" id="screenGame">
+  <div class="game-placeholder">
+    <div class="game-placeholder-emoji">🏈</div>
+    <div class="game-placeholder-label">Content Coming Soon</div>
+    <div class="game-team-badge" id="gameTeamBadge"></div>
+  </div>
+  <div class="ticker"><div class="ticker-inner" id="gameTicker"></div></div>
+</div>
+
+<script>
+const TEAMS = [
+  {city:"Arizona",       primary:"#97233F", secondary:"#000000"},
+  {city:"Atlanta",       primary:"#A71930", secondary:"#000000"},
+  {city:"Baltimore",     primary:"#241773", secondary:"#9E7C0C"},
+  {city:"Buffalo",       primary:"#00338D", secondary:"#C60C30"},
+  {city:"Carolina",      primary:"#0085CA", secondary:"#101820"},
+  {city:"Chicago",       primary:"#0B162A", secondary:"#C83803"},
+  {city:"Cincinnati",    primary:"#FB4F14", secondary:"#000000"},
+  {city:"Cleveland",     primary:"#311D00", secondary:"#FF3C00"},
+  {city:"Dallas",        primary:"#003594", secondary:"#869397"},
+  {city:"Denver",        primary:"#FB4F14", secondary:"#002244"},
+  {city:"Detroit",       primary:"#0076B6", secondary:"#B0B7BC"},
+  {city:"Green Bay",     primary:"#203731", secondary:"#FFB612"},
+  {city:"Houston",       primary:"#03202F", secondary:"#A71930"},
+  {city:"Indianapolis",  primary:"#002C5F", secondary:"#A2AAAD"},
+  {city:"Jacksonville",  primary:"#101820", secondary:"#D7A22A"},
+  {city:"Kansas City",   primary:"#E31837", secondary:"#FFB81C"},
+  {city:"Las Vegas",     primary:"#000000", secondary:"#A5ACAF"},
+  {city:"Los Angeles",   primary:"#003594", secondary:"#FFA300"},
+  {city:"LA Chargers",   primary:"#0080C6", secondary:"#FFC20E"},
+  {city:"Miami",         primary:"#008E97", secondary:"#FC4C02"},
+  {city:"Minnesota",     primary:"#4F2683", secondary:"#FFC62F"},
+  {city:"New England",   primary:"#002244", secondary:"#C60C30"},
+  {city:"New Orleans",   primary:"#101820", secondary:"#D3BC8D"},
+  {city:"NY Giants",     primary:"#0B2265", secondary:"#A71930"},
+  {city:"NY Jets",       primary:"#125740", secondary:"#000000"},
+  {city:"Philadelphia",  primary:"#004C54", secondary:"#A5ACAF"},
+  {city:"Pittsburgh",    primary:"#101820", secondary:"#FFB612"},
+  {city:"San Francisco", primary:"#AA0000", secondary:"#B3995D"},
+  {city:"Seattle",       primary:"#002244", secondary:"#69BE28"},
+  {city:"Tampa Bay",     primary:"#D50A0A", secondary:"#FF7900"},
+  {city:"Tennessee",     primary:"#0C2340", secondary:"#4B92DB"},
+  {city:"Washington",    primary:"#5A1414", secondary:"#FFB612"},
+];
+
+let current = 0;
+
+// Convert hex to rgb for tinting
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return `rgb(${r},${g},${b})`;
+}
+
+function render(dir) {
+  const t = TEAMS[current];
+
+  // Very subtle team color wash on bg
+  document.getElementById('bgBleed').style.background =
+    `radial-gradient(ellipse 60% 70% at 50% 50%, ${t.primary}14 0%, ${t.primary}06 55%, transparent 75%)`;
+
+  // Helmet tint — multiply blend mode colors the white shell
+  // Use primary color; darks stay dark (facemask stays black)
+  document.getElementById('helmetTint').style.background = hexToRgb(t.primary);
+
+  document.getElementById('cityName').textContent = t.city.toUpperCase();
+  document.getElementById('teamCounter').textContent = `${String(current+1).padStart(2,'0')} / ${String(TEAMS.length).padStart(2,'0')}`;
+
+  document.getElementById('cardTopBar').style.background = t.primary;
+  document.getElementById('teamCard').style.borderColor = t.primary+'25';
+  ['ccTL','ccTR','ccBL','ccBR'].forEach(id => document.getElementById(id).style.borderColor = t.primary+'40');
+
+  document.getElementById('selectedHint').textContent = t.city.toUpperCase() + ' IS ON THE CLOCK';
+  document.querySelectorAll('.dd-item').forEach((el,i) => el.classList.toggle('active', i===current));
+  document.getElementById('pickBtnLabel').textContent = t.city;
+
+  const wrap = document.getElementById('cardWrap');
+  wrap.classList.remove('slide-left','slide-right');
+  void wrap.offsetWidth;
+  if(dir==='left')  wrap.classList.add('slide-left');
+  if(dir==='right') wrap.classList.add('slide-right');
+}
+
+// Dropdown
+const menu = document.getElementById('dropdownMenu');
+TEAMS.forEach((t,i) => {
+  const item = document.createElement('div');
+  item.className = 'dd-item';
+  item.innerHTML = `<span class="dd-swatch" style="background:${t.primary};border:1px solid ${t.secondary}55"></span>${t.city}`;
+  item.addEventListener('click', () => {
+    current = i; render('left');
+    menu.classList.remove('open');
+    document.getElementById('pickBtn').classList.remove('open');
+  });
+  menu.appendChild(item);
+});
+document.getElementById('pickBtn').addEventListener('click', e => {
+  e.stopPropagation();
+  menu.classList.toggle('open');
+  document.getElementById('pickBtn').classList.toggle('open');
+});
+document.addEventListener('click', () => {
+  menu.classList.remove('open');
+  document.getElementById('pickBtn').classList.remove('open');
+});
+
+document.getElementById('prevBtn').addEventListener('click', () => { current=(current-1+TEAMS.length)%TEAMS.length; render('right'); });
+document.getElementById('nextBtn').addEventListener('click', () => { current=(current+1)%TEAMS.length; render('left'); });
+document.addEventListener('keydown', e => {
+  if(document.getElementById('screenTeamSelect').classList.contains('active')) {
+    if(e.key==='ArrowLeft')  { current=(current-1+TEAMS.length)%TEAMS.length; render('right'); }
+    if(e.key==='ArrowRight') { current=(current+1)%TEAMS.length; render('left'); }
+  }
+});
+
+function fadeToScreen(targetId, afterFade) {
+  const overlay = document.getElementById('fadeOverlay');
+  overlay.classList.add('covering');
+  setTimeout(() => {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(targetId).classList.add('active');
+    if(afterFade) afterFade();
+    setTimeout(() => overlay.classList.remove('covering'), 60);
+  }, 460);
+}
+
+document.getElementById('selectTeamBtn').addEventListener('click', () => {
+  fadeToScreen('screenTeamSelect', () => render());
+});
+document.getElementById('startGameBtn').addEventListener('click', () => {
+  const t = TEAMS[current];
+  fadeToScreen('screenGame', () => {
+    document.getElementById('gameTeamBadge').textContent = t.city.toUpperCase() + ' · GAME 1';
+  });
+});
+
+const words = ['FIRST & LEARN','10 YARDS · 10 MODULES','3 DOWNS TO PASS','PUNT = RESTART','SCORE = ADVANCE','SELECT YOUR TEAM','GAME ON','TRAINING IN SESSION','FIRST & LEARN','10 YARDS · 10 MODULES','3 DOWNS TO PASS','PUNT = RESTART','SCORE = ADVANCE','SELECT YOUR TEAM','GAME ON','TRAINING IN SESSION'];
+const tickHTML = words.map(w=>`<span class="ticker-item">${w} ·</span>`).join('');
+['welcomeTicker','teamTicker','gameTicker'].forEach(id => document.getElementById(id).innerHTML = tickHTML);
+</script>
+</body>
+</html>

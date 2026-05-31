@@ -123,18 +123,23 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 }
 .team-card:hover .helmet-wrap { transform: scale(1.04) rotate(-2deg); }
 
-/* Base helmet — renders naturally */
-.helmet-base {
+/* White base — facemask and highlights stay white */
+.helmet-white {
   position: absolute;
   inset: 0;
-  background-image: url('/helmet.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+  -webkit-mask-image: url('/helmet.png');
+  mask-image: url('/helmet.png');
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  background: white;
   z-index: 1;
 }
 
-/* Color layer — masked to helmet shape only, no rectangle */
+/* Color layer — masked to helmet silhouette, multiply on white = team color */
 .helmet-color {
   position: absolute;
   inset: 0;
@@ -147,8 +152,22 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
   -webkit-mask-position: center;
   mask-position: center;
   mix-blend-mode: multiply;
+  opacity: 0.85;
   z-index: 2;
   transition: background-color 0.4s;
+}
+
+/* Natural helmet on top at low opacity — restores depth, shadows, facemask detail */
+.helmet-base {
+  position: absolute;
+  inset: 0;
+  background-image: url('/helmet.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.22;
+  mix-blend-mode: luminosity;
+  z-index: 3;
 }
 
 .city-name { font-family: 'Bebas Neue', sans-serif; font-size: 38px; letter-spacing: 3px; line-height: 1; text-align: center; color: var(--green); margin-bottom: 4px; }
@@ -266,8 +285,9 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
         <div class="card-banner" id="cardBanner">
           <div class="helmet-stage">
             <div class="helmet-wrap" id="helmetWrap">
-              <div class="helmet-base"></div>
+              <div class="helmet-white"></div>
               <div class="helmet-color" id="helmetColor"></div>
+              <div class="helmet-base"></div>
             </div>
           </div>
         </div>

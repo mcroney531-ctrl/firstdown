@@ -92,16 +92,29 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 .arrow-next { right: 40px; }
 
 .team-card-wrap { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; }
-.team-card { width: 280px; background: var(--white); border: 1px solid rgba(12,66,48,0.12); display: flex; flex-direction: column; align-items: center; padding: 28px 20px 24px; position: relative; overflow: hidden; box-shadow: 0 8px 40px rgba(12,66,48,0.1); }
+.team-card { width: 300px; background: var(--white); border: 1px solid rgba(12,66,48,0.12); display: flex; flex-direction: column; align-items: center; padding: 0 0 24px; position: relative; overflow: hidden; box-shadow: 0 8px 40px rgba(12,66,48,0.1); }
 .card-top-bar { position: absolute; top: 0; left: 0; right: 0; height: 4px; transition: background 0.4s; }
 .card-corner { position: absolute; width: 14px; height: 14px; border-style: solid; transition: border-color 0.4s; }
+
+/* Banner gradient behind helmet */
+.card-banner {
+  width: 100%;
+  height: 220px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  transition: background 0.5s ease;
+  flex-shrink: 0;
+}
 .card-corner.tl { top: 8px; left: 8px; border-width: 1px 0 0 1px; }
 .card-corner.tr { top: 8px; right: 8px; border-width: 1px 1px 0 0; }
 .card-corner.bl { bottom: 8px; left: 8px; border-width: 0 0 1px 1px; }
 .card-corner.br { bottom: 8px; right: 8px; border-width: 0 1px 1px 0; }
 
-.helmet-stage { width: 200px; height: 200px; position: relative; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; }
-#helmetCanvas { width: 200px; height: 200px; transition: transform 0.3s ease; }
+.helmet-stage { width: 240px; height: 180px; position: relative; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; }
+#helmetCanvas { width: 240px; height: 180px; transition: transform 0.3s ease; }
 .team-card:hover #helmetCanvas { transform: scale(1.04) rotate(-2deg); }
 
 .city-name { font-family: 'Bebas Neue', sans-serif; font-size: 38px; letter-spacing: 3px; line-height: 1; text-align: center; color: var(--green); margin-bottom: 4px; }
@@ -216,8 +229,10 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
         <div class="card-corner tr" id="ccTR"></div>
         <div class="card-corner bl" id="ccBL"></div>
         <div class="card-corner br" id="ccBR"></div>
-        <div class="helmet-stage">
-          <canvas id="helmetCanvas" width="400" height="400"></canvas>
+        <div class="card-banner" id="cardBanner">
+          <div class="helmet-stage">
+            <canvas id="helmetCanvas" width="480" height="360"></canvas>
+          </div>
         </div>
         <div class="city-name" id="cityName"></div>
         <div class="team-counter" id="teamCounter"></div>
@@ -292,19 +307,19 @@ function hexToRgb(hex) {
 }
 
 // Canvas pixel tinting — all-white helmet
-// Every visible pixel mapped to team color preserving brightness depth.
+// Bright pixels (shell) get team color. Near-white pixels (facemask) stay white.
 // City initial drawn on crown after tinting.
 function tintHelmet(color, initial) {
   const canvas = document.getElementById('helmetCanvas');
   const ctx = canvas.getContext('2d');
-  const size = 400;
-  canvas.width = size;
-  canvas.height = size;
+  const w = 480; const h = 360;
+  canvas.width = w;
+  canvas.height = h;
 
-  ctx.clearRect(0, 0, size, size);
-  ctx.drawImage(helmetImg, 0, 0, size, size);
+  ctx.clearRect(0, 0, w, h);
+  ctx.drawImage(helmetImg, 0, 0, w, h);
 
-  const imageData = ctx.getImageData(0, 0, size, size);
+  const imageData = ctx.getImageData(0, 0, w, h);
   const data = imageData.data;
   const tc = hexToRgb(color);
 
@@ -317,21 +332,30 @@ function tintHelmet(color, initial) {
     const b = data[i+2];
     const brightness = (r * 0.299 + g * 0.587 + b * 0.114) / 255;
 
-    data[i]   = Math.round(tc.r * brightness);
-    data[i+1] = Math.round(tc.g * brightness);
-    data[i+2] = Math.round(tc.b * brightness);
+    // Very bright pixels = facemask/hardware = keep white
+    if (brightness > 0.88) {
+      data[i]   = 255;
+      data[i+1] = 255;
+      data[i+2] = 255;
+      continue;
+    }
+
+    // Mid-range pixels = shell body = tint to team color
+    // Remap brightness so mid-tones stay rich, not washed out
+    const mapped = 0.3 + brightness * 0.7;
+    data[i]   = Math.min(255, Math.round(tc.r * mapped));
+    data[i+1] = Math.min(255, Math.round(tc.g * mapped));
+    data[i+2] = Math.min(255, Math.round(tc.b * mapped));
   }
 
   ctx.putImageData(imageData, 0, 0);
 
-  // Draw initial on crown — top-center of helmet
-  const letterX = size * 0.50;
-  const letterY = size * 0.20;
-  const tc2 = hexToRgb(color);
-  const lum = (tc2.r * 0.299 + tc2.g * 0.587 + tc2.b * 0.114) / 255;
-  const letterColor = lum > 0.45 ? 'rgba(0,0,0,0.82)' : 'rgba(255,255,255,0.95)';
-
-  ctx.font = `bold ${Math.round(size * 0.17)}px Arial, sans-serif`;
+  // Draw initial on crown
+  const letterX = w * 0.50;
+  const letterY = h * 0.24;
+  const lum = (tc.r * 0.299 + tc.g * 0.587 + tc.b * 0.114) / 255;
+  const letterColor = lum > 0.45 ? 'rgba(0,0,0,0.85)' : 'rgba(255,255,255,0.95)';
+  ctx.font = `bold ${Math.round(h * 0.20)}px Arial, sans-serif`;
   ctx.fillStyle = letterColor;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
@@ -350,6 +374,10 @@ function render(dir) {
   } else {
     helmetImg.onload = () => tintHelmet(t.primary, initial);
   }
+
+  // Banner gradient using team colors
+  const banner = document.getElementById('cardBanner');
+  banner.style.background = `linear-gradient(135deg, ${t.primary}dd 0%, ${t.secondary}99 60%, ${t.primary}aa 100%)`;
 
   document.getElementById('cityName').textContent = t.city.toUpperCase();
   document.getElementById('teamCounter').textContent = `${String(current+1).padStart(2,'0')} / ${String(TEAMS.length).padStart(2,'0')}`;

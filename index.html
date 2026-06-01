@@ -6,6 +6,12 @@
 <title>FIRST & LEARN</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
 <style>
+@font-face {
+  font-family: 'Cowboys';
+  src: url('/Cowboys_2_0_D.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
 * { margin: 0; padding: 0; box-sizing: border-box; }
 :root { --green: #0c4230; --green-pale: #e8f2ee; --white: #ffffff; --off-white: #f7f9f8; }
 body { background: var(--white); color: var(--green); font-family: 'Barlow Condensed', sans-serif; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
@@ -323,6 +329,10 @@ const helmetImg = new Image();
 helmetImg.crossOrigin = 'anonymous';
 helmetImg.src = '/helmet.png';
 
+// Preload Cowboys font for canvas use
+const cowboysFont = new FontFace('Cowboys', "url('/Cowboys_2_0_D.otf')");
+cowboysFont.load().then(f => document.fonts.add(f)).catch(e => console.warn('Font load:', e));
+
 function tintHelmet(color, abbr) {
   const canvas = document.getElementById('helmetCanvas');
   if (!canvas) return;
@@ -408,7 +418,7 @@ function tintHelmet(color, abbr) {
     // Abbreviation on crown
     const lum = (tc.r * 0.299 + tc.g * 0.587 + tc.b * 0.114) / 255;
     const letterColor = lum > 0.45 ? 'rgba(0,0,0,0.82)' : 'rgba(255,255,255,0.95)';
-    ctx.font = `bold ${Math.round(H * 0.17)}px Arial, sans-serif`;
+    ctx.font = `${Math.round(H * 0.20)}px Cowboys, 'Bebas Neue', Arial, sans-serif`;
     ctx.fillStyle = letterColor;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';

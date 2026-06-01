@@ -18,6 +18,24 @@ body { background: var(--white); color: var(--green); font-family: 'Barlow Conde
 body::after { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.015) 3px, rgba(0,0,0,0.015) 4px); pointer-events: none; z-index: 999; }
 
 .hdr { display: flex; align-items: center; justify-content: space-between; padding: 14px 32px; background: var(--green); border-bottom: 3px solid rgba(255,255,255,0.15); position: relative; z-index: 10; flex-shrink: 0; }
+
+.back-btn {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.7);
+  background: none;
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 6px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+.back-btn:hover { color: #fff; border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.08); }
+.back-btn svg { flex-shrink: 0; }
+.back-btn.hidden { visibility: hidden; pointer-events: none; }
 .hdr-left { display: flex; align-items: center; }
 .brand { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 4px; color: #fff; }
 .brand span { color: #a8d5c2; }
@@ -195,6 +213,10 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 <div class="fade-overlay" id="fadeOverlay"></div>
 
 <header class="hdr">
+  <button class="back-btn hidden" id="backBtn">
+    <svg width="8" height="12" viewBox="0 0 8 12" fill="none"><path d="M7 1L1 6L7 11" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+    BACK
+  </button>
   <div class="hdr-left">
     <div class="brand">FIRST &amp; <span>LEARN</span></div>
     <div class="hdr-tag">Training Series · Season 1</div>
@@ -652,16 +674,41 @@ document.addEventListener('keydown', e => {
   }
 });
 
+// Screen history stack for back navigation
+const screenHistory = [];
+const screenTitles = {
+  screenWelcome: null,      // no back on welcome
+  screenTeamSelect: 'screenWelcome',
+  screenGame: 'screenTeamSelect',
+};
+
+function updateBackBtn(targetId) {
+  const btn = document.getElementById('backBtn');
+  if (targetId === 'screenWelcome') {
+    btn.classList.add('hidden');
+  } else {
+    btn.classList.remove('hidden');
+  }
+}
+
 function fadeToScreen(targetId, afterFade) {
   const overlay = document.getElementById('fadeOverlay');
   overlay.classList.add('covering');
   setTimeout(() => {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(targetId).classList.add('active');
+    updateBackBtn(targetId);
     if(afterFade) afterFade();
     setTimeout(() => overlay.classList.remove('covering'), 60);
   }, 460);
 }
+
+document.getElementById('backBtn').addEventListener('click', () => {
+  const active = document.querySelector('.screen.active');
+  if (!active) return;
+  const prev = screenTitles[active.id];
+  if (prev) fadeToScreen(prev);
+});
 
 document.getElementById('selectTeamBtn').addEventListener('click', () => {
   fadeToScreen('screenTeamSelect', () => render());

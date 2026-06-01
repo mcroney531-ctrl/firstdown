@@ -355,24 +355,21 @@ function tintHelmet(color, abbr) {
       // White facemask: brightness > 220 = keep white/near-white
       // Dark vents: brightness < 80 = keep dark
 
-      if (br > 215) {
-        // Facemask, hardware, highlights — stay white
-        od[i] = 255; od[i+1] = 255; od[i+2] = 255;
-        od[i+3] = a;
-      } else if (br < 60) {
-        // Deep shadows, vent holes — keep near-black
-        od[i] = Math.round(br * 0.5);
-        od[i+1] = Math.round(br * 0.5);
-        od[i+2] = Math.round(br * 0.5);
+      if (br < 40) {
+        // Deep shadows and vent holes — keep dark
+        const s = Math.round(br * 0.5);
+        od[i] = s; od[i+1] = s; od[i+2] = s;
         od[i+3] = a;
       } else {
-        // Shell midtones — map to team color preserving depth
-        // Normalize within shell range (60-215)
-        const norm = (br - 60) / 155;
-        const intensity = 0.25 + norm * 0.75;
-        od[i]   = Math.min(255, Math.round(tc.r * intensity));
-        od[i+1] = Math.min(255, Math.round(tc.g * intensity));
-        od[i+2] = Math.min(255, Math.round(tc.b * intensity));
+        // Everything else — map brightness to team color
+        // High brightness = bright team color (highlights)
+        // Low-mid brightness = dark team color (shadows)
+        // This means facemask (brighter) reads lighter than shell (mid-grey)
+        // naturally, without any hard threshold
+        const norm = Math.pow(br / 255, 0.75); // slight gamma to boost midtones
+        od[i]   = Math.min(255, Math.round(tc.r * norm));
+        od[i+1] = Math.min(255, Math.round(tc.g * norm));
+        od[i+2] = Math.min(255, Math.round(tc.b * norm));
         od[i+3] = a;
       }
     }

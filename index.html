@@ -191,7 +191,7 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 @keyframes slideR { from{opacity:0;transform:translateX(-36px)} to{opacity:1;transform:translateX(0)} }
 
 /* GAME */
-#screenGame { background: #1a3a1a; align-items: stretch; justify-content: stretch; }
+#screenGame { background: #1a3a1a; align-items: stretch; justify-content: stretch; position: relative; }
 .field-wrap {
   flex: 1;
   display: flex;
@@ -201,6 +201,129 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
   background: #111;
   overflow: hidden;
 }
+
+/* GAME POPUP */
+.game-popup-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+.game-popup-overlay.hidden { display: none; }
+
+.game-popup {
+  background: var(--white);
+  width: 520px;
+  max-width: 90%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+}
+
+.game-popup-header {
+  padding: 24px 28px 20px;
+  background: var(--green);
+  flex-shrink: 0;
+  transition: background 0.4s;
+}
+.game-popup-eyebrow {
+  font-size: 10px;
+  letter-spacing: 5px;
+  color: rgba(255,255,255,0.55);
+  display: block;
+  margin-bottom: 6px;
+}
+.game-popup-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 3px;
+  color: #fff;
+  line-height: 1;
+}
+
+.game-popup-body {
+  padding: 24px 28px;
+  overflow-y: auto;
+  flex: 1;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(12,66,48,0.2) transparent;
+}
+.game-popup-body p {
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  line-height: 1.75;
+  color: rgba(12,66,48,0.7);
+  margin-bottom: 16px;
+}
+
+.game-popup-rules {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(12,66,48,0.1);
+}
+.popup-rule-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 13px;
+  color: rgba(12,66,48,0.65);
+  line-height: 1.4;
+}
+.popup-rule-icon {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  color: #fff;
+  background: var(--green);
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 2px;
+}
+
+.game-popup-footer {
+  padding: 16px 28px 24px;
+  flex-shrink: 0;
+  border-top: 1px solid rgba(12,66,48,0.08);
+  display: flex;
+  justify-content: center;
+}
+.game-begin-btn {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 6px;
+  padding: 14px 64px;
+  background: var(--green);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+.game-begin-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.4s;
+}
+.game-begin-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(12,66,48,0.3); }
+.game-begin-btn:hover::before { transform: translateX(100%); }
+.game-begin-btn:active { transform: translateY(0); }
 
 .ticker { background: var(--green); padding: 6px 0; overflow: hidden; white-space: nowrap; flex-shrink: 0; }
 .ticker-inner { display: inline-flex; animation: tick 30s linear infinite; }
@@ -313,6 +436,37 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 
 <!-- GAME -->
 <div class="screen" id="screenGame">
+  <!-- GAME INTRO POPUP -->
+  <div class="game-popup-overlay" id="gamePopupOverlay">
+    <div class="game-popup">
+      <div class="game-popup-header" id="gamePopupHeader">
+        <span class="game-popup-eyebrow">GAME BRIEFING</span>
+        <h2 class="game-popup-title" id="gamePopupTitle">READY TO TAKE THE FIELD</h2>
+      </div>
+      <div class="game-popup-body">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <div class="game-popup-rules">
+          <div class="popup-rule-item">
+            <span class="popup-rule-icon">10</span>
+            <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</span>
+          </div>
+          <div class="popup-rule-item">
+            <span class="popup-rule-icon">3</span>
+            <span>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.</span>
+          </div>
+          <div class="popup-rule-item">
+            <span class="popup-rule-icon">🏈</span>
+            <span>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.</span>
+          </div>
+        </div>
+      </div>
+      <div class="game-popup-footer">
+        <button class="game-begin-btn" id="gameBeginBtn">BEGIN</button>
+      </div>
+    </div>
+  </div>
+
   <div class="field-wrap" id="fieldWrap">
     <svg id="fieldSVG" viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;">
 
@@ -393,60 +547,37 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
         <line x1="860" y1="333" x2="860" y2="342"/>
       </g>
 
-      <!-- YARD NUMBERS — top row, both sides of each line -->
-      <g font-family="'Bebas Neue', Arial, sans-serif" font-size="26" fill="white" text-anchor="middle" opacity="0.9">
-        <!-- 10 yard line x=180 -->
-        <text x="162" y="138">10</text>
-        <text x="198" y="138">10</text>
-        <!-- 20 yard line x=260 -->
-        <text x="242" y="138">20</text>
-        <text x="278" y="138">20</text>
-        <!-- 30 yard line x=340 -->
-        <text x="322" y="138">30</text>
-        <text x="358" y="138">30</text>
-        <!-- 40 yard line x=420 -->
-        <text x="402" y="138">40</text>
-        <text x="438" y="138">40</text>
-        <!-- right side 40 x=580 -->
-        <text x="562" y="138">40</text>
-        <text x="598" y="138">40</text>
-        <!-- right side 30 x=660 -->
-        <text x="642" y="138">30</text>
-        <text x="678" y="138">30</text>
-        <!-- right side 20 x=740 -->
-        <text x="722" y="138">20</text>
-        <text x="758" y="138">20</text>
-        <!-- right side 10 x=820 -->
-        <text x="802" y="138">10</text>
-        <text x="838" y="138">10</text>
+      <!-- YARD NUMBERS — TOP EDGE, straddling each yard line -->
+      <g font-family="'Bebas Neue', Arial, sans-serif" font-size="24" fill="white" text-anchor="middle" opacity="0.92">
+        <text x="162" y="28">10</text><text x="198" y="28">10</text>
+        <text x="242" y="28">20</text><text x="278" y="28">20</text>
+        <text x="322" y="28">30</text><text x="358" y="28">30</text>
+        <text x="402" y="28">40</text><text x="438" y="28">40</text>
+        <text x="562" y="28">40</text><text x="598" y="28">40</text>
+        <text x="642" y="28">30</text><text x="678" y="28">30</text>
+        <text x="722" y="28">20</text><text x="758" y="28">20</text>
+        <text x="802" y="28">10</text><text x="838" y="28">10</text>
       </g>
 
-      <!-- YARD NUMBERS — bottom row (flipped), both sides -->
-      <g font-family="'Bebas Neue', Arial, sans-serif" font-size="26" fill="white" text-anchor="middle" opacity="0.9" transform="scale(1,-1) translate(0,-500)">
-        <text x="162" y="-362">10</text>
-        <text x="198" y="-362">10</text>
-        <text x="242" y="-362">20</text>
-        <text x="278" y="-362">20</text>
-        <text x="322" y="-362">30</text>
-        <text x="358" y="-362">30</text>
-        <text x="402" y="-362">40</text>
-        <text x="438" y="-362">40</text>
-        <text x="562" y="-362">40</text>
-        <text x="598" y="-362">40</text>
-        <text x="642" y="-362">30</text>
-        <text x="678" y="-362">30</text>
-        <text x="722" y="-362">20</text>
-        <text x="758" y="-362">20</text>
-        <text x="802" y="-362">10</text>
-        <text x="838" y="-362">10</text>
+      <!-- YARD NUMBERS — BOTTOM EDGE, straddling each yard line -->
+      <g font-family="'Bebas Neue', Arial, sans-serif" font-size="24" fill="white" text-anchor="middle" opacity="0.92">
+        <text x="162" y="490">10</text><text x="198" y="490">10</text>
+        <text x="242" y="490">20</text><text x="278" y="490">20</text>
+        <text x="322" y="490">30</text><text x="358" y="490">30</text>
+        <text x="402" y="490">40</text><text x="438" y="490">40</text>
+        <text x="562" y="490">40</text><text x="598" y="490">40</text>
+        <text x="642" y="490">30</text><text x="678" y="490">30</text>
+        <text x="722" y="490">20</text><text x="758" y="490">20</text>
+        <text x="802" y="490">10</text><text x="838" y="490">10</text>
       </g>
 
-      <!-- 50 YARD LINE LOGO — team abbr in circle -->
-      <circle cx="500" cy="250" r="38" fill="rgba(0,0,0,0.25)" stroke="white" stroke-width="1.5" opacity="0.85"/>
-      <text id="fieldLogoText" x="500" y="263"
+      <!-- MIDFIELD LOGO — team colored circle with abbr -->
+      <circle id="fieldLogoCircle" cx="500" cy="250" r="42" fill="#1a3a1a" stroke="white" stroke-width="3" opacity="0.92"/>
+      <circle id="fieldLogoRing" cx="500" cy="250" r="48" fill="none" stroke="white" stroke-width="1" opacity="0.4"/>
+      <text id="fieldLogoText" x="500" y="264"
         font-family="Cowboys, 'Bebas Neue', Arial, sans-serif"
-        font-size="30" fill="white" text-anchor="middle"
-        letter-spacing="2" opacity="0.95">—</text>
+        font-size="32" fill="white" text-anchor="middle"
+        letter-spacing="2" opacity="0.97">—</text>
 
       <!-- END ZONE BORDERS -->
       <line x1="100" y1="0" x2="100" y2="500" stroke="white" stroke-width="2.5"/>
@@ -755,9 +886,29 @@ document.getElementById('startGameBtn').addEventListener('click', () => {
     const textCol = lum > 0.45 ? '#000000' : '#ffffff';
     document.getElementById('ezTextLeft').setAttribute('fill', textCol);
     document.getElementById('ezTextRight').setAttribute('fill', textCol);
-    // 50 yard line logo
-    document.getElementById('fieldLogoText').textContent = t.abbr;
+    // Midfield logo — team colors
+    const fieldCircle = document.getElementById('fieldLogoCircle');
+    const fieldRing = document.getElementById('fieldLogoRing');
+    const fieldText = document.getElementById('fieldLogoText');
+    fieldCircle.setAttribute('fill', t.primary);
+    fieldCircle.setAttribute('stroke', t.secondary);
+    fieldCircle.setAttribute('stroke-width', '4');
+    fieldRing.setAttribute('stroke', t.secondary);
+    fieldText.textContent = t.abbr;
+    const ftc = hexToRgb(t.primary);
+    const flum = (ftc.r * 0.299 + ftc.g * 0.587 + ftc.b * 0.114) / 255;
+    fieldText.setAttribute('fill', flum > 0.45 ? '#000' : t.secondary);
+
+    // Popup — set header color to team primary, show overlay
+    document.getElementById('gamePopupHeader').style.background = t.primary;
+    document.getElementById('gameBeginBtn').style.background = t.primary;
+    document.getElementById('gamePopupTitle').textContent = t.city.toUpperCase() + ' — GAME BRIEFING';
+    document.getElementById('gamePopupOverlay').classList.remove('hidden');
   });
+});
+
+document.getElementById('gameBeginBtn').addEventListener('click', () => {
+  document.getElementById('gamePopupOverlay').classList.add('hidden');
 });
 
 const words = ['FIRST & LEARN','10 YARDS · 10 MODULES','3 DOWNS TO PASS','PUNT = RESTART','SCORE = ADVANCE','SELECT YOUR TEAM','GAME ON','TRAINING IN SESSION','FIRST & LEARN','10 YARDS · 10 MODULES','3 DOWNS TO PASS','PUNT = RESTART','SCORE = ADVANCE','SELECT YOUR TEAM','GAME ON','TRAINING IN SESSION'];

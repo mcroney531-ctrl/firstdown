@@ -97,7 +97,7 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 .arrow-prev { left: 150px; }
 .arrow-next { right: 40px; }
 
-.team-card-wrap { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; }
+.team-card-wrap { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; gap: 0; }
 .team-card { width: 300px; background: var(--white); border: 1px solid rgba(12,66,48,0.12); display: flex; flex-direction: column; align-items: center; padding: 0 0 24px; position: relative; overflow: hidden; box-shadow: 0 8px 40px rgba(12,66,48,0.1); }
 .card-top-bar { position: absolute; top: 0; left: 0; right: 0; height: 4px; transition: background 0.4s; }
 .card-corner { position: absolute; width: 14px; height: 14px; border-style: solid; transition: border-color 0.4s; }
@@ -159,7 +159,7 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 
 .bottom-bar { flex-shrink: 0; padding: 18px 40px; background: var(--white); border-top: 2px solid rgba(12,66,48,0.08); display: flex; align-items: center; justify-content: center; gap: 32px; position: relative; z-index: 10; }
 .bottom-hint { font-size: 11px; letter-spacing: 2px; color: rgba(12,66,48,0.3); text-align: center; line-height: 1.5; }
-.start-game-btn { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 6px; padding: 16px 60px; background: var(--green); color: #fff; border: none; cursor: pointer; position: relative; overflow: hidden; transition: all 0.25s; }
+.start-game-btn { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 6px; padding: 14px 60px; background: var(--green); color: #fff; border: none; cursor: pointer; position: relative; overflow: hidden; transition: all 0.25s; width: 300px; }
 .start-game-btn::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent); transform: translateX(-100%); transition: transform 0.45s; }
 .start-game-btn::after { content: ''; position: absolute; inset: -4px; border: 2px solid rgba(12,66,48,0.25); animation: ring 2.4s ease-in-out infinite; pointer-events: none; }
 @keyframes ring { 0%{opacity:0.6;transform:scale(1)} 70%{opacity:0;transform:scale(1.04)} 100%{opacity:0;transform:scale(1.04)} }
@@ -274,11 +274,9 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
         </div>
         <div class="team-counter" id="teamCounter"></div>
       </div>
+      <button class="start-game-btn" id="startGameBtn">START GAME</button>
     </div>
     <button class="arrow-btn arrow-next" id="nextBtn">&#8594;</button>
-  </div>
-  <div style="display:flex;justify-content:center;padding:14px 0 0;position:relative;z-index:10;background:var(--white);">
-    <button class="start-game-btn" id="startGameBtn">START GAME</button>
   </div>
   <div class="bottom-bar">
     <div class="bottom-hint">ARROWS OR QUICK PICK TO SELECT YOUR TEAM</div>

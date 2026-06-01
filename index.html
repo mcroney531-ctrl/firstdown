@@ -334,31 +334,63 @@ function tintHelmet(color, abbr) {
   const doTint = () => {
     const tc = hexToRgb(color);
 
-    // Step 1: Fill team color as solid base — this IS the shell color
-    ctx.fillStyle = color;
-    ctx.fillRect(0, 0, W, H);
+    // Draw helmet to offscreen canvas to read pixels
+    const off = document.createElement('canvas');
+    off.width = W; off.height = H;
+    const octx = off.getContext('2d');
+    octx.drawImage(helmetImg, 0, 0, W, H);
+    const src = octx.getImageData(0, 0, W, H);
+    const sd = src.data;
 
-    // Step 2: Draw the line art helmet on top
-    // The grey lines and shadows will darken the color beneath them
-    // giving depth. The white/transparent areas stay team color.
-    ctx.globalCompositeOperation = 'multiply';
-    ctx.drawImage(helmetImg, 0, 0, W, H);
-    ctx.globalCompositeOperation = 'source-over';
+    // Build output pixel by pixel
+    const out = ctx.createImageData(W, H);
+    const od = out.data;
 
-    // Step 3: Mask to helmet shape — clear everything outside helmet
-    // Use destination-in with the helmet image alpha
-    ctx.globalCompositeOperation = 'destination-in';
-    ctx.drawImage(helmetImg, 0, 0, W, H);
-    ctx.globalCompositeOperation = 'source-over';
+    for (let i = 0; i < sd.length; i += 4) {
+      const a = sd[i+3];
+      if (a < 15) {
+        // Fully transparent — skip
+        od[i+3] = 0;
+        continue;
+      }
 
-    // Step 4: Abbreviation on crown
+      const r = sd[i], g = sd[i+1], b = sd[i+2];
+      const br = (r * 0.299 + g * 0.587 + b * 0.114);
+
+      // Key insight: facemask bars have LOWER alpha than shell
+      // Shell pixels are fully opaque (alpha ~255)
+      // Facemask detail pixels have partial alpha (< 220)
+      if (a < 220) {
+        // Facemask/detail lines — render as dark grey lines on white
+        const lineStr = 1 - (a / 220);
+        const grey = Math.round(200 - lineStr * 180);
+        od[i]   = grey;
+        od[i+1] = grey;
+        od[i+2] = grey;
+        od[i+3] = 255;
+        continue;
+      }
+
+      // Shell area — bright pixels = team color, dark lines = darken color
+      const norm = br / 255;
+      // Dark detail lines on shell darken the team color
+      const intensity = 0.25 + norm * 0.75;
+      od[i]   = Math.min(255, Math.round(tc.r * intensity));
+      od[i+1] = Math.min(255, Math.round(tc.g * intensity));
+      od[i+2] = Math.min(255, Math.round(tc.b * intensity));
+      od[i+3] = 255;
+    }
+
+    ctx.putImageData(out, 0, 0);
+
+    // Abbreviation on crown
     const lum = (tc.r * 0.299 + tc.g * 0.587 + tc.b * 0.114) / 255;
-    const letterColor = lum > 0.45 ? 'rgba(0,0,0,0.75)' : 'rgba(255,255,255,0.92)';
+    const letterColor = lum > 0.45 ? 'rgba(0,0,0,0.80)' : 'rgba(255,255,255,0.95)';
     ctx.font = `bold ${Math.round(H * 0.17)}px Arial, sans-serif`;
     ctx.fillStyle = letterColor;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(abbr, W * 0.44, H * 0.22);
+    ctx.fillText(abbr, W * 0.38, H * 0.22);
   };
 
   if (helmetImg.complete && helmetImg.naturalWidth > 0) {

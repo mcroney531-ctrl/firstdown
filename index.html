@@ -110,9 +110,25 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 16px;
+  margin-bottom: 0;
   transition: background 0.5s ease;
   flex-shrink: 0;
+  overflow: hidden;
+}
+
+.banner-city {
+  position: absolute;
+  bottom: 10px;
+  left: 0; right: 0;
+  text-align: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 4px;
+  color: #fff;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+  pointer-events: none;
+  z-index: 5;
+  transition: color 0.4s;
 }
 .card-corner.tl { top: 8px; left: 8px; border-width: 1px 0 0 1px; }
 .card-corner.tr { top: 8px; right: 8px; border-width: 1px 1px 0 0; }
@@ -252,20 +268,20 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
         <div class="card-corner br" id="ccBR"></div>
         <div class="card-banner" id="cardBanner">
           <div class="helmet-stage">
-            <div class="helmet-wrap" id="helmetWrap">
-              <canvas id="helmetCanvas" width="480" height="360"></canvas>
-            </div>
+            <canvas id="helmetCanvas" width="480" height="360"></canvas>
           </div>
+          <div class="banner-city" id="bannerCity"></div>
         </div>
-        <div class="city-name" id="cityName"></div>
         <div class="team-counter" id="teamCounter"></div>
       </div>
     </div>
     <button class="arrow-btn arrow-next" id="nextBtn">&#8594;</button>
   </div>
-  <div class="bottom-bar">
-    <div class="bottom-hint">ARROWS OR QUICK PICK<br>TO SELECT YOUR TEAM</div>
+  <div style="display:flex;justify-content:center;padding:14px 0 0;position:relative;z-index:10;background:var(--white);">
     <button class="start-game-btn" id="startGameBtn">START GAME</button>
+  </div>
+  <div class="bottom-bar">
+    <div class="bottom-hint">ARROWS OR QUICK PICK TO SELECT YOUR TEAM</div>
     <div class="bottom-hint" id="selectedHint">— CHOOSE YOUR CITY —</div>
   </div>
   <div class="ticker"><div class="ticker-inner" id="teamTicker"></div></div>
@@ -333,7 +349,7 @@ helmetImg.src = '/helmet.png';
 const cowboysFont = new FontFace('Cowboys', "url('/Cowboys_2_0_D.otf')");
 cowboysFont.load().then(f => document.fonts.add(f)).catch(e => console.warn('Font load:', e));
 
-function tintHelmet(color, abbr) {
+function tintHelmet(color, secondaryColor, abbr) {
   const canvas = document.getElementById('helmetCanvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
@@ -415,14 +431,24 @@ function tintHelmet(color, abbr) {
     ctx.clearRect(0, 0, W, H);
     ctx.drawImage(final, 0, 0);
 
-    // Abbreviation on crown
-    const lum = (tc.r * 0.299 + tc.g * 0.587 + tc.b * 0.114) / 255;
-    const letterColor = lum > 0.45 ? 'rgba(0,0,0,0.82)' : 'rgba(255,255,255,0.95)';
-    ctx.font = `${Math.round(H * 0.20)}px Cowboys, 'Bebas Neue', Arial, sans-serif`;
-    ctx.fillStyle = letterColor;
+    // Abbreviation on crown — secondary color with stroke
+    const sc = hexToRgb(secondaryColor);
+    const scLum = (sc.r * 0.299 + sc.g * 0.587 + sc.b * 0.114) / 255;
+    // Use secondary color for fill, contrast color for stroke
+    const fillCol = `rgb(${sc.r},${sc.g},${sc.b})`;
+    const strokeCol = scLum > 0.5 ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.9)';
+    const fontSize = Math.round(H * 0.14);
+    ctx.font = `${fontSize}px Cowboys, 'Bebas Neue', Arial, sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(abbr, W * 0.38, H * 0.22);
+    // Stroke first
+    ctx.strokeStyle = strokeCol;
+    ctx.lineWidth = 4;
+    ctx.lineJoin = 'round';
+    ctx.strokeText(abbr, W * 0.43, H * 0.23);
+    // Fill on top
+    ctx.fillStyle = fillCol;
+    ctx.fillText(abbr, W * 0.43, H * 0.23);
   };
 
   if (helmetImg.complete && helmetImg.naturalWidth > 0) {
@@ -437,13 +463,13 @@ function render(dir) {
   document.getElementById('bgBleed').style.background =
     `radial-gradient(ellipse 60% 70% at 50% 50%, ${t.primary}14 0%, ${t.primary}06 55%, transparent 75%)`;
 
-  tintHelmet(t.primary, t.abbr);
+  tintHelmet(t.primary, t.secondary, t.abbr);
 
   // Banner gradient — subtle, desaturated, helmet is the hero
   const banner = document.getElementById('cardBanner');
   banner.style.background = `linear-gradient(145deg, ${t.primary}55 0%, ${t.secondary}33 55%, ${t.primary}44 100%), linear-gradient(180deg, #f0f0ee 0%, #e8e8e6 100%)`;
 
-  document.getElementById('cityName').textContent = t.city.toUpperCase();
+  document.getElementById('bannerCity').textContent = t.city.toUpperCase();
   document.getElementById('teamCounter').textContent = `${String(current+1).padStart(2,'0')} / ${String(TEAMS.length).padStart(2,'0')}`;
   document.getElementById('cardTopBar').style.background = t.primary;
   document.getElementById('teamCard').style.borderColor = t.primary+'25';

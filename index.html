@@ -93,14 +93,30 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 .field-hashes::before, .field-hashes::after { content: ''; position: absolute; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(12,66,48,0.07) 30%, rgba(12,66,48,0.07) 70%, transparent); }
 .field-hashes::before { top: 30%; } .field-hashes::after { top: 70%; }
 
-.left-panel { position: absolute; left: 40px; top: 50%; transform: translateY(-50%); z-index: 50; display: flex; flex-direction: column; gap: 10px; }
-.dropdown-label { font-size: 10px; letter-spacing: 3px; color: rgba(12,66,48,0.4); text-transform: uppercase; }
+.card-controls-row { display: none; }
+
+.left-panel {
+  position: absolute;
+  left: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.dropdown-label {
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: rgba(12,66,48,0.5);
+  text-transform: uppercase;
+}
 .dropdown-wrapper { position: relative; }
-.pick-btn { font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: 2px; padding: 10px 18px; background: var(--white); border: 1px solid rgba(12,66,48,0.22); color: var(--green); cursor: pointer; display: flex; align-items: center; gap: 10px; transition: all 0.2s; white-space: nowrap; }
+.pick-btn { font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 2px; padding: 10px 14px; background: var(--white); border: 1px solid rgba(12,66,48,0.22); color: var(--green); cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; white-space: nowrap; flex: 1; }
 .pick-btn:hover { background: var(--green-pale); border-color: var(--green); }
-.pick-btn svg { transition: transform 0.2s; flex-shrink: 0; }
+.pick-btn svg { transition: transform 0.2s; flex-shrink: 0; margin-left: auto; }
 .pick-btn.open svg { transform: rotate(180deg); }
-.dropdown-menu { position: absolute; top: calc(100% + 5px); left: 0; width: 210px; max-height: 300px; overflow-y: auto; background: var(--white); border: 1px solid rgba(12,66,48,0.18); z-index: 100; display: none; box-shadow: 0 8px 24px rgba(12,66,48,0.1); scrollbar-width: thin; scrollbar-color: rgba(12,66,48,0.2) transparent; }
+.dropdown-menu { position: absolute; top: calc(100% + 5px); left: 0; width: 100%; max-height: 300px; overflow-y: auto; background: var(--white); border: 1px solid rgba(12,66,48,0.18); z-index: 100; display: none; box-shadow: 0 8px 24px rgba(12,66,48,0.1); scrollbar-width: thin; scrollbar-color: rgba(12,66,48,0.2) transparent; }
 .dropdown-menu.open { display: block; }
 .dropdown-menu::-webkit-scrollbar { width: 4px; }
 .dropdown-menu::-webkit-scrollbar-thumb { background: rgba(12,66,48,0.2); }
@@ -124,6 +140,7 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
   transition: all 0.2s;
   white-space: nowrap;
   width: auto;
+  flex-shrink: 0;
   justify-content: center;
   pointer-events: all !important;
   position: relative;
@@ -155,6 +172,27 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 .banner-arrow:active { transform: scale(0.93); }
 .banner-arrow-left  { left: 10px; }
 .banner-arrow-right { right: 10px; }
+
+.banner-random {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  z-index: 20;
+  background: rgba(0,0,0,0.25);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: #fff;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 2px;
+  backdrop-filter: blur(4px);
+}
+.banner-random:hover { background: rgba(0,0,0,0.5); border-color: rgba(255,255,255,0.6); }
+.banner-random:active { transform: scale(0.93); }
 
 .team-card-wrap { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; gap: 0; }
 .team-card-col { display: flex; flex-direction: column; align-items: center; width: 100%; }
@@ -440,8 +478,10 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
   <div class="stage">
     <div class="bg-bleed" id="bgBleed"></div>
     <div class="field-hashes"></div>
+
+    <!-- SELECT DROPDOWN — left panel -->
     <div class="left-panel">
-      <span class="dropdown-label">Quick Pick</span>
+      <span class="dropdown-label">SELECT</span>
       <div class="dropdown-wrapper">
         <button class="pick-btn" id="pickBtn">
           <span id="pickBtnLabel">Browse Teams</span>
@@ -450,16 +490,13 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
         <div class="dropdown-menu" id="dropdownMenu"></div>
       </div>
     </div>
-    <button class="random-btn" id="randomBtn">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M1 4h2.5l6.5 6H13M13 4h-3l-2-2M7 7l2 3h4M1 10h2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      RANDOM TEAM
-    </button>
+
+    <button class="random-
 
 
     <div class="team-card-wrap" id="cardWrap">
       <div class="team-card-col">
+
       <div class="team-card" id="teamCard">
         <div class="card-top-bar" id="cardTopBar"></div>
         <div class="card-corner tl" id="ccTL"></div>
@@ -469,6 +506,11 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
         <div class="card-banner" id="cardBanner">
           <button class="banner-arrow banner-arrow-left" id="prevBtn">&#8592;</button>
           <button class="banner-arrow banner-arrow-right" id="nextBtn">&#8594;</button>
+          <button class="banner-random" id="randomBtn" title="Random team">
+            <svg width="16" height="16" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 4h2.5l6.5 6H13M13 4h-3l-2-2M7 7l2 3h4M1 10h2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
           <div class="helmet-stage">
             <canvas id="helmetCanvas" width="480" height="360"></canvas>
           </div>

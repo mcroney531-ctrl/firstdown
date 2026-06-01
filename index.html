@@ -443,11 +443,9 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
       <rect x="0" y="0" width="1000" height="500" fill="none" stroke="white" stroke-width="3"/>
 
       <!-- BALL MARKER — starts at 50 yard line -->
-      <g id="ballMarker" transform="translate(500, 250)">
-        <ellipse cx="0" cy="0" rx="16" ry="11" fill="#8B4513" stroke="white" stroke-width="1.5"/>
-        <line x1="-8" y1="0" x2="8" y2="0" stroke="white" stroke-width="1"/>
-        <line x1="0" y1="-6" x2="0" y2="6" stroke="white" stroke-width="1"/>
-      </g>
+      <image id="ballMarker" href="/ball.png"
+        x="466" y="216" width="68" height="68"
+        style="filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6))"/>
 
     </svg>
   </div>

@@ -572,28 +572,28 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
         <line x1="860" y1="333" x2="860" y2="342"/>
       </g>
 
-      <!-- YARD NUMBERS — TOP EDGE, one per yard line centered on it -->
-      <g font-family="'Bebas Neue', Arial, sans-serif" font-size="24" fill="white" text-anchor="middle" opacity="0.92">
-        <text x="180" y="28">10</text>
-        <text x="260" y="28">20</text>
-        <text x="340" y="28">30</text>
-        <text x="420" y="28">40</text>
-        <text x="580" y="28">40</text>
-        <text x="660" y="28">30</text>
-        <text x="740" y="28">20</text>
-        <text x="820" y="28">10</text>
+      <!-- YARD NUMBERS — UPPER INTERIOR, just above upper hash marks -->
+      <g id="yardNumsUpper" font-family="'Bebas Neue', Arial, sans-serif" font-size="26" fill="white" text-anchor="middle" opacity="0.92" stroke="rgba(0,0,0,0.4)" stroke-width="3" paint-order="stroke">
+        <text x="180" y="148">10</text>
+        <text x="260" y="148">20</text>
+        <text x="340" y="148">30</text>
+        <text x="420" y="148">40</text>
+        <text x="580" y="148">40</text>
+        <text x="660" y="148">30</text>
+        <text x="740" y="148">20</text>
+        <text x="820" y="148">10</text>
       </g>
 
-      <!-- YARD NUMBERS — BOTTOM EDGE, one per yard line centered on it -->
-      <g font-family="'Bebas Neue', Arial, sans-serif" font-size="24" fill="white" text-anchor="middle" opacity="0.92">
-        <text x="180" y="492">10</text>
-        <text x="260" y="492">20</text>
-        <text x="340" y="492">30</text>
-        <text x="420" y="492">40</text>
-        <text x="580" y="492">40</text>
-        <text x="660" y="492">30</text>
-        <text x="740" y="492">20</text>
-        <text x="820" y="492">10</text>
+      <!-- YARD NUMBERS — LOWER INTERIOR, just below lower hash marks -->
+      <g id="yardNumsLower" font-family="'Bebas Neue', Arial, sans-serif" font-size="26" fill="white" text-anchor="middle" opacity="0.92" stroke="rgba(0,0,0,0.4)" stroke-width="3" paint-order="stroke">
+        <text x="180" y="362">10</text>
+        <text x="260" y="362">20</text>
+        <text x="340" y="362">30</text>
+        <text x="420" y="362">40</text>
+        <text x="580" y="362">40</text>
+        <text x="660" y="362">30</text>
+        <text x="740" y="362">20</text>
+        <text x="820" y="362">10</text>
       </g>
 
       <!-- MIDFIELD LOGO — team colored circle with abbr -->
@@ -610,18 +610,20 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 
       <!-- END ZONE TEXT — left (rotated up) -->
       <text id="ezTextLeft" x="50" y="250"
-        font-family="'Bebas Neue', Arial, sans-serif"
-        font-size="36" fill="white" text-anchor="middle"
+        font-family="Cowboys, 'Bebas Neue', Arial, sans-serif"
+        font-size="52" fill="white" text-anchor="middle"
         transform="rotate(-90, 50, 250)"
-        letter-spacing="8"
+        letter-spacing="10"
+        stroke="rgba(0,0,0,0.4)" stroke-width="4" paint-order="stroke"
         opacity="0.95">TEAM</text>
 
       <!-- END ZONE TEXT — right (rotated down) -->
       <text id="ezTextRight" x="950" y="250"
-        font-family="'Bebas Neue', Arial, sans-serif"
-        font-size="36" fill="white" text-anchor="middle"
+        font-family="Cowboys, 'Bebas Neue', Arial, sans-serif"
+        font-size="52" fill="white" text-anchor="middle"
         transform="rotate(90, 950, 250)"
-        letter-spacing="8"
+        letter-spacing="10"
+        stroke="rgba(0,0,0,0.4)" stroke-width="4" paint-order="stroke"
         opacity="0.95">TEAM</text>
 
       <!-- FIELD BORDER -->
@@ -848,13 +850,16 @@ document.addEventListener('click', () => {
   document.getElementById('pickBtn').classList.remove('open');
 });
 
-document.getElementById('randomBtn').addEventListener('click', () => {
-  const prev = current;
-  let next;
-  do { next = Math.floor(Math.random() * TEAMS.length); } while (next === prev);
-  current = next;
-  render('left');
-});
+const randomBtnEl = document.getElementById('randomBtn');
+if (randomBtnEl) {
+  randomBtnEl.addEventListener('click', () => {
+    const prev = current;
+    let next;
+    do { next = Math.floor(Math.random() * TEAMS.length); } while (next === prev);
+    current = next;
+    render('left');
+  });
+}
 
 document.getElementById('prevBtn').addEventListener('click', () => { current=(current-1+TEAMS.length)%TEAMS.length; render('right'); });
 document.getElementById('nextBtn').addEventListener('click', () => { current=(current+1)%TEAMS.length; render('left'); });
@@ -919,6 +924,16 @@ document.getElementById('startGameBtn').addEventListener('click', () => {
     const textCol = lum > 0.45 ? '#000000' : '#ffffff';
     document.getElementById('ezTextLeft').setAttribute('fill', textCol);
     document.getElementById('ezTextRight').setAttribute('fill', textCol);
+    // EZ text stroke = team secondary for contrast against primary bg
+    document.getElementById('ezTextLeft').setAttribute('stroke', t.secondary);
+    document.getElementById('ezTextRight').setAttribute('stroke', t.secondary);
+    document.getElementById('ezTextLeft').setAttribute('stroke-width', '5');
+    document.getElementById('ezTextRight').setAttribute('stroke-width', '5');
+    // Yard number strokes also pull team secondary
+    document.getElementById('yardNumsUpper').setAttribute('stroke', t.secondary);
+    document.getElementById('yardNumsLower').setAttribute('stroke', t.secondary);
+    document.getElementById('yardNumsUpper').setAttribute('stroke-width', '3');
+    document.getElementById('yardNumsLower').setAttribute('stroke-width', '3');
     // Midfield logo — team colors
     const fieldCircle = document.getElementById('fieldLogoCircle');
     const fieldRing = document.getElementById('fieldLogoRing');

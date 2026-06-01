@@ -133,13 +133,12 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 .random-btn:hover { background: linear-gradient(135deg, #155a42 0%, #22805a 50%, #155a42 100%); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(12,66,48,0.35); }
 .random-btn:active { transform: translateY(0); }
 
-.arrow-btn { position: absolute; top: 50%; transform: translateY(-50%); z-index: 20; background: var(--white); border: 1px solid rgba(12,66,48,0.18); color: var(--green); width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; font-size: 22px; box-shadow: 0 2px 10px rgba(12,66,48,0.07); }
+.arrow-btn { background: var(--white); border: 1px solid rgba(12,66,48,0.18); color: var(--green); width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; font-size: 20px; box-shadow: 0 2px 10px rgba(12,66,48,0.07); flex-shrink: 0; align-self: center; }
 .arrow-btn:hover { background: var(--green); color: #fff; border-color: var(--green); }
-.arrow-btn:active { transform: translateY(-50%) scale(0.95); }
-.arrow-prev { left: 150px; }
-.arrow-next { right: 40px; }
+.arrow-btn:active { transform: scale(0.95); }
 
-.team-card-wrap { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; gap: 0; }
+.team-card-wrap { position: relative; z-index: 10; display: flex; flex-direction: row; align-items: flex-start; gap: 10px; }
+.team-card-col { display: flex; flex-direction: column; align-items: center; }
 .team-card { width: 300px; background: var(--white); border: 1px solid rgba(12,66,48,0.12); display: flex; flex-direction: column; align-items: center; padding: 0 0 24px; position: relative; overflow: hidden; box-shadow: 0 8px 40px rgba(12,66,48,0.1); }
 .card-top-bar { position: absolute; top: 0; left: 0; right: 0; height: 4px; transition: background 0.4s; }
 .card-corner { position: absolute; width: 14px; height: 14px; border-style: solid; transition: border-color 0.4s; }
@@ -439,8 +438,10 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
       RANDOM TEAM
     </button>
 
-    <button class="arrow-btn arrow-prev" id="prevBtn">&#8592;</button>
+
+    <button class="arrow-btn" id="prevBtn">&#8592;</button>
     <div class="team-card-wrap" id="cardWrap">
+      <div class="team-card-col">
       <div class="team-card" id="teamCard">
         <div class="card-top-bar" id="cardTopBar"></div>
         <div class="card-corner tl" id="ccTL"></div>
@@ -456,8 +457,10 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
         <div class="team-counter" id="teamCounter"></div>
       </div>
       <button class="start-game-btn" id="startGameBtn">START GAME</button>
+      </div>
     </div>
-    <button class="arrow-btn arrow-next" id="nextBtn">&#8594;</button>
+    <button class="arrow-btn" id="nextBtn">&#8594;</button>
+
   </div>
   <div class="bottom-bar">
     <div class="bottom-hint">ARROWS OR QUICK PICK TO SELECT YOUR TEAM</div>

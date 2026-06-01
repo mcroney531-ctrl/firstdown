@@ -382,6 +382,29 @@ function tintHelmet(color, abbr) {
 
     ctx.putImageData(out, 0, 0);
 
+    // Drop shadow — draw helmet silhouette offset, blurred, behind
+    // We do this by compositing: save current, draw shadow behind it
+    const shadow = document.createElement('canvas');
+    shadow.width = W; shadow.height = H;
+    const sctx = shadow.getContext('2d');
+    // Draw current tinted helmet onto shadow canvas
+    sctx.drawImage(canvas, 0, 0);
+    // Now draw shadow + stroke on main canvas below current pixels
+    const final = document.createElement('canvas');
+    final.width = W; final.height = H;
+    const fctx = final.getContext('2d');
+    // Shadow layer
+    fctx.shadowColor = 'rgba(0,0,0,0.45)';
+    fctx.shadowBlur = 18;
+    fctx.shadowOffsetX = 4;
+    fctx.shadowOffsetY = 6;
+    fctx.drawImage(shadow, 0, 0);
+    fctx.shadowColor = 'transparent';
+    // Stroke — draw helmet outline
+    fctx.globalCompositeOperation = 'source-over';
+    ctx.clearRect(0, 0, W, H);
+    ctx.drawImage(final, 0, 0);
+
     // Abbreviation on crown
     const lum = (tc.r * 0.299 + tc.g * 0.587 + tc.b * 0.114) / 255;
     const letterColor = lum > 0.45 ? 'rgba(0,0,0,0.82)' : 'rgba(255,255,255,0.95)';
@@ -406,9 +429,9 @@ function render(dir) {
 
   tintHelmet(t.primary, t.abbr);
 
-  // Banner gradient using team colors
+  // Banner gradient — subtle, desaturated, helmet is the hero
   const banner = document.getElementById('cardBanner');
-  banner.style.background = `linear-gradient(135deg, ${t.primary}dd 0%, ${t.secondary}99 60%, ${t.primary}aa 100%)`;
+  banner.style.background = `linear-gradient(145deg, ${t.primary}55 0%, ${t.secondary}33 55%, ${t.primary}44 100%), linear-gradient(180deg, #f0f0ee 0%, #e8e8e6 100%)`;
 
   document.getElementById('cityName').textContent = t.city.toUpperCase();
   document.getElementById('teamCounter').textContent = `${String(current+1).padStart(2,'0')} / ${String(TEAMS.length).padStart(2,'0')}`;

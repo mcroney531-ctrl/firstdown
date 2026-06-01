@@ -334,58 +334,54 @@ function tintHelmet(color, abbr) {
   const doTint = () => {
     const tc = hexToRgb(color);
 
-    // Draw helmet to offscreen canvas to read pixels
+    // Read source pixels from helmet
     const off = document.createElement('canvas');
     off.width = W; off.height = H;
     const octx = off.getContext('2d');
     octx.drawImage(helmetImg, 0, 0, W, H);
     const src = octx.getImageData(0, 0, W, H);
     const sd = src.data;
-
-    // Build output pixel by pixel
     const out = ctx.createImageData(W, H);
     const od = out.data;
 
     for (let i = 0; i < sd.length; i += 4) {
       const a = sd[i+3];
-      if (a < 15) {
-        // Fully transparent — skip
-        od[i+3] = 0;
-        continue;
-      }
+      if (a < 10) { od[i+3] = 0; continue; }
 
       const r = sd[i], g = sd[i+1], b = sd[i+2];
       const br = (r * 0.299 + g * 0.587 + b * 0.114);
 
-      // Key insight: facemask bars have LOWER alpha than shell
-      // Shell pixels are fully opaque (alpha ~255)
-      // Facemask detail pixels have partial alpha (< 220)
-      if (a < 220) {
-        // Facemask/detail lines — render as dark grey lines on white
-        const lineStr = 1 - (a / 220);
-        const grey = Math.round(200 - lineStr * 180);
-        od[i]   = grey;
-        od[i+1] = grey;
-        od[i+2] = grey;
-        od[i+3] = 255;
-        continue;
-      }
+      // Grey shell: brightness 80-220 = tint to team color
+      // White facemask: brightness > 220 = keep white/near-white
+      // Dark vents: brightness < 80 = keep dark
 
-      // Shell area — bright pixels = team color, dark lines = darken color
-      const norm = br / 255;
-      // Dark detail lines on shell darken the team color
-      const intensity = 0.25 + norm * 0.75;
-      od[i]   = Math.min(255, Math.round(tc.r * intensity));
-      od[i+1] = Math.min(255, Math.round(tc.g * intensity));
-      od[i+2] = Math.min(255, Math.round(tc.b * intensity));
-      od[i+3] = 255;
+      if (br > 215) {
+        // Facemask, hardware, highlights — stay white
+        od[i] = 255; od[i+1] = 255; od[i+2] = 255;
+        od[i+3] = a;
+      } else if (br < 60) {
+        // Deep shadows, vent holes — keep near-black
+        od[i] = Math.round(br * 0.5);
+        od[i+1] = Math.round(br * 0.5);
+        od[i+2] = Math.round(br * 0.5);
+        od[i+3] = a;
+      } else {
+        // Shell midtones — map to team color preserving depth
+        // Normalize within shell range (60-215)
+        const norm = (br - 60) / 155;
+        const intensity = 0.25 + norm * 0.75;
+        od[i]   = Math.min(255, Math.round(tc.r * intensity));
+        od[i+1] = Math.min(255, Math.round(tc.g * intensity));
+        od[i+2] = Math.min(255, Math.round(tc.b * intensity));
+        od[i+3] = a;
+      }
     }
 
     ctx.putImageData(out, 0, 0);
 
     // Abbreviation on crown
     const lum = (tc.r * 0.299 + tc.g * 0.587 + tc.b * 0.114) / 255;
-    const letterColor = lum > 0.45 ? 'rgba(0,0,0,0.80)' : 'rgba(255,255,255,0.95)';
+    const letterColor = lum > 0.45 ? 'rgba(0,0,0,0.82)' : 'rgba(255,255,255,0.95)';
     ctx.font = `bold ${Math.round(H * 0.17)}px Arial, sans-serif`;
     ctx.fillStyle = letterColor;
     ctx.textAlign = 'center';

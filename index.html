@@ -361,15 +361,21 @@ function tintHelmet(color, abbr) {
         od[i] = s; od[i+1] = s; od[i+2] = s;
         od[i+3] = a;
       } else {
-        // Everything else — map brightness to team color
-        // High brightness = bright team color (highlights)
-        // Low-mid brightness = dark team color (shadows)
-        // This means facemask (brighter) reads lighter than shell (mid-grey)
-        // naturally, without any hard threshold
-        const norm = Math.pow(br / 255, 0.75); // slight gamma to boost midtones
-        od[i]   = Math.min(255, Math.round(tc.r * norm));
-        od[i+1] = Math.min(255, Math.round(tc.g * norm));
-        od[i+2] = Math.min(255, Math.round(tc.b * norm));
+        // Blend between team color and white based on brightness
+        // Low-mid: team color with depth
+        // High (facemask/highlights): lerp toward white so bars read clearly
+        const norm = Math.pow(br / 255, 0.75);
+
+        // How much to push toward white (0 at br=40, 1 at br=255)
+        const whitePush = Math.pow((br - 40) / 215, 2.0);
+
+        const cr = Math.round(tc.r * norm);
+        const cg = Math.round(tc.g * norm);
+        const cb = Math.round(tc.b * norm);
+
+        od[i]   = Math.min(255, Math.round(cr + (255 - cr) * whitePush * 0.7));
+        od[i+1] = Math.min(255, Math.round(cg + (255 - cg) * whitePush * 0.7));
+        od[i+2] = Math.min(255, Math.round(cb + (255 - cb) * whitePush * 0.7));
         od[i+3] = a;
       }
     }

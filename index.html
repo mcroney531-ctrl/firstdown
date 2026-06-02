@@ -406,6 +406,333 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 .game-begin-btn:hover::before { transform: translateX(100%); }
 .game-begin-btn:active { transform: translateY(0); }
 
+/* ══ GAME LOOP ══ */
+
+/* Field HUD */
+.field-hud {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+}
+.hud-pill {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  letter-spacing: 3px;
+  background: rgba(0,0,0,0.65);
+  color: #fff;
+  padding: 5px 14px;
+  border: 1px solid rgba(255,255,255,0.2);
+  backdrop-filter: blur(4px);
+}
+.hud-pill.down-active {
+  background: var(--green);
+  border-color: rgba(255,255,255,0.4);
+}
+
+/* First Down Button */
+.first-down-btn-wrap {
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+}
+.first-down-btn {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 5px;
+  padding: 14px 48px;
+  background: linear-gradient(135deg, #0c4230 0%, #1a6648 50%, #0c4230 100%);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  animation: pulse-btn 2s ease-in-out infinite;
+}
+@keyframes pulse-btn {
+  0%,100% { box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+  50%      { box-shadow: 0 4px 32px rgba(12,66,48,0.6), 0 0 0 4px rgba(12,66,48,0.2); }
+}
+.first-down-btn:hover { transform: translateY(-2px); }
+.first-down-btn:active { transform: translateY(0); }
+
+/* Progress flags on field */
+.field-flag { pointer-events: none; }
+
+/* Game Overlay — sits over field */
+.game-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.78);
+  backdrop-filter: blur(6px);
+  transition: opacity 0.3s ease;
+}
+.game-overlay.hidden { display: none; }
+
+.overlay-card {
+  background: #fff;
+  width: 580px;
+  max-width: 92%;
+  max-height: 82vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.7);
+  position: relative;
+}
+
+/* Overlay header */
+.overlay-hdr {
+  padding: 18px 24px 14px;
+  background: var(--green);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.overlay-module-label {
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: rgba(255,255,255,0.5);
+}
+.overlay-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 3px;
+  color: #fff;
+  line-height: 1;
+  margin-top: 4px;
+}
+.overlay-down-badge {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  padding: 4px 12px;
+  border: 1px solid rgba(255,255,255,0.25);
+  flex-shrink: 0;
+}
+
+/* Overlay body */
+.overlay-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 28px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(12,66,48,0.2) transparent;
+}
+.overlay-body::-webkit-scrollbar { width: 4px; }
+.overlay-body::-webkit-scrollbar-thumb { background: rgba(12,66,48,0.2); }
+
+.overlay-body p {
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  line-height: 1.8;
+  color: rgba(12,66,48,0.72);
+  margin-bottom: 16px;
+}
+
+.best-practices {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(12,66,48,0.1);
+}
+.best-practices-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 12px;
+  letter-spacing: 4px;
+  color: rgba(12,66,48,0.4);
+  margin-bottom: 12px;
+  display: block;
+}
+.bp-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 10px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 13px;
+  color: rgba(12,66,48,0.7);
+  line-height: 1.5;
+}
+.bp-icon {
+  width: 22px;
+  height: 22px;
+  background: var(--green);
+  color: #fff;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Overlay footer */
+.overlay-footer {
+  padding: 14px 24px;
+  border-top: 1px solid rgba(12,66,48,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  gap: 12px;
+}
+.overlay-footer-left {
+  flex: 1;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: rgba(12,66,48,0.3);
+}
+.next-arrow-btn {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 3px;
+  padding: 10px 28px;
+  background: var(--green);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.2s;
+}
+.next-arrow-btn:hover { background: #155a42; }
+.next-arrow-btn svg { flex-shrink: 0; }
+
+/* Question styles */
+.question-block { margin-bottom: 20px; }
+.question-number {
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: rgba(12,66,48,0.4);
+  margin-bottom: 8px;
+  display: block;
+}
+.question-text {
+  font-family: 'Barlow', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--green);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+.answer-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.answer-btn {
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  padding: 12px 16px;
+  background: var(--off-white);
+  border: 1.5px solid rgba(12,66,48,0.15);
+  color: var(--green);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s;
+  line-height: 1.4;
+}
+.answer-btn:hover:not(:disabled) { background: var(--green-pale); border-color: var(--green); }
+.answer-btn.correct { background: #e6f4ea; border-color: #2d7a3a; color: #1a5226; }
+.answer-btn.wrong   { background: #fdecea; border-color: #c0392b; color: #7b1a14; }
+.answer-btn:disabled { cursor: default; }
+
+.feedback-msg {
+  margin-top: 10px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 12px;
+  display: none;
+}
+.feedback-msg.correct { background: #e6f4ea; color: #1a5226; display: block; }
+.feedback-msg.wrong   { background: #fdecea; color: #7b1a14; display: block; }
+
+/* Q2 hidden until Q1 answered */
+.question-block.locked { opacity: 0.35; pointer-events: none; }
+
+/* State overlays */
+.state-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+  line-height: 1;
+}
+.state-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  letter-spacing: 4px;
+  color: var(--green);
+  margin-bottom: 8px;
+  line-height: 1;
+}
+.state-sub {
+  font-family: 'Barlow', sans-serif;
+  font-size: 15px;
+  color: rgba(12,66,48,0.6);
+  line-height: 1.6;
+  max-width: 360px;
+  text-align: center;
+}
+.state-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 28px;
+  text-align: center;
+}
+.state-action-btn {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 5px;
+  padding: 13px 44px;
+  background: var(--green);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  margin-top: 24px;
+  transition: all 0.2s;
+}
+.state-action-btn:hover { background: #155a42; transform: translateY(-2px); }
+.state-action-btn.punt { background: #c0392b; }
+.state-action-btn.punt:hover { background: #a93226; }
+
+/* Touchdown */
+.touchdown-body {
+  background: linear-gradient(135deg, #0c4230, #1a6648);
+  color: #fff;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  text-align: center;
+}
+.td-emoji { font-size: 64px; margin-bottom: 16px; }
+.td-title { font-family: 'Bebas Neue', sans-serif; font-size: 52px; letter-spacing: 6px; line-height: 1; margin-bottom: 8px; }
+.td-sub { font-size: 14px; letter-spacing: 3px; opacity: 0.65; margin-bottom: 28px; }
+.td-team { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 4px; opacity: 0.8; }
+
 .ticker { background: var(--green); padding: 6px 0; overflow: hidden; white-space: nowrap; flex-shrink: 0; }
 .ticker-inner { display: inline-flex; animation: tick 30s linear infinite; }
 .ticker-item { font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 3px; color: rgba(255,255,255,0.8); padding: 0 36px; }
@@ -556,6 +883,46 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
       <div class="game-popup-footer">
         <button class="game-begin-btn" id="gameBeginBtn">BEGIN</button>
       </div>
+    </div>
+  </div>
+
+  <!-- FIELD HUD -->
+  <div class="field-hud" id="fieldHud">
+    <div class="hud-pill" id="hudModule">MODULE 01</div>
+    <div class="hud-pill down-active" id="hudDown">1ST DOWN</div>
+    <div class="hud-pill" id="hudTeam">—</div>
+  </div>
+
+  <!-- FIRST DOWN BUTTON -->
+  <div class="first-down-btn-wrap" id="firstDownWrap">
+    <button class="first-down-btn" id="firstDownBtn">🏈 FIRST DOWN</button>
+  </div>
+
+  <!-- GAME OVERLAY (content / questions / states) -->
+  <div class="game-overlay hidden" id="gameOverlay">
+    <div class="overlay-card" id="overlayCard">
+
+      <!-- HEADER -->
+      <div class="overlay-hdr" id="overlayHdr">
+        <div>
+          <div class="overlay-module-label" id="overlayModuleLabel">MODULE 01 · PHISHING</div>
+          <div class="overlay-title" id="overlayTitle">Reading the Play</div>
+        </div>
+        <div class="overlay-down-badge" id="overlayDownBadge">1ST DOWN</div>
+      </div>
+
+      <!-- BODY — swapped per state -->
+      <div class="overlay-body" id="overlayBody"></div>
+
+      <!-- FOOTER -->
+      <div class="overlay-footer" id="overlayFooter">
+        <div class="overlay-footer-left" id="overlayFooterLeft"></div>
+        <button class="next-arrow-btn" id="overlayNextBtn">
+          CONTINUE
+          <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5h12M9 1l4 4-4 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+
     </div>
   </div>
 
@@ -975,6 +1342,7 @@ document.getElementById('selectTeamBtn').addEventListener('click', () => {
 });
 document.getElementById('startGameBtn').addEventListener('click', () => {
   const t = TEAMS[current];
+  gameState.selectedTeam = t;
   fadeToScreen('screenGame', () => {
     // Set end zone colors to team primary
     document.getElementById('ezLeft').setAttribute('fill', t.primary);
@@ -1021,6 +1389,574 @@ document.getElementById('startGameBtn').addEventListener('click', () => {
 
 document.getElementById('gameBeginBtn').addEventListener('click', () => {
   document.getElementById('gamePopupOverlay').classList.add('hidden');
+  initGame();
+});
+
+// ══════════════════════════════════════════
+// GAME DATA — placeholder modules
+// ══════════════════════════════════════════
+const MODULES = [
+  {
+    id: 1,
+    title: "Phishing: The One-Click Catastrophe",
+    topic: "PHISHING",
+    content: `<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In 2014, a single employee at one of the world's largest entertainment companies clicked on an email that appeared to come from a colleague. That one click gave attackers access to the entire corporate network.</p>
+    <p>Phishing emails are designed to look legitimate — they may use real logos, familiar names, or urgent language to trick you into clicking a link or downloading an attachment. The goal is always the same: get inside your system.</p>
+    <p>Spear phishing takes it further — attackers research their targets first, personalizing the email so it feels impossible to ignore. Spray phishing casts a wide net, sending thousands of emails knowing only a fraction need to succeed.</p>`,
+    practices: [
+      "Hover over links before clicking to verify the actual destination URL.",
+      "When in doubt about an email's legitimacy, call the sender directly — never reply to the suspicious email."
+    ],
+    questions: [
+      {
+        q: "A Sony employee received an email that appeared to be from a business contact with words like 'Adobe Flash' in the subject. What was it actually designed to do?",
+        choices: ["Update their media player software", "Download malware onto their computer", "Connect them to a business partner", "Verify their company credentials"],
+        correct: 1,
+        feedback: ["That's the trap — it looked like a routine software prompt.", "Correct. The link dropped malicious software the moment it was clicked.", "That's how it appeared, but appearances were the weapon.", "Credential phishing is real, but this attack used a file download."]
+      },
+      {
+        q: "What is the key difference between 'spray' phishing and 'spear' phishing?",
+        choices: ["Spray phishing is more dangerous", "Spear phishing targets specific individuals with personalized messages", "Spray phishing only targets executives", "Spear phishing uses text messages instead of email"],
+        correct: 1,
+        feedback: ["Volume doesn't equal danger — spear phishing's precision is often more effective.", "Correct. Spear phishing is researched and personalized, making it much harder to spot.", "Spray phishing targets everyone — that's the whole point.", "The delivery channel is the same — it's the targeting that differs."]
+      }
+    ]
+  },
+  {
+    id: 2,
+    title: "Social Engineering: The Long Con",
+    topic: "SOCIAL ENGINEERING",
+    content: `<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Not every attack starts with malware. Some start with a message: "Hello, how are you?" Social engineering exploits human psychology — trust, curiosity, loneliness, and the desire to be helpful.</p>
+    <p>In pig butchering scams, attackers spend weeks or months building a relationship before making any financial ask. By the time they do, the victim is emotionally invested. The trap was set long before the bait appeared.</p>
+    <p>In corporate settings, social engineering might look like a caller claiming to be from IT support, a fake vendor requesting invoice changes, or a new "employee" asking for access credentials. The attack is the conversation, not the code.</p>`,
+    practices: [
+      "Verify identities through official channels before sharing any sensitive information — even with people who seem familiar.",
+      "Be suspicious of any unsolicited contact that creates urgency, offers unexpected rewards, or requests credentials."
+    ],
+    questions: [
+      {
+        q: "In 'pig butchering' scams, why do attackers spend weeks building a relationship before making their ask?",
+        choices: ["To give victims time to save money", "To build trust and emotional investment, making the victim less likely to question them", "Because regulations require a cooling-off period", "To test if the victim has cybersecurity training"],
+        correct: 1,
+        feedback: ["The timing is strategic, not considerate.", "Correct. Emotional investment is the weapon — it overrides rational suspicion.", "There are no such regulations and scammers don't follow rules anyway.", "Ironically, training is exactly what they're trying to bypass."]
+      },
+      {
+        q: "A caller claims to be from your company's IT department and asks for your login credentials to fix an urgent system issue. What should you do?",
+        choices: ["Provide them — it's your IT team", "Ask them to verify by sending an email from an official address first, then hang up and call IT directly", "Ask for their employee ID number before complying", "Only provide your username, not your password"],
+        correct: 1,
+        feedback: ["Legitimate IT departments will never ask for your password.", "Correct. Hang up and initiate contact yourself through verified channels.", "An employee ID can be faked just as easily as the call itself.", "No part of your credentials should be shared over an unsolicited call."]
+      }
+    ]
+  },
+  {
+    id: 3,
+    title: "Password Hygiene: Your First Line of Defense",
+    topic: "PASSWORDS",
+    content: `<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Passwords are the lock on the front door of every account you own. Using the same password across multiple accounts means one breach unlocks everything — attackers call this credential stuffing.</p>
+    <p>Weak passwords get cracked in seconds with automated tools. "Password123" or your pet's name isn't a password — it's an open invitation. Length matters more than complexity: a four-word passphrase is both stronger and easier to remember than a scrambled 8-character string.</p>
+    <p>A password manager solves the problem entirely — it generates and stores unique, complex passwords for every account so you only need to remember one master password.</p>`,
+    practices: [
+      "Use a password manager to generate and store unique passwords for every account.",
+      "Never reuse passwords — a breach at one site should never compromise another."
+    ],
+    questions: [
+      {
+        q: "Why is reusing the same password across multiple accounts particularly dangerous?",
+        choices: ["It makes passwords easier to guess", "A breach at one site gives attackers access to all accounts using that password", "It violates most companies' password policies", "Reusing passwords causes accounts to expire faster"],
+        correct: 1,
+        feedback: ["The issue isn't guessing — it's that attackers already have it from another breach.", "Correct. Credential stuffing uses breached passwords to automatically try other sites.", "Policy is a secondary concern — the security risk is the real problem.", "Password expiration has nothing to do with reuse vulnerability."]
+      },
+      {
+        q: "Which of the following is the strongest password?",
+        choices: ["P@ssw0rd!", "correct-horse-battery-staple-mountain", "M1ch@el1985!", "qwerty123456"],
+        correct: 1,
+        feedback: ["Common substitutions (@ for a) are the first thing cracking tools try.", "Correct. Length beats complexity — four random words create billions of combinations.", "Personal information like birth years makes passwords much weaker.", "Sequential keyboard patterns are cracked almost instantly."]
+      }
+    ]
+  },
+  {
+    id: 4,
+    title: "Software Updates: Don't Ignore That Notification",
+    topic: "PATCHING",
+    content: `<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. When WannaCry ransomware tore through hundreds of thousands of computers in 2017, it exploited a vulnerability in Windows that Microsoft had already patched — two months earlier. Every unpatched machine was a door left open.</p>
+    <p>Software updates aren't just new features. They're emergency repairs to known security holes. When researchers or attackers discover a vulnerability, the clock starts ticking. The question is whether the patch arrives before the attack does.</p>
+    <p>Delaying updates is a gamble. The longer you wait, the more time attackers have to exploit a known weakness that you've already been handed the fix for.</p>`,
+    practices: [
+      "Enable automatic updates wherever possible — the patch you delay today may be the door that gets kicked in tomorrow.",
+      "Keep all software updated, not just your operating system — browsers, plugins, and apps are equally common attack surfaces."
+    ],
+    questions: [
+      {
+        q: "The WannaCry ransomware attack in 2017 spread by exploiting a Windows vulnerability. What made it particularly preventable?",
+        choices: ["The vulnerability was only discovered after the attack", "Microsoft had released a patch for the vulnerability two months before the attack", "It only affected outdated operating systems that couldn't be updated", "The attack required users to click a malicious link to be affected"],
+        correct: 1,
+        feedback: ["The vulnerability was known and patched — unpatched systems were the problem.", "Correct. Every machine that ran the patch in time was protected.", "Many affected systems were capable of updating — they just hadn't.", "WannaCry spread automatically across networks with no user interaction required."]
+      },
+      {
+        q: "Why do attackers specifically target unpatched software vulnerabilities?",
+        choices: ["Unpatched software runs slower, making attacks easier", "The vulnerability is publicly known, giving attackers a roadmap", "Patched software cannot connect to the internet", "Unpatched systems automatically disable their firewalls"],
+        correct: 1,
+        feedback: ["Speed has nothing to do with it.", "Correct. Once a patch is released, the vulnerability becomes public knowledge — a known target.", "Patching doesn't affect connectivity.", "Firewalls and patches are completely separate security mechanisms."]
+      }
+    ]
+  },
+  {
+    id: 5,
+    title: "Multi-Factor Authentication: The Second Lock",
+    topic: "MFA",
+    content: `<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. A password is something you know. Multi-factor authentication adds something you have — a code sent to your phone, a hardware key, or a biometric scan. Even if an attacker has your password, they can't get in without the second factor.</p>
+    <p>MFA blocks the vast majority of automated account takeover attacks. Microsoft reported that MFA prevents over 99% of account compromise attempts. It's not perfect — sophisticated attackers can intercept SMS codes — but it raises the bar dramatically.</p>
+    <p>The small friction of entering a second code is nothing compared to the friction of recovering a compromised account.</p>`,
+    practices: [
+      "Enable MFA on every account that offers it — prioritize email, banking, and work accounts first.",
+      "Use an authenticator app (like Google Authenticator or Authy) rather than SMS codes where possible — they're significantly more secure."
+    ],
+    questions: [
+      {
+        q: "An attacker has obtained your email password through a data breach. You have MFA enabled. What happens when they try to log in?",
+        choices: ["They gain access immediately using your password", "They are blocked because they don't have access to your second factor", "Your account is locked and requires a reset", "They receive an error message and your password is automatically changed"],
+        correct: 1,
+        feedback: ["The password alone isn't enough — that's the entire point.", "Correct. Without your phone or authenticator app, the password is useless.", "Accounts don't automatically lock — MFA simply blocks the login attempt.", "Passwords don't auto-change on failed login attempts."]
+      },
+      {
+        q: "Why is an authenticator app generally more secure than receiving MFA codes via SMS?",
+        choices: ["Authenticator apps generate longer codes", "SMS codes can be intercepted through SIM swapping attacks", "SMS codes expire faster than app-generated codes", "Authenticator apps don't require an internet connection"],
+        correct: 1,
+        feedback: ["Code length isn't the security difference.", "Correct. SIM swapping and SS7 protocol attacks can intercept SMS codes.", "Both types of codes expire quickly — expiry time isn't the key difference.", "While true, offline capability isn't the primary security advantage."]
+      }
+    ]
+  },
+  {
+    id: 6,
+    title: "Public Wi-Fi: The Open Door",
+    topic: "PUBLIC WI-FI",
+    content: `<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. That free Wi-Fi at the coffee shop is also free for anyone else in the building — including attackers. On an unencrypted public network, traffic can be intercepted, read, and manipulated.</p>
+    <p>A man-in-the-middle attack places an attacker between you and the internet, silently reading everything you send and receive. A more brazen tactic is a rogue hotspot — an attacker creates a Wi-Fi network named "Free_Airport_WiFi" and waits for people to connect.</p>
+    <p>A VPN (Virtual Private Network) encrypts your traffic before it leaves your device, making it unreadable even on a compromised network. It's the clearest solution to an unavoidable situation.</p>`,
+    practices: [
+      "Use a VPN whenever connecting to public Wi-Fi — it encrypts your traffic and hides it from other users on the network.",
+      "Avoid accessing sensitive accounts (banking, work email) on public networks unless you are using a VPN."
+    ],
+    questions: [
+      {
+        q: "You're at an airport and see two Wi-Fi networks: 'Airport_Official_WiFi' and 'Free_Airport_WiFi'. Which is the bigger red flag?",
+        choices: ["Airport_Official_WiFi because it sounds too formal", "Free_Airport_WiFi because unsecured 'free' networks are a common attacker tactic", "Both are equally risky on a public network", "Neither — airports are required to secure their Wi-Fi"],
+        correct: 2,
+        feedback: ["Official-sounding names can be fake too, but 'free' networks are a more classic trap.", "This is the right instinct but the bigger truth is both carry risk on public networks.", "Correct. Both networks on a public network carry risk — a VPN is your real protection.", "No such requirement exists — airport Wi-Fi has no special security guarantee."]
+      },
+      {
+        q: "What does a VPN do that makes it effective on public Wi-Fi?",
+        choices: ["It blocks other users from seeing your device on the network", "It encrypts your internet traffic so it cannot be read even if intercepted", "It automatically detects and blocks rogue hotspots", "It prevents websites from collecting your browsing data"],
+        correct: 1,
+        feedback: ["Device visibility and traffic encryption are different protections.", "Correct. Encryption means intercepted data is unreadable gibberish without the decryption key.", "VPNs don't actively scan for or block rogue networks.", "VPNs help with privacy from networks but don't prevent website-level tracking."]
+      }
+    ]
+  },
+  {
+    id: 7,
+    title: "Data Handling: Know What You're Carrying",
+    topic: "DATA HANDLING",
+    content: `<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. When the Sony hack data spilled online, it exposed social security numbers, salary information, medical records, and private emails. All of it had value — and all of it had been stored without adequate protection.</p>
+    <p>Data classification means understanding what kind of information you're handling and treating it accordingly. Not every file needs the same protection — but sensitive data requires encryption, access controls, and careful handling from the moment it's created.</p>
+    <p>The most common data handling mistakes are simple: emailing sensitive documents unencrypted, storing passwords in plain text files, sharing access credentials with colleagues, or leaving sensitive files on shared drives without access restrictions.</p>`,
+    practices: [
+      "Never email sensitive data — social security numbers, passwords, financial details — without encryption.",
+      "Apply the principle of least privilege: only give people access to the data they specifically need to do their job."
+    ],
+    questions: [
+      {
+        q: "A colleague asks you to email them a spreadsheet containing employees' salary information. What is the safest approach?",
+        choices: ["Email it immediately — the information stays within the company", "Encrypt the file or use a secure file-sharing platform instead of standard email", "Change the file extension before emailing to obscure its contents", "CC your manager so there is a record of the transfer"],
+        correct: 1,
+        feedback: ["Internal doesn't mean secure — email can be intercepted and company systems can be breached.", "Correct. Standard email is not a secure transfer method for sensitive data.", "Changing a file extension is security theater — it provides no real protection.", "A paper trail doesn't make the transfer any more secure."]
+      },
+      {
+        q: "What is the 'principle of least privilege' in data security?",
+        choices: ["Giving all employees read-only access to company data", "Only granting people access to the specific data they need to perform their job", "Restricting data access to senior management only", "Automatically deleting data after a set period of time"],
+        correct: 1,
+        feedback: ["Read-only is one form of restriction, but least privilege is about need, not level.", "Correct. Limiting access reduces the blast radius of any breach or insider threat.", "Seniority isn't the right metric for data access — job function is.", "Data retention policies are related but separate from access control principles."]
+      }
+    ]
+  },
+  {
+    id: 8,
+    title: "Ransomware: When They Lock the Door",
+    topic: "RANSOMWARE",
+    content: `<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ransomware is exactly what it sounds like: malicious software that encrypts your files and demands payment to unlock them. When WannaCry hit in 2017, it encrypted hundreds of thousands of computers across 150 countries, including systems in hospitals where patients were actively being treated.</p>
+    <p>Ransomware typically enters through phishing emails, unpatched software, or compromised credentials. Once inside, it can spread through an entire network before a single encrypted file is noticed. Attackers then demand payment — often in cryptocurrency — for the decryption key.</p>
+    <p>The grim reality: paying doesn't guarantee recovery. Some attackers take the money and vanish. Others send a broken key. And paying funds the next attack.</p>`,
+    practices: [
+      "Maintain regular offline or cloud backups of critical data — a good backup is your best defense against ransomware.",
+      "Never pay the ransom — it funds criminal operations and provides no guarantee of data recovery."
+    ],
+    questions: [
+      {
+        q: "Why is maintaining regular data backups the most effective defense against ransomware?",
+        choices: ["Backups prevent ransomware from encrypting your files", "If your files are encrypted, you can restore from a backup without paying the ransom", "Ransomware cannot infect systems that have backup software installed", "Backups allow you to identify who deployed the ransomware"],
+        correct: 1,
+        feedback: ["Backups don't prevent infection — they give you a recovery path.", "Correct. A clean backup makes the ransom demand irrelevant.", "Backup software provides no protection against ransomware infection.", "Backups store data, not attacker attribution information."]
+      },
+      {
+        q: "A company's files are encrypted by ransomware. The attackers demand $50,000 in cryptocurrency. Why do security experts generally advise against paying?",
+        choices: ["Cryptocurrency payments are illegal in most countries", "Payment funds criminal operations and doesn't guarantee recovery of your data", "The FBI can reverse ransomware encryption without payment", "Paying increases the ransom amount automatically"],
+        correct: 1,
+        feedback: ["Cryptocurrency isn't illegal — the extortion is.", "Correct. Attackers may take the payment, send a broken key, or demand more.", "The FBI has tools in some cases but cannot universally decrypt ransomware.", "Ransom amounts don't automatically escalate with payment — that's not how it works."]
+      }
+    ]
+  },
+  {
+    id: 9,
+    title: "Social Media & OSINT: What You Post Can Be Used Against You",
+    topic: "SOCIAL MEDIA",
+    content: `<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. OSINT stands for Open Source Intelligence — information gathered from publicly available sources. Before sophisticated technical attacks, threat actors often spend hours researching targets through LinkedIn, Twitter, Instagram, and Facebook.</p>
+    <p>A photo of your office lobby reveals what your building looks like. Your LinkedIn job title reveals what systems you have access to. A vacation post reveals when your home is empty. A photo of your work badge in the background of a selfie reveals badge design and facility access codes.</p>
+    <p>In pig butchering scams, attackers lifted profile photos from real influencers to create convincing fake identities. Your public presence is their raw material.</p>`,
+    practices: [
+      "Audit your public social media profiles — if information could help someone impersonate you or gain unauthorized access, restrict it.",
+      "Never post photos that inadvertently reveal security-sensitive details: building layouts, badge designs, screen contents, or system interfaces."
+    ],
+    questions: [
+      {
+        q: "An attacker researching a target finds their LinkedIn profile showing job title, employer, and recent projects. How might this be used in an attack?",
+        choices: ["It cannot be used — LinkedIn profiles are not useful for attackers", "To craft a convincing spear phishing email that appears relevant to the target's actual work", "To gain direct access to the target's company systems", "To identify the target's home address"],
+        correct: 1,
+        feedback: ["Public professional information is one of attackers' most valuable research tools.", "Correct. Knowing your role, employer, and projects makes fake emails far more convincing.", "Profile information alone doesn't provide system access — it's the foundation for social engineering.", "LinkedIn doesn't typically reveal home addresses, though other OSINT techniques might."]
+      },
+      {
+        q: "Which of the following social media behaviors creates a security risk?",
+        choices: ["Posting a photo of a company event that shows your office building exterior", "Liking a competitor's LinkedIn post", "Following industry news accounts on Twitter", "Using your real name on a professional network"],
+        correct: 0,
+        feedback: ["Correct. Building exteriors, layouts, and access points are useful intelligence for physical security attacks.", "Engagement with public posts creates no security vulnerability.", "Following public accounts poses no security risk.", "Real names on professional networks are standard and expected — that's not the risk."]
+      }
+    ]
+  },
+  {
+    id: 10,
+    title: "Cybersecurity in the AI Age",
+    topic: "AI & SECURITY",
+    content: `<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. AI has changed the threat landscape for both attackers and defenders. For attackers, it's lowered the barrier to entry dramatically — sophisticated phishing emails that once required skilled writers can now be generated at scale, in any language, at near-zero cost.</p>
+    <p>Deepfakes enable voice and video impersonation of executives, family members, and colleagues. In one documented case, a finance employee transferred $25 million after a video call with what appeared to be their CFO — who was entirely AI-generated. Vishing (voice phishing) calls can now clone a voice from seconds of public audio.</p>
+    <p>For defenders, AI offers real-time threat detection, behavioral analysis, and automated response. But the fundamental human vulnerabilities — trust, urgency, fear — remain the primary attack surface. AI makes existing attacks faster and cheaper, not fundamentally different.</p>`,
+    practices: [
+      "Establish a verbal codeword with close colleagues for verifying unusual requests — especially those involving money transfers or sensitive access.",
+      "Treat any unsolicited contact that creates urgency with heightened suspicion, regardless of how legitimate the voice, face, or writing style appears."
+    ],
+    questions: [
+      {
+        q: "A finance employee receives a video call from what appears to be their CFO requesting an urgent wire transfer. The CFO's face and voice seem completely authentic. What is the safest response?",
+        choices: ["Process the transfer — a video call provides strong verification", "Hang up, call the CFO's known phone number directly, and verify the request through an independent channel", "Ask the caller for their employee ID number to verify identity", "Process half the transfer now and wait for written confirmation for the rest"],
+        correct: 1,
+        feedback: ["Deepfake technology can produce convincing video in real time — visual verification is no longer reliable.", "Correct. Hang up and initiate contact yourself through a verified channel.", "An employee ID can be faked — verbal information during the suspicious call isn't reliable verification.", "No portion of a potentially fraudulent transfer should be processed before independent verification."]
+      },
+      {
+        q: "How has AI most significantly changed phishing attacks?",
+        choices: ["AI allows attackers to bypass all email spam filters automatically", "AI enables attackers to generate convincing, personalized phishing content at massive scale with minimal effort", "AI-generated phishing emails are always detectable by security software", "AI has made phishing attacks slower but more precise"],
+        correct: 1,
+        feedback: ["Spam filters have also improved — it's an arms race, not a bypass.", "Correct. Volume, personalization, and quality of phishing content have all increased dramatically.", "AI-generated content is increasingly indistinguishable from human writing.", "AI makes attacks faster and cheaper, not slower."]
+      }
+    ]
+  }
+];
+
+// ══════════════════════════════════════════
+// GAME STATE
+// ══════════════════════════════════════════
+let gameState = {
+  moduleIndex: 0,
+  down: 1,           // 1, 2, 3
+  phase: 'idle',     // idle | content | questions | down-state | punt | touchdown
+  q1answered: false,
+  q2answered: false,
+  q1correct: false,
+  q2correct: false,
+  selectedTeam: null,
+  completedModules: [],
+};
+
+// Ball X positions per module (10yd line to touchdown)
+const BALL_X_POSITIONS = [146, 226, 306, 386, 466, 546, 626, 706, 786, 866, 900];
+// Flag X positions (where completed markers go)
+const FLAG_X_POSITIONS = [180, 260, 340, 420, 500, 580, 660, 740, 820];
+
+function initGame() {
+  gameState.moduleIndex = 0;
+  gameState.down = 1;
+  gameState.phase = 'idle';
+  gameState.completedModules = [];
+  updateFieldHUD();
+  showFirstDownBtn();
+}
+
+function updateFieldHUD() {
+  const mod = MODULES[gameState.moduleIndex];
+  document.getElementById('hudModule').textContent = `MODULE ${String(mod.id).padStart(2,'0')}`;
+  const downLabels = ['1ST DOWN','2ND DOWN','3RD DOWN'];
+  document.getElementById('hudDown').textContent = downLabels[gameState.down-1] || '1ST DOWN';
+  if (gameState.selectedTeam) {
+    document.getElementById('hudTeam').textContent = gameState.selectedTeam.abbr;
+  }
+}
+
+function showFirstDownBtn() {
+  gameState.phase = 'idle';
+  document.getElementById('firstDownWrap').style.display = 'flex';
+  document.getElementById('gameOverlay').classList.add('hidden');
+  updateFieldHUD();
+}
+
+function openOverlay() {
+  document.getElementById('firstDownWrap').style.display = 'none';
+  document.getElementById('gameOverlay').classList.remove('hidden');
+}
+
+function updateOverlayHeader() {
+  const mod = MODULES[gameState.moduleIndex];
+  const downLabels = ['1ST DOWN','2ND DOWN','3RD DOWN'];
+  document.getElementById('overlayModuleLabel').textContent = `MODULE ${String(mod.id).padStart(2,'0')} · ${mod.topic}`;
+  document.getElementById('overlayTitle').textContent = mod.title;
+  document.getElementById('overlayDownBadge').textContent = downLabels[gameState.down-1] || '1ST DOWN';
+  // Color header by team
+  if (gameState.selectedTeam) {
+    document.getElementById('overlayHdr').style.background = gameState.selectedTeam.primary;
+  }
+}
+
+// ── CONTENT SCREEN ──
+function showContentScreen() {
+  gameState.phase = 'content';
+  openOverlay();
+  updateOverlayHeader();
+  const mod = MODULES[gameState.moduleIndex];
+  document.getElementById('overlayBody').innerHTML = `
+    ${mod.content}
+    <div class="best-practices">
+      <span class="best-practices-label">BEST PRACTICES</span>
+      ${mod.practices.map(p => `
+        <div class="bp-item">
+          <div class="bp-icon">✓</div>
+          <span>${p}</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+  document.getElementById('overlayFooterLeft').textContent = 'Read carefully — questions follow.';
+  const btn = document.getElementById('overlayNextBtn');
+  btn.textContent = 'TO THE QUESTIONS';
+  btn.innerHTML = 'TO THE QUESTIONS <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5h12M9 1l4 4-4 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  btn.onclick = () => showQuestionsScreen();
+}
+
+// ── QUESTIONS SCREEN ──
+function showQuestionsScreen() {
+  gameState.phase = 'questions';
+  gameState.q1answered = false;
+  gameState.q2answered = false;
+  gameState.q1correct = false;
+  gameState.q2correct = false;
+  openOverlay();
+  updateOverlayHeader();
+  const mod = MODULES[gameState.moduleIndex];
+
+  document.getElementById('overlayBody').innerHTML = `
+    <!-- Q1 -->
+    <div class="question-block" id="q1block">
+      <span class="question-number">QUESTION 1 OF 2</span>
+      <div class="question-text">${mod.questions[0].q}</div>
+      <div class="answer-choices" id="q1choices">
+        ${mod.questions[0].choices.map((c,i) => `
+          <button class="answer-btn" onclick="answerQ(1,${i})">${c}</button>
+        `).join('')}
+      </div>
+      <div class="feedback-msg" id="q1feedback"></div>
+    </div>
+    <!-- Q2 -->
+    <div class="question-block locked" id="q2block">
+      <span class="question-number">QUESTION 2 OF 2</span>
+      <div class="question-text">${mod.questions[1].q}</div>
+      <div class="answer-choices" id="q2choices">
+        ${mod.questions[1].choices.map((c,i) => `
+          <button class="answer-btn" onclick="answerQ(2,${i})">${c}</button>
+        `).join('')}
+      </div>
+      <div class="feedback-msg" id="q2feedback"></div>
+    </div>
+  `;
+
+  document.getElementById('overlayFooterLeft').textContent = 'Answer both questions to advance.';
+  const btn = document.getElementById('overlayNextBtn');
+  btn.style.display = 'none';
+}
+
+function answerQ(qNum, choiceIndex) {
+  const mod = MODULES[gameState.moduleIndex];
+  const qData = mod.questions[qNum - 1];
+  const isCorrect = choiceIndex === qData.correct;
+  const choicesEl = document.getElementById(`q${qNum}choices`);
+  const feedbackEl = document.getElementById(`q${qNum}feedback`);
+  const btns = choicesEl.querySelectorAll('.answer-btn');
+
+  // Disable all choices
+  btns.forEach(b => b.disabled = true);
+  btns[qData.correct].classList.add('correct');
+  if (!isCorrect) btns[choiceIndex].classList.add('wrong');
+
+  // Feedback
+  feedbackEl.textContent = isCorrect ? '✓ ' + qData.feedback[qData.correct] : '✗ ' + qData.feedback[choiceIndex];
+  feedbackEl.className = 'feedback-msg ' + (isCorrect ? 'correct' : 'wrong');
+
+  if (qNum === 1) {
+    gameState.q1answered = true;
+    gameState.q1correct = isCorrect;
+    // Unlock Q2 after a beat
+    setTimeout(() => {
+      document.getElementById('q2block').classList.remove('locked');
+    }, 800);
+  } else {
+    gameState.q2answered = true;
+    gameState.q2correct = isCorrect;
+    // Both answered — evaluate after a beat
+    setTimeout(() => evaluateRound(), 1000);
+  }
+}
+
+function evaluateRound() {
+  const bothCorrect = gameState.q1correct && gameState.q2correct;
+  if (bothCorrect) {
+    // Advance
+    showAdvanceState();
+  } else {
+    // Down used
+    if (gameState.down >= 3) {
+      showPuntState();
+    } else {
+      gameState.down++;
+      showDownState();
+    }
+  }
+}
+
+// ── ADVANCE STATE ──
+function showAdvanceState() {
+  gameState.phase = 'advance';
+  const mod = MODULES[gameState.moduleIndex];
+  updateOverlayHeader();
+  document.getElementById('overlayBody').innerHTML = `
+    <div class="state-body">
+      <div class="state-icon">🏈</div>
+      <div class="state-title">FIRST DOWN!</div>
+      <div class="state-sub">Excellent read. You've advanced 10 yards and completed <strong>${mod.topic}</strong>.</div>
+      <button class="state-action-btn" onclick="advanceModule()">
+        ${gameState.moduleIndex >= MODULES.length - 1 ? 'TOUCHDOWN →' : 'NEXT MODULE →'}
+      </button>
+    </div>
+  `;
+  document.getElementById('overlayFooter').style.display = 'none';
+
+  // Move ball on field
+  moveBall();
+  dropFlag();
+}
+
+function moveBall() {
+  const nextPos = BALL_X_POSITIONS[gameState.moduleIndex + 1];
+  const ball = document.getElementById('ballMarker');
+  ball.setAttribute('x', String(nextPos - 34));
+}
+
+function dropFlag() {
+  const flagX = FLAG_X_POSITIONS[gameState.moduleIndex];
+  if (!flagX) return;
+  const svg = document.getElementById('fieldSVG');
+  const flag = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  flag.setAttribute('class', 'field-flag');
+  flag.innerHTML = `
+    <line x1="${flagX}" y1="200" x2="${flagX}" y2="240" stroke="white" stroke-width="2"/>
+    <polygon points="${flagX},200 ${flagX+14},207 ${flagX},214" fill="#FFD700" stroke="white" stroke-width="1"/>
+  `;
+  svg.appendChild(flag);
+  gameState.completedModules.push(gameState.moduleIndex);
+}
+
+function advanceModule() {
+  document.getElementById('overlayFooter').style.display = 'flex';
+  gameState.moduleIndex++;
+  gameState.down = 1;
+  if (gameState.moduleIndex >= MODULES.length) {
+    showTouchdown();
+  } else {
+    showFirstDownBtn();
+  }
+}
+
+// ── DOWN STATE ──
+function showDownState() {
+  gameState.phase = 'down-state';
+  updateOverlayHeader();
+  const downLabels = ['', '2ND DOWN','3RD DOWN'];
+  const downLabel = downLabels[gameState.down - 1] || '2ND DOWN';
+  document.getElementById('overlayBody').innerHTML = `
+    <div class="state-body">
+      <div class="state-icon">😤</div>
+      <div class="state-title">${downLabel}</div>
+      <div class="state-sub">Not quite. You need both answers correct to advance. Study the material and try again.</div>
+      <button class="state-action-btn" onclick="retryModule()">TRY AGAIN</button>
+    </div>
+  `;
+  document.getElementById('overlayFooter').style.display = 'none';
+}
+
+function retryModule() {
+  document.getElementById('overlayFooter').style.display = 'flex';
+  updateOverlayHeader();
+  showContentScreen();
+}
+
+// ── PUNT STATE ──
+function showPuntState() {
+  gameState.phase = 'punt';
+  updateOverlayHeader();
+  document.getElementById('overlayBody').innerHTML = `
+    <div class="state-body">
+      <div class="state-icon">😬</div>
+      <div class="state-title">4TH DOWN</div>
+      <div class="state-sub">Incomplete pass. You've used all three downs. It's time to punt — the ball resets and you'll run this module again from the start.</div>
+      <button class="state-action-btn punt" onclick="puntModule()">🏈 PUNT</button>
+    </div>
+  `;
+  document.getElementById('overlayFooter').style.display = 'none';
+}
+
+function puntModule() {
+  document.getElementById('overlayFooter').style.display = 'flex';
+  gameState.down = 1;
+  // Reset ball to 10 yard line
+  const ball = document.getElementById('ballMarker');
+  ball.setAttribute('x', '146');
+  showFirstDownBtn();
+}
+
+// ── TOUCHDOWN ──
+function showTouchdown() {
+  gameState.phase = 'touchdown';
+  const team = gameState.selectedTeam;
+  document.getElementById('overlayHdr').style.display = 'none';
+  document.getElementById('overlayBody').innerHTML = `
+    <div class="touchdown-body" style="background: linear-gradient(135deg, ${team ? team.primary : '#0c4230'}, ${team ? team.secondary : '#1a6648'})">
+      <div class="td-emoji">🏆</div>
+      <div class="td-title">TOUCHDOWN!</div>
+      <div class="td-sub">TRAINING COMPLETE</div>
+      <div class="td-team">${team ? team.city.toUpperCase() + ' WINS' : 'GAME COMPLETE'}</div>
+      <button class="state-action-btn" style="margin-top:32px;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);" onclick="location.reload()">PLAY AGAIN</button>
+    </div>
+  `;
+  document.getElementById('overlayFooter').style.display = 'none';
+  document.getElementById('gameOverlay').classList.remove('hidden');
+  document.getElementById('firstDownWrap').style.display = 'none';
+}
+
+// ── WIRE UP FIRST DOWN BTN ──
+document.getElementById('firstDownBtn').addEventListener('click', () => {
+  showContentScreen();
 });
 
 const words = ['FIRST & LEARN','10 YARDS · 10 MODULES','3 DOWNS TO PASS','PUNT = RESTART','SCORE = ADVANCE','SELECT YOUR TEAM','GAME ON','TRAINING IN SESSION','FIRST & LEARN','10 YARDS · 10 MODULES','3 DOWNS TO PASS','PUNT = RESTART','SCORE = ADVANCE','SELECT YOUR TEAM','GAME ON','TRAINING IN SESSION'];

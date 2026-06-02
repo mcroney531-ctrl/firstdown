@@ -1,0 +1,2398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIRST & LEARN</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+@font-face {
+  font-family: 'Cowboys';
+  src: url('/Cowboys_2_0_D.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root { --green: #0c4230; --green-pale: #e8f2ee; --white: #ffffff; --off-white: #f7f9f8; }
+body { background: var(--white); color: var(--green); font-family: 'Barlow Condensed', sans-serif; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+body::after { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.015) 3px, rgba(0,0,0,0.015) 4px); pointer-events: none; z-index: 999; }
+
+.hdr { display: flex; align-items: center; justify-content: space-between; padding: 14px 32px; background: var(--green); border-bottom: 3px solid rgba(255,255,255,0.15); position: relative; z-index: 10; flex-shrink: 0; }
+
+.back-btn {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.7);
+  background: none;
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 6px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+.back-btn:hover { color: #fff; border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.08); }
+.back-btn svg { flex-shrink: 0; }
+.back-btn.hidden { visibility: hidden; pointer-events: none; }
+.hdr-left { display: flex; align-items: center; }
+.brand { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 4px; color: #fff; }
+.brand span { color: #a8d5c2; }
+.hdr-tag { font-size: 11px; letter-spacing: 3px; color: rgba(255,255,255,0.35); border-left: 1px solid rgba(255,255,255,0.15); padding-left: 20px; margin-left: 20px; }
+.live-bug { display: flex; align-items: center; gap: 7px; font-size: 11px; letter-spacing: 3px; color: #ff8080; font-weight: 700; }
+.live-dot { width: 7px; height: 7px; background: #ff8080; border-radius: 50%; animation: blink 1.2s ease-in-out infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.screen { flex: 1; display: none; flex-direction: column; overflow: hidden; }
+.screen.active { display: flex; }
+.fade-overlay { position: fixed; inset: 0; background: #fff; z-index: 9998; opacity: 0; pointer-events: none; transition: opacity 0.45s ease; }
+.fade-overlay.covering { opacity: 1; pointer-events: all; }
+
+/* WELCOME */
+.welcome-stage { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; background: var(--off-white); }
+.welcome-bg { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(12,66,48,0.04) 0%, rgba(12,66,48,0.02) 100%); z-index: 0; }
+.yard-lines { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.yard-lines::before, .yard-lines::after { content: ''; position: absolute; left: -10%; right: -10%; height: 1px; background: rgba(12,66,48,0.09); }
+.yard-lines::before { top: 28%; } .yard-lines::after { top: 72%; }
+.yard-line-mid { position: absolute; left: -10%; right: -10%; top: 50%; height: 2px; background: rgba(12,66,48,0.11); z-index: 1; }
+.ez-glow-left  { position: absolute; left: 0; top: 0; bottom: 0; width: 10%; background: linear-gradient(90deg, rgba(12,66,48,0.06), transparent); z-index: 1; }
+.ez-glow-right { position: absolute; right: 0; top: 0; bottom: 0; width: 10%; background: linear-gradient(270deg, rgba(12,66,48,0.06), transparent); z-index: 1; }
+.hashes { position: absolute; inset: 0; z-index: 1; pointer-events: none; display: flex; justify-content: space-between; padding: 0 12%; }
+.hash-col { display: flex; flex-direction: column; justify-content: space-evenly; }
+.hash { width: 18px; height: 2px; background: rgba(12,66,48,0.07); }
+.welcome-content { position: relative; z-index: 10; display: flex; align-items: center; gap: 80px; max-width: 1000px; padding: 0 48px; }
+.welcome-title-block { flex-shrink: 0; text-align: center; animation: fadeUp 0.6s ease both; }
+.welcome-eyebrow { font-size: 11px; letter-spacing: 6px; color: rgba(12,66,48,0.5); text-transform: uppercase; margin-bottom: 12px; display: block; }
+.welcome-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(72px, 10vw, 110px); line-height: 0.88; letter-spacing: 4px; color: var(--green); }
+.welcome-title .accent { color: #1a7a55; }
+.welcome-rule { width: 60px; height: 3px; background: var(--green); margin: 20px auto; opacity: 0.2; }
+.welcome-tagline { font-size: 13px; letter-spacing: 4px; color: rgba(12,66,48,0.4); text-transform: uppercase; }
+.welcome-divider { width: 1px; height: 220px; background: linear-gradient(180deg, transparent, rgba(12,66,48,0.18), transparent); flex-shrink: 0; animation: fadeUp 0.6s 0.1s ease both; }
+.welcome-desc-block { flex: 1; max-width: 420px; animation: fadeUp 0.6s 0.18s ease both; }
+.desc-label { font-size: 10px; letter-spacing: 5px; color: rgba(12,66,48,0.45); text-transform: uppercase; margin-bottom: 16px; display: block; }
+.desc-body { font-family: 'Barlow', sans-serif; font-size: 15px; line-height: 1.75; color: rgba(12,66,48,0.6); margin-bottom: 20px; }
+.desc-rules { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
+.rule-item { display: flex; align-items: center; gap: 14px; }
+.rule-icon { font-family: 'Bebas Neue', sans-serif; font-size: 13px; color: #fff; background: var(--green); width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.rule-text { font-family: 'Barlow', sans-serif; font-size: 13px; color: rgba(12,66,48,0.55); line-height: 1.4; }
+.rule-text strong { color: var(--green); font-weight: 600; }
+.select-team-btn { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 5px; padding: 15px 48px; background: var(--green); color: #fff; border: none; cursor: pointer; position: relative; overflow: hidden; transition: all 0.2s; display: inline-block; }
+.select-team-btn::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent); transform: translateX(-100%); transition: transform 0.4s; }
+.select-team-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(12,66,48,0.22); }
+.select-team-btn:hover::before { transform: translateX(100%); }
+.select-team-btn:active { transform: translateY(0); }
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+/* TEAM SELECT */
+.ts-label { text-align: center; padding: 14px 0 6px; flex-shrink: 0; z-index: 10; position: relative; background: var(--off-white); border-bottom: 1px solid rgba(12,66,48,0.08); }
+.ts-label h2 { font-family: 'Bebas Neue', sans-serif; font-size: 12px; letter-spacing: 8px; color: rgba(12,66,48,0.35); }
+.stage { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; background: var(--off-white); }
+.bg-bleed { position: absolute; inset: 0; transition: background 0.5s ease; z-index: 0; }
+.field-hashes { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.field-hashes::before, .field-hashes::after { content: ''; position: absolute; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(12,66,48,0.07) 30%, rgba(12,66,48,0.07) 70%, transparent); }
+.field-hashes::before { top: 30%; } .field-hashes::after { top: 70%; }
+
+.card-controls-row { display: none; }
+
+.left-panel {
+  position: absolute;
+  left: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.dropdown-label {
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: rgba(12,66,48,0.5);
+  text-transform: uppercase;
+}
+.dropdown-wrapper { position: relative; }
+.pick-btn { font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 2px; padding: 10px 14px; background: var(--white); border: 1px solid rgba(12,66,48,0.22); color: var(--green); cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; white-space: nowrap; flex: 1; }
+.pick-btn:hover { background: var(--green-pale); border-color: var(--green); }
+.pick-btn svg { transition: transform 0.2s; flex-shrink: 0; margin-left: auto; }
+.pick-btn.open svg { transform: rotate(180deg); }
+.dropdown-menu { position: absolute; top: calc(100% + 5px); left: 0; width: 100%; max-height: 300px; overflow-y: auto; background: var(--white); border: 1px solid rgba(12,66,48,0.18); z-index: 100; display: none; box-shadow: 0 8px 24px rgba(12,66,48,0.1); scrollbar-width: thin; scrollbar-color: rgba(12,66,48,0.2) transparent; }
+.dropdown-menu.open { display: block; }
+.dropdown-menu::-webkit-scrollbar { width: 4px; }
+.dropdown-menu::-webkit-scrollbar-thumb { background: rgba(12,66,48,0.2); }
+.dd-item { padding: 9px 14px; font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: 2px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: background 0.15s; border-bottom: 1px solid rgba(12,66,48,0.05); color: var(--green); }
+.dd-item:hover { background: var(--green-pale); }
+.dd-item.active { font-weight: 700; }
+.dd-swatch { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+.random-btn {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+  padding: 10px 18px;
+  background: linear-gradient(135deg, #0c4230 0%, #1a6648 50%, #0c4230 100%);
+  border: none;
+  color: #fff;
+  cursor: pointer !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  white-space: nowrap;
+  width: auto;
+  flex-shrink: 0;
+  justify-content: center;
+  pointer-events: all !important;
+  position: relative;
+  z-index: 50;
+  box-shadow: 0 3px 12px rgba(12,66,48,0.25);
+}
+.random-btn:hover { background: linear-gradient(135deg, #155a42 0%, #22805a 50%, #155a42 100%); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(12,66,48,0.35); }
+.random-btn:active { transform: translateY(0); }
+
+.banner-arrow {
+  position: absolute;
+  top: 10px;
+  z-index: 20;
+  background: rgba(0,0,0,0.25);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: #fff;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 16px;
+  border-radius: 2px;
+  backdrop-filter: blur(4px);
+}
+.banner-arrow:hover { background: rgba(0,0,0,0.5); border-color: rgba(255,255,255,0.6); }
+.banner-arrow:active { transform: scale(0.93); }
+.banner-arrow-left  { left: 10px; }
+.banner-arrow-right { right: 10px; }
+
+.banner-random {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  z-index: 20;
+  background: rgba(0,0,0,0.25);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: #fff;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 2px;
+  backdrop-filter: blur(4px);
+}
+.banner-random:hover { background: rgba(0,0,0,0.5); border-color: rgba(255,255,255,0.6); }
+.banner-random:active { transform: scale(0.93); }
+
+.team-card-wrap { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; gap: 0; }
+.team-card-col { display: flex; flex-direction: column; align-items: center; width: 100%; }
+.team-card { width: 300px; background: var(--white); border: 1px solid rgba(12,66,48,0.12); display: flex; flex-direction: column; align-items: center; padding: 0 0 24px; position: relative; overflow: hidden; box-shadow: 0 8px 40px rgba(12,66,48,0.1); }
+.card-top-bar { position: absolute; top: 0; left: 0; right: 0; height: 4px; transition: background 0.4s; }
+.card-corner { position: absolute; width: 14px; height: 14px; border-style: solid; transition: border-color 0.4s; }
+
+/* Banner gradient behind helmet */
+.card-banner {
+  width: 100%;
+  height: 220px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0;
+  transition: background 0.5s ease;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.banner-city {
+  position: absolute;
+  bottom: 10px;
+  left: 0; right: 0;
+  text-align: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 4px;
+  color: #fff;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+  pointer-events: none;
+  z-index: 5;
+  transition: color 0.4s;
+}
+.card-corner.tl { top: 8px; left: 8px; border-width: 1px 0 0 1px; }
+.card-corner.tr { top: 8px; right: 8px; border-width: 1px 1px 0 0; }
+.card-corner.bl { bottom: 8px; left: 8px; border-width: 0 0 1px 1px; }
+.card-corner.br { bottom: 8px; right: 8px; border-width: 0 1px 1px 0; }
+
+.helmet-stage { width: 240px; height: 180px; position: relative; margin-bottom: 0; display: flex; align-items: center; justify-content: center; }
+
+.helmet-wrap {
+  position: relative;
+  width: 240px;
+  height: 180px;
+  transition: transform 0.3s ease;
+}
+.team-card:hover .helmet-wrap { transform: scale(1.04) rotate(-2deg); }
+
+/* Canvas helmet — pixel-level tinting */
+#helmetCanvas {
+  width: 240px;
+  height: 180px;
+  transition: transform 0.3s ease;
+  display: block;
+}
+.team-card:hover #helmetCanvas { transform: scale(1.04) rotate(-2deg); }
+
+.city-name { font-family: 'Bebas Neue', sans-serif; font-size: 38px; letter-spacing: 3px; line-height: 1; text-align: center; color: var(--green); margin-bottom: 4px; }
+.team-counter { font-size: 10px; letter-spacing: 3px; color: rgba(12,66,48,0.28); margin-top: 10px; }
+
+.bottom-bar { flex-shrink: 0; padding: 18px 40px; background: var(--white); border-top: 2px solid rgba(12,66,48,0.08); display: flex; align-items: center; justify-content: center; gap: 32px; position: relative; z-index: 10; }
+.bottom-hint { font-size: 11px; letter-spacing: 2px; color: rgba(12,66,48,0.3); text-align: center; line-height: 1.5; }
+.start-game-btn { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 6px; padding: 14px 60px; background: linear-gradient(135deg, #0c4230 0%, #1a6648 50%, #0c4230 100%); color: #fff; border: none; cursor: pointer; position: relative; overflow: hidden; transition: all 0.25s; width: 300px; box-shadow: 0 3px 14px rgba(12,66,48,0.3); }
+.start-game-btn:hover { background: linear-gradient(135deg, #155a42 0%, #22805a 50%, #155a42 100%); }
+.start-game-btn::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent); transform: translateX(-100%); transition: transform 0.45s; }
+.start-game-btn::after { content: ''; position: absolute; inset: -4px; border: 2px solid rgba(12,66,48,0.25); animation: ring 2.4s ease-in-out infinite; pointer-events: none; }
+@keyframes ring { 0%{opacity:0.6;transform:scale(1)} 70%{opacity:0;transform:scale(1.04)} 100%{opacity:0;transform:scale(1.04)} }
+.start-game-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 36px rgba(12,66,48,0.28); }
+.start-game-btn:hover::before { transform: translateX(100%); }
+.start-game-btn:active { transform: translateY(-1px); }
+
+.slide-left  { animation: slideL 0.28s ease both; }
+.slide-right { animation: slideR 0.28s ease both; }
+@keyframes slideL { from{opacity:0;transform:translateX(36px)} to{opacity:1;transform:translateX(0)} }
+@keyframes slideR { from{opacity:0;transform:translateX(-36px)} to{opacity:1;transform:translateX(0)} }
+
+/* GAME */
+#screenGame { background: #1a3a1a; align-items: stretch; justify-content: stretch; position: relative; }
+.field-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 32px;
+  background: #111;
+  overflow: hidden;
+}
+
+/* GAME POPUP */
+.game-popup-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+.game-popup-overlay.hidden { display: none; }
+
+.game-popup {
+  background: var(--white);
+  width: 520px;
+  max-width: 90%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+}
+
+.game-popup-header {
+  padding: 24px 28px 20px;
+  background: var(--green);
+  flex-shrink: 0;
+  transition: background 0.4s;
+}
+.game-popup-eyebrow {
+  font-size: 10px;
+  letter-spacing: 5px;
+  color: rgba(255,255,255,0.55);
+  display: block;
+  margin-bottom: 6px;
+}
+.game-popup-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 2px;
+  color: #fff;
+  line-height: 1.1;
+
+}
+
+.game-popup-body {
+  padding: 24px 28px;
+  overflow-y: auto;
+  flex: 1;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(12,66,48,0.2) transparent;
+}
+.game-popup-body p {
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  line-height: 1.75;
+  color: rgba(12,66,48,0.7);
+  margin-bottom: 16px;
+}
+
+.game-popup-rules {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(12,66,48,0.1);
+}
+.popup-rule-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 13px;
+  color: rgba(12,66,48,0.65);
+  line-height: 1.4;
+}
+.popup-rule-icon {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  color: #fff;
+  background: var(--green);
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 2px;
+}
+
+.game-popup-footer {
+  padding: 16px 28px 24px;
+  flex-shrink: 0;
+  border-top: 1px solid rgba(12,66,48,0.08);
+  display: flex;
+  justify-content: center;
+}
+.game-begin-btn {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 6px;
+  padding: 14px 64px;
+  background: var(--green);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+.game-begin-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.4s;
+}
+.game-begin-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(12,66,48,0.3); }
+.game-begin-btn:hover::before { transform: translateX(100%); }
+.game-begin-btn:active { transform: translateY(0); }
+
+/* ══ GAME LOOP ══ */
+
+/* Field HUD */
+.field-hud {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+}
+.hud-pill {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  letter-spacing: 3px;
+  background: rgba(0,0,0,0.65);
+  color: #fff;
+  padding: 5px 14px;
+  border: 1px solid rgba(255,255,255,0.2);
+  backdrop-filter: blur(4px);
+}
+.hud-pill.down-active {
+  background: var(--green);
+  border-color: rgba(255,255,255,0.4);
+}
+
+/* First Down Button — anchors next to ball */
+.first-down-btn-wrap {
+  position: absolute;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  transition: left 0.6s ease, top 0.6s ease;
+}
+.first-down-btn {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  letter-spacing: 3px;
+  padding: 6px 14px;
+  background: linear-gradient(135deg, #c8960a 0%, #FFD700 50%, #c8960a 100%);
+  color: #000;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+  white-space: nowrap;
+  animation: pulse-btn 2s ease-in-out infinite;
+}
+@keyframes pulse-btn {
+  0%,100% { box-shadow: 0 2px 10px rgba(0,0,0,0.4); }
+  50%      { box-shadow: 0 2px 18px rgba(255,215,0,0.5), 0 0 0 2px rgba(255,215,0,0.3); }
+}
+.first-down-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.first-down-btn:active { transform: translateY(0); }
+.first-down-hint {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.55);
+  text-transform: uppercase;
+  padding-left: 2px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+/* Progress flags on field */
+.field-flag { pointer-events: none; }
+
+/* Game Overlay — sits over field */
+.game-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.78);
+  backdrop-filter: blur(6px);
+  transition: opacity 0.3s ease;
+}
+.game-overlay.hidden { display: none; }
+
+.overlay-card {
+  background: #fff;
+  width: 580px;
+  max-width: 92%;
+  max-height: 82vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.7);
+  position: relative;
+}
+
+/* Overlay header */
+.overlay-hdr {
+  padding: 18px 24px 14px;
+  background: var(--green);
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  transition: background 0.4s;
+}
+.overlay-module-label {
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 5px;
+  display: block;
+}
+.overlay-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 2px;
+  color: #fff;
+  line-height: 1.1;
+
+}
+.overlay-hdr-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.overlay-down-badge {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+  background: #FFD700;
+  color: #000;
+  padding: 5px 14px;
+  border: 2px solid #000;
+  flex-shrink: 0;
+  text-shadow: none;
+}
+.overlay-close-btn {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.6);
+  background: rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.overlay-close-btn:hover { color: #fff; border-color: rgba(255,255,255,0.5); background: rgba(0,0,0,0.35); }
+
+/* Overlay body */
+.overlay-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 28px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(12,66,48,0.2) transparent;
+}
+.overlay-body::-webkit-scrollbar { width: 4px; }
+.overlay-body::-webkit-scrollbar-thumb { background: rgba(12,66,48,0.2); }
+
+.overlay-body p {
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  line-height: 1.8;
+  color: rgba(12,66,48,0.72);
+  margin-bottom: 16px;
+}
+
+.best-practices {
+  margin-top: 24px;
+  padding: 20px;
+  position: relative;
+  background: rgba(0,0,0,0.02);
+  /* Gradient border via pseudo-element */
+}
+.best-practices::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
+  padding: 2px;
+  background: var(--team-btn-gradient, linear-gradient(135deg, #0c4230, #1a6648, #0c4230));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.best-practices-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 4px;
+  color: #000;
+  margin-bottom: 16px;
+  display: block;
+  font-weight: 900;
+}
+.bp-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 14px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  color: #000;
+  line-height: 1.6;
+  font-weight: 500;
+}
+.bp-icon {
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: 2px solid var(--green);
+  color: var(--green);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+  border-radius: 50%;
+}
+
+/* Overlay footer */
+.overlay-footer {
+  padding: 14px 24px;
+  border-top: 1px solid rgba(12,66,48,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  gap: 12px;
+}
+.overlay-footer-left {
+  flex: 1;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: rgba(12,66,48,0.3);
+}
+.overlay-back-btn {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: rgba(12,66,48,0.45);
+  background: none;
+  border: 1px solid rgba(12,66,48,0.15);
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.overlay-back-btn:hover { color: var(--green); border-color: var(--green); }
+
+.next-arrow-btn {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 3px;
+  padding: 10px 28px;
+  background: var(--team-btn-gradient, linear-gradient(135deg, #0c4230, #1a6648));
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.2s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.18);
+}
+.next-arrow-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+.next-arrow-btn svg { flex-shrink: 0; }
+
+/* Question styles */
+.question-block { margin-bottom: 20px; }
+.question-number {
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: rgba(0,0,0,0.4);
+  margin-bottom: 8px;
+  display: block;
+}
+.question-text {
+  font-family: 'Barlow', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #000;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+.answer-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.answer-btn {
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  padding: 12px 16px;
+  background: var(--off-white);
+  border: 1.5px solid rgba(0,0,0,0.15);
+  color: #000;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s;
+  line-height: 1.4;
+  font-weight: 500;
+}
+.answer-btn:hover:not(:disabled) { background: #f0f0f0; border-color: #000; }
+.answer-btn.correct { background: #e6f4ea; border-color: #2d7a3a; color: #1a5226; }
+.answer-btn.wrong   { background: #fdecea; border-color: #c0392b; color: #7b1a14; }
+.answer-btn:disabled { cursor: default; }
+
+.feedback-msg {
+  margin-top: 10px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 12px;
+  display: none;
+}
+.feedback-msg.correct { background: #e6f4ea; color: #1a5226; display: block; }
+.feedback-msg.wrong   { background: #fdecea; color: #7b1a14; display: block; }
+
+/* Q2 hidden until Q1 answered */
+.question-block.locked { opacity: 0.35; pointer-events: none; }
+
+/* State overlays */
+.state-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+  line-height: 1;
+}
+.state-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  letter-spacing: 4px;
+  color: var(--green);
+  margin-bottom: 8px;
+  line-height: 1;
+}
+.state-sub {
+  font-family: 'Barlow', sans-serif;
+  font-size: 15px;
+  color: rgba(12,66,48,0.6);
+  line-height: 1.6;
+  max-width: 360px;
+  text-align: center;
+}
+.state-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 28px;
+  text-align: center;
+}
+.state-action-btn {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 5px;
+  padding: 13px 44px;
+  background: var(--team-btn-gradient, linear-gradient(135deg, #0c4230, #1a6648));
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  margin-top: 24px;
+  transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+.state-action-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.25); filter: brightness(1.08); }
+.state-action-btn.punt { background: linear-gradient(135deg, #8B0000, #c0392b) !important; }
+.state-action-btn.punt:hover { filter: brightness(1.1); }
+
+/* Touchdown */
+.touchdown-body {
+  background: linear-gradient(135deg, #0c4230, #1a6648);
+  color: #fff;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  text-align: center;
+}
+.td-emoji { font-size: 64px; margin-bottom: 16px; }
+.td-title { font-family: 'Bebas Neue', sans-serif; font-size: 52px; letter-spacing: 6px; line-height: 1; margin-bottom: 8px; }
+.td-sub { font-size: 14px; letter-spacing: 3px; opacity: 0.65; margin-bottom: 28px; }
+.td-team { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 4px; opacity: 0.8; }
+
+/* Content enhancements */
+.content-module-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px;
+  letter-spacing: 3px;
+  color: #111;
+  line-height: 1.1;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  position: relative;
+}
+/* Gradient line under the body title */
+.content-module-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--team-btn-gradient, linear-gradient(135deg, #0c4230, #1a6648, #0c4230));
+}
+.content-visual {
+  width: 100%;
+  height: 140px;
+  background: linear-gradient(135deg, rgba(0,0,0,0.03) 0%, rgba(0,0,0,0.01) 100%);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+  overflow: visible;
+}
+.content-visual::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
+  padding: 2px;
+  background: var(--team-btn-gradient, linear-gradient(135deg, #0c4230, #1a6648, #0c4230));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.content-visual-icon { font-size: 40px; }
+.content-visual-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: rgba(12,66,48,0.35);
+}
+.content-stat-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.stat-pill {
+  flex: 1;
+  background: rgba(0,0,0,0.02);
+  padding: 10px 12px;
+  text-align: center;
+  position: relative;
+}
+.stat-pill::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1.5px;
+  background: var(--team-btn-gradient, linear-gradient(135deg, #0c4230, #1a6648, #0c4230));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.stat-pill-number {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  color: #000;
+  line-height: 1;
+  display: block;
+  font-weight: 900;
+}
+.stat-pill-label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: rgba(0,0,0,0.5);
+  display: block;
+  margin-top: 3px;
+}
+.overlay-body p {
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  line-height: 1.85;
+  color: #111;
+  margin-bottom: 16px;
+  font-weight: 400;
+}
+.overlay-body p strong {
+  color: #000;
+  font-weight: 700;
+}
+.overlay-body p em {
+  font-style: italic;
+  color: #222;
+}
+.callout-box {
+  background: var(--team-callout-bg, rgba(12,66,48,0.07));
+  border-left: 4px solid var(--team-primary, var(--green));
+  padding: 14px 16px;
+  margin: 16px 0;
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  color: #000;
+  line-height: 1.6;
+  font-style: italic;
+}
+
+.ticker { background: var(--green); padding: 6px 0; overflow: hidden; white-space: nowrap; flex-shrink: 0; }
+.ticker-inner { display: inline-flex; animation: tick 30s linear infinite; }
+.ticker-item { font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 3px; color: rgba(255,255,255,0.8); padding: 0 36px; }
+@keyframes tick { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+</style>
+</head>
+<body>
+
+<div class="fade-overlay" id="fadeOverlay"></div>
+
+<header class="hdr">
+  <button class="back-btn hidden" id="backBtn">
+    <svg width="8" height="12" viewBox="0 0 8 12" fill="none"><path d="M7 1L1 6L7 11" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+    BACK
+  </button>
+  <div class="hdr-left">
+    <div class="brand">FIRST &amp; <span>LEARN</span></div>
+    <div class="hdr-tag">Training Series · Season 1</div>
+  </div>
+  <div class="live-bug"><span class="live-dot"></span>LIVE</div>
+</header>
+
+<!-- WELCOME -->
+<div class="screen active" id="screenWelcome">
+  <div class="welcome-stage">
+    <div class="welcome-bg"></div>
+    <div class="yard-lines"></div>
+    <div class="yard-line-mid"></div>
+    <div class="ez-glow-left"></div>
+    <div class="ez-glow-right"></div>
+    <div class="hashes">
+      <div class="hash-col"><div class="hash"></div><div class="hash"></div><div class="hash"></div><div class="hash"></div><div class="hash"></div><div class="hash"></div></div>
+      <div class="hash-col"><div class="hash"></div><div class="hash"></div><div class="hash"></div><div class="hash"></div><div class="hash"></div><div class="hash"></div></div>
+    </div>
+    <div class="welcome-content">
+      <div class="welcome-title-block">
+        <span class="welcome-eyebrow">Welcome to the Field</span>
+        <h1 class="welcome-title">FIRST<br>&amp;<br><span class="accent">LEARN</span></h1>
+        <div class="welcome-rule"></div>
+        <p class="welcome-tagline">10 Yards · 10 Modules · 3 Downs</p>
+      </div>
+      <div class="welcome-divider"></div>
+      <div class="welcome-desc-block">
+        <span class="desc-label">How It Works</span>
+        <p class="desc-body">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+        <div class="desc-rules">
+          <div class="rule-item">
+            <div class="rule-icon">10</div>
+            <div class="rule-text"><strong>10 modules.</strong> Each one moves you 1 yard down the field toward the end zone.</div>
+          </div>
+          <div class="rule-item">
+            <div class="rule-icon">3</div>
+            <div class="rule-text"><strong>3 downs per module.</strong> Answer correctly and advance. Use all three and you punt — restart the module.</div>
+          </div>
+          <div class="rule-item">
+            <div class="rule-icon">&#8594;</div>
+            <div class="rule-text"><strong>Score a touchdown</strong> to complete the training. Your team. Your drive. Your call.</div>
+          </div>
+        </div>
+        <button class="select-team-btn" id="selectTeamBtn">SELECT YOUR TEAM</button>
+      </div>
+    </div>
+  </div>
+  <div class="ticker"><div class="ticker-inner" id="welcomeTicker"></div></div>
+</div>
+
+<!-- TEAM SELECT -->
+<div class="screen" id="screenTeamSelect">
+  <div class="ts-label"><h2>— Team Select —</h2></div>
+  <div class="stage">
+    <div class="bg-bleed" id="bgBleed"></div>
+    <div class="field-hashes"></div>
+
+    <!-- SELECT DROPDOWN — left panel -->
+    <div class="left-panel">
+      <span class="dropdown-label">SELECT</span>
+      <div class="dropdown-wrapper">
+        <button class="pick-btn" id="pickBtn">
+          <span id="pickBtnLabel">Browse Teams</span>
+          <svg width="11" height="7" viewBox="0 0 11 7" fill="none"><path d="M1 1L5.5 6L10 1" stroke="#0c4230" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <div class="dropdown-menu" id="dropdownMenu"></div>
+      </div>
+    </div>
+
+    <div class="team-card-wrap" id="cardWrap">
+      <div class="team-card-col">
+      <div class="team-card" id="teamCard">
+        <div class="card-top-bar" id="cardTopBar"></div>
+        <div class="card-corner tl" id="ccTL"></div>
+        <div class="card-corner tr" id="ccTR"></div>
+        <div class="card-corner bl" id="ccBL"></div>
+        <div class="card-corner br" id="ccBR"></div>
+        <div class="card-banner" id="cardBanner">
+          <button class="banner-arrow banner-arrow-left" id="prevBtn">&#8592;</button>
+          <button class="banner-arrow banner-arrow-right" id="nextBtn">&#8594;</button>
+          <button class="banner-random" id="randomBtn" title="Random team">
+            <svg width="16" height="16" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 4h2.5l6.5 6H13M13 4h-3l-2-2M7 7l2 3h4M1 10h2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="helmet-stage">
+            <canvas id="helmetCanvas" width="480" height="360"></canvas>
+          </div>
+          <div class="banner-city" id="bannerCity"></div>
+        </div>
+        <div class="team-counter" id="teamCounter"></div>
+      </div>
+      <button class="start-game-btn" id="startGameBtn">START GAME</button>
+      </div>
+    </div>
+
+  </div>
+  <div class="bottom-bar">
+    <div class="bottom-hint">ARROWS OR QUICK PICK TO SELECT YOUR TEAM</div>
+    <div class="bottom-hint" id="selectedHint">— CHOOSE YOUR CITY —</div>
+  </div>
+  <div class="ticker"><div class="ticker-inner" id="teamTicker"></div></div>
+</div>
+
+<!-- GAME -->
+<div class="screen" id="screenGame">
+  <!-- GAME INTRO POPUP -->
+  <div class="game-popup-overlay" id="gamePopupOverlay">
+    <div class="game-popup">
+      <div class="game-popup-header" id="gamePopupHeader">
+        <span class="game-popup-eyebrow">GAME BRIEFING</span>
+        <h2 class="game-popup-title" id="gamePopupTitle">READY TO TAKE THE FIELD</h2>
+      </div>
+      <div class="game-popup-body">
+        <p style="font-size:15px;font-weight:600;color:var(--green);line-height:1.7;">The best defense is a good offense. In cybersecurity, staying proactive isn't optional — it's the only play that works. You're on offense, and the field is yours.</p>
+        <p>You have <strong>10 modules</strong> to move the ball from the 10 yard line to the end zone. Each module puts a real cybersecurity threat in front of you — how it works, what it looks like, and what to do about it. Study the material, then answer <strong>2 questions</strong> to advance 10 yards.</p>
+        <p>Get both right and you earn a <strong>First Down</strong> — the ball moves and you pick up a yard marker. Miss one and you're back to try again. You've got <strong>3 downs</strong> to get it right before it's time to punt and reset.</p>
+        <div class="game-popup-rules">
+          <div class="popup-rule-item">
+            <span class="popup-rule-icon">10</span>
+            <span><strong>10 modules, 10 yards each.</strong> Read the material, answer both questions correctly, and advance down the field.</span>
+          </div>
+          <div class="popup-rule-item">
+            <span class="popup-rule-icon">3</span>
+            <span><strong>3 downs per module.</strong> Each wrong attempt costs a down. Use all three and it's 4th down — punt and restart the module from the top.</span>
+          </div>
+          <div class="popup-rule-item">
+            <span class="popup-rule-icon">🏆</span>
+            <span><strong>Score a touchdown</strong> to complete your training. Your team. Your field. Your move.</span>
+          </div>
+        </div>
+      </div>
+      <div class="game-popup-footer">
+        <button class="game-begin-btn" id="gameBeginBtn">BEGIN</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FIELD HUD -->
+  <div class="field-hud" id="fieldHud">
+    <div class="hud-pill" id="hudModule">MODULE 01</div>
+    <div class="hud-pill down-active" id="hudDown">1ST DOWN</div>
+    <div class="hud-pill" id="hudTeam">—</div>
+  </div>
+
+  <!-- FIRST DOWN BUTTON — positioned next to ball -->
+  <div class="first-down-btn-wrap" id="firstDownWrap">
+    <button class="first-down-btn" id="firstDownBtn">🏈 FIRST DOWN</button>
+    <span class="first-down-hint">Click to begin the activity</span>
+  </div>
+
+  <!-- RESUME BUTTON (shown when overlay is closed mid-activity) -->
+  <div class="first-down-btn-wrap" id="resumeWrap" style="display:none;">
+    <button class="first-down-btn" onclick="resumeOverlay()" style="background:linear-gradient(135deg,#1a4a6a,#2980b9);">
+      ▶ RESUME MODULE
+    </button>
+    <span class="first-down-hint">Click to continue where you left off</span>
+  </div>
+
+  <!-- GAME OVERLAY (content / questions / states) -->
+  <div class="game-overlay hidden" id="gameOverlay">
+    <div class="overlay-card" id="overlayCard">
+
+      <!-- HEADER -->
+      <div class="overlay-hdr" id="overlayHdr">
+        <div>
+          <span class="overlay-module-label" id="overlayModuleLabel">MODULE 01</span>
+          <div class="overlay-title" id="overlayTitle">Module 01: Phishing</div>
+        </div>
+        <div class="overlay-hdr-right">
+          <div class="overlay-down-badge" id="overlayDownBadge">1ST DOWN</div>
+          <button class="overlay-close-btn" id="overlayCloseBtn" onclick="closeOverlay()">✕ CLOSE</button>
+        </div>
+      </div>
+
+      <!-- BODY — swapped per state -->
+      <div class="overlay-body" id="overlayBody"></div>
+
+      <!-- FOOTER -->
+      <div class="overlay-footer" id="overlayFooter">
+        <div class="overlay-footer-left">
+          <button class="overlay-back-btn" id="overlayBackBtn" onclick="overlayBack()" style="display:none">
+            ← BACK
+          </button>
+        </div>
+        <div class="overlay-footer-right" style="display:flex;align-items:center;gap:10px;">
+          <span class="overlay-footer-hint" id="overlayFooterLeft" style="font-size:11px;letter-spacing:2px;color:rgba(12,66,48,0.3);"></span>
+          <button class="next-arrow-btn" id="overlayNextBtn">
+            CONTINUE
+            <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5h12M9 1l4 4-4 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="field-wrap" id="fieldWrap">
+    <svg id="fieldSVG" viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;">
+
+      <!-- END ZONES -->
+      <rect id="ezLeft"  x="0"   y="0" width="100" height="500" fill="#1a3a1a"/>
+      <rect id="ezRight" x="900" y="0" width="100" height="500" fill="#1a3a1a"/>
+
+      <!-- FIELD BODY -->
+      <rect x="100" y="0" width="800" height="500" fill="#2d5a1b"/>
+
+      <!-- ALTERNATING FIELD STRIPES -->
+      <g id="fieldStripes" opacity="0.18">
+        <rect x="100" y="0" width="80" height="500" fill="#fff"/>
+        <rect x="260" y="0" width="80" height="500" fill="#fff"/>
+        <rect x="420" y="0" width="80" height="500" fill="#fff"/>
+        <rect x="580" y="0" width="80" height="500" fill="#fff"/>
+        <rect x="740" y="0" width="80" height="500" fill="#fff"/>
+      </g>
+
+      <!-- YARD LINES — every 10 yards -->
+      <g stroke="white" stroke-width="1.5" opacity="0.9">
+        <line x1="180" y1="0" x2="180" y2="500"/>
+        <line x1="260" y1="0" x2="260" y2="500"/>
+        <line x1="340" y1="0" x2="340" y2="500"/>
+        <line x1="420" y1="0" x2="420" y2="500"/>
+        <line x1="500" y1="0" x2="500" y2="500"/>
+        <line x1="580" y1="0" x2="580" y2="500"/>
+        <line x1="660" y1="0" x2="660" y2="500"/>
+        <line x1="740" y1="0" x2="740" y2="500"/>
+        <line x1="820" y1="0" x2="820" y2="500"/>
+      </g>
+
+      <!-- HASH MARKS — upper row -->
+      <g stroke="white" stroke-width="1.2" opacity="0.85">
+        <line x1="180" y1="155" x2="180" y2="170"/>
+        <line x1="260" y1="155" x2="260" y2="170"/>
+        <line x1="340" y1="155" x2="340" y2="170"/>
+        <line x1="420" y1="155" x2="420" y2="170"/>
+        <line x1="500" y1="155" x2="500" y2="170"/>
+        <line x1="580" y1="155" x2="580" y2="170"/>
+        <line x1="660" y1="155" x2="660" y2="170"/>
+        <line x1="740" y1="155" x2="740" y2="170"/>
+        <line x1="820" y1="155" x2="820" y2="170"/>
+        <!-- 5-yard hash marks -->
+        <line x1="140" y1="158" x2="140" y2="167"/>
+        <line x1="220" y1="158" x2="220" y2="167"/>
+        <line x1="300" y1="158" x2="300" y2="167"/>
+        <line x1="380" y1="158" x2="380" y2="167"/>
+        <line x1="460" y1="158" x2="460" y2="167"/>
+        <line x1="540" y1="158" x2="540" y2="167"/>
+        <line x1="620" y1="158" x2="620" y2="167"/>
+        <line x1="700" y1="158" x2="700" y2="167"/>
+        <line x1="780" y1="158" x2="780" y2="167"/>
+        <line x1="860" y1="158" x2="860" y2="167"/>
+      </g>
+
+      <!-- HASH MARKS — lower row -->
+      <g stroke="white" stroke-width="1.2" opacity="0.85">
+        <line x1="180" y1="330" x2="180" y2="345"/>
+        <line x1="260" y1="330" x2="260" y2="345"/>
+        <line x1="340" y1="330" x2="340" y2="345"/>
+        <line x1="420" y1="330" x2="420" y2="345"/>
+        <line x1="500" y1="330" x2="500" y2="345"/>
+        <line x1="580" y1="330" x2="580" y2="345"/>
+        <line x1="660" y1="330" x2="660" y2="345"/>
+        <line x1="740" y1="330" x2="740" y2="345"/>
+        <line x1="820" y1="330" x2="820" y2="345"/>
+        <!-- 5-yard hash marks -->
+        <line x1="140" y1="333" x2="140" y2="342"/>
+        <line x1="220" y1="333" x2="220" y2="342"/>
+        <line x1="300" y1="333" x2="300" y2="342"/>
+        <line x1="380" y1="333" x2="380" y2="342"/>
+        <line x1="460" y1="333" x2="460" y2="342"/>
+        <line x1="540" y1="333" x2="540" y2="342"/>
+        <line x1="620" y1="333" x2="620" y2="342"/>
+        <line x1="700" y1="333" x2="700" y2="342"/>
+        <line x1="780" y1="333" x2="780" y2="342"/>
+        <line x1="860" y1="333" x2="860" y2="342"/>
+      </g>
+
+      <!-- YARD NUMBERS — UPPER INTERIOR, just above upper hash marks -->
+      <g id="yardNumsUpper" font-family="'Bebas Neue', Arial, sans-serif" font-size="26" fill="white" text-anchor="middle" opacity="0.92" stroke="rgba(0,0,0,0.4)" stroke-width="3" paint-order="stroke">
+        <text x="180" y="148">10</text>
+        <text x="260" y="148">20</text>
+        <text x="340" y="148">30</text>
+        <text x="420" y="148">40</text>
+        <text x="580" y="148">40</text>
+        <text x="660" y="148">30</text>
+        <text x="740" y="148">20</text>
+        <text x="820" y="148">10</text>
+      </g>
+
+      <!-- YARD NUMBERS — LOWER INTERIOR, just below lower hash marks -->
+      <g id="yardNumsLower" font-family="'Bebas Neue', Arial, sans-serif" font-size="26" fill="white" text-anchor="middle" opacity="0.92" stroke="rgba(0,0,0,0.4)" stroke-width="3" paint-order="stroke">
+        <text x="180" y="362">10</text>
+        <text x="260" y="362">20</text>
+        <text x="340" y="362">30</text>
+        <text x="420" y="362">40</text>
+        <text x="580" y="362">40</text>
+        <text x="660" y="362">30</text>
+        <text x="740" y="362">20</text>
+        <text x="820" y="362">10</text>
+      </g>
+
+      <!-- MIDFIELD LOGO — team colored circle with abbr -->
+      <circle id="fieldLogoCircle" cx="500" cy="250" r="42" fill="#1a3a1a" stroke="white" stroke-width="3" opacity="0.92"/>
+      <circle id="fieldLogoRing" cx="500" cy="250" r="48" fill="none" stroke="white" stroke-width="1" opacity="0.4"/>
+      <text id="fieldLogoText" x="500" y="264"
+        font-family="Cowboys, 'Bebas Neue', Arial, sans-serif"
+        font-size="32" fill="white" text-anchor="middle"
+        letter-spacing="2" opacity="0.97">—</text>
+
+      <!-- END ZONE BORDERS -->
+      <line x1="100" y1="0" x2="100" y2="500" stroke="white" stroke-width="2.5"/>
+      <line x1="900" y1="0" x2="900" y2="500" stroke="white" stroke-width="2.5"/>
+
+      <!-- END ZONE TEXT — left (rotated up) -->
+      <text id="ezTextLeft" x="50" y="275"
+        font-family="Cowboys, 'Bebas Neue', Arial, sans-serif"
+        font-size="52" fill="white" text-anchor="middle"
+        transform="rotate(-90, 50, 250)"
+        letter-spacing="10"
+        stroke="rgba(0,0,0,0.4)" stroke-width="4" paint-order="stroke"
+        opacity="0.95">TEAM</text>
+
+      <!-- END ZONE TEXT — right (rotated down) -->
+      <text id="ezTextRight" x="950" y="275"
+        font-family="Cowboys, 'Bebas Neue', Arial, sans-serif"
+        font-size="52" fill="white" text-anchor="middle"
+        transform="rotate(90, 950, 250)"
+        letter-spacing="10"
+        stroke="rgba(0,0,0,0.4)" stroke-width="4" paint-order="stroke"
+        opacity="0.95">TEAM</text>
+
+      <!-- FIELD BORDER -->
+      <rect x="0" y="0" width="1000" height="500" fill="none" stroke="white" stroke-width="3"/>
+
+      <!-- BALL MARKER — starts at 10 yard line (left) -->
+      <image id="ballMarker" href="/ball.png"
+        x="146" y="216" width="68" height="68"
+        style="filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6))"/>
+
+    </svg>
+  </div>
+  <div class="ticker"><div class="ticker-inner" id="gameTicker"></div></div>
+</div>
+
+<script>
+const TEAMS = [
+  {city:"Arizona",       abbr:"ARI", primary:"#97233F", secondary:"#000000"},
+  {city:"Atlanta",       abbr:"ATL", primary:"#A71930", secondary:"#000000"},
+  {city:"Baltimore",     abbr:"BAL", primary:"#241773", secondary:"#9E7C0C"},
+  {city:"Buffalo",       abbr:"BUF", primary:"#00338D", secondary:"#C60C30"},
+  {city:"Carolina",      abbr:"CAR", primary:"#0085CA", secondary:"#101820"},
+  {city:"Chicago",       abbr:"CHI", primary:"#0B162A", secondary:"#C83803"},
+  {city:"Cincinnati",    abbr:"CIN", primary:"#FB4F14", secondary:"#000000"},
+  {city:"Cleveland",     abbr:"CLE", primary:"#311D00", secondary:"#FF3C00"},
+  {city:"Dallas",        abbr:"DAL", primary:"#003594", secondary:"#869397"},
+  {city:"Denver",        abbr:"DEN", primary:"#FB4F14", secondary:"#002244"},
+  {city:"Detroit",       abbr:"DET", primary:"#0076B6", secondary:"#B0B7BC"},
+  {city:"Green Bay",     abbr:"GB",  primary:"#203731", secondary:"#FFB612"},
+  {city:"Houston",       abbr:"HOU", primary:"#03202F", secondary:"#A71930"},
+  {city:"Indianapolis",  abbr:"IND", primary:"#002C5F", secondary:"#A2AAAD"},
+  {city:"Jacksonville",  abbr:"JAC", primary:"#101820", secondary:"#D7A22A"},
+  {city:"Kansas City",   abbr:"KC",  primary:"#E31837", secondary:"#FFB81C"},
+  {city:"Las Vegas",     abbr:"LV",  primary:"#000000", secondary:"#A5ACAF"},
+  {city:"Los Angeles",   abbr:"LA",  primary:"#003594", secondary:"#FFA300"},
+  {city:"Los Angeles",   abbr:"LA",  primary:"#0080C6", secondary:"#FFC20E"},
+  {city:"Miami",         abbr:"MIA", primary:"#008E97", secondary:"#FC4C02"},
+  {city:"Minnesota",     abbr:"MIN", primary:"#4F2683", secondary:"#FFC62F"},
+  {city:"New England",   abbr:"NE",  primary:"#002244", secondary:"#C60C30"},
+  {city:"New Orleans",   abbr:"NO",  primary:"#101820", secondary:"#D3BC8D"},
+  {city:"New York",      abbr:"NYG", primary:"#0B2265", secondary:"#A71930"},
+  {city:"New York",      abbr:"NYJ", primary:"#125740", secondary:"#000000"},
+  {city:"Philadelphia",  abbr:"PHI", primary:"#004C54", secondary:"#A5ACAF"},
+  {city:"Pittsburgh",    abbr:"PIT", primary:"#101820", secondary:"#FFB612"},
+  {city:"San Francisco", abbr:"SF",  primary:"#AA0000", secondary:"#B3995D"},
+  {city:"Seattle",       abbr:"SEA", primary:"#002244", secondary:"#69BE28"},
+  {city:"Tampa Bay",     abbr:"TB",  primary:"#D50A0A", secondary:"#FF7900"},
+  {city:"Tennessee",     abbr:"TEN", primary:"#0C2340", secondary:"#4B92DB"},
+  {city:"Washington",    abbr:"WSH", primary:"#5A1414", secondary:"#FFB612"},
+];
+
+let current = 0;
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return {r, g, b};
+}
+
+const helmetImg = new Image();
+helmetImg.crossOrigin = 'anonymous';
+helmetImg.src = '/helmet.png';
+
+// Preload Cowboys font for canvas use
+const cowboysFont = new FontFace('Cowboys', "url('/Cowboys_2_0_D.otf')");
+cowboysFont.load().then(f => document.fonts.add(f)).catch(e => console.warn('Font load:', e));
+
+
+function tintHelmet(color, secondaryColor, abbr) {
+  const canvas = document.getElementById('helmetCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = 480, H = 360;
+  canvas.width = W; canvas.height = H;
+  ctx.clearRect(0, 0, W, H);
+
+  const doTint = () => {
+    const tc = hexToRgb(color);
+
+    // Read source pixels from helmet
+    const off = document.createElement('canvas');
+    off.width = W; off.height = H;
+    const octx = off.getContext('2d');
+    octx.drawImage(helmetImg, 0, 0, W, H);
+    const src = octx.getImageData(0, 0, W, H);
+    const sd = src.data;
+    const out = ctx.createImageData(W, H);
+    const od = out.data;
+
+    for (let i = 0; i < sd.length; i += 4) {
+      const a = sd[i+3];
+      if (a < 10) { od[i+3] = 0; continue; }
+
+      const r = sd[i], g = sd[i+1], b = sd[i+2];
+      const br = (r * 0.299 + g * 0.587 + b * 0.114);
+
+      // Grey shell: brightness 80-220 = tint to team color
+      // White facemask: brightness > 220 = keep white/near-white
+      // Dark vents: brightness < 80 = keep dark
+
+      if (br < 40) {
+        // Deep shadows and vent holes — keep dark
+        const s = Math.round(br * 0.5);
+        od[i] = s; od[i+1] = s; od[i+2] = s;
+        od[i+3] = a;
+      } else {
+        // Blend between team color and white based on brightness
+        // Low-mid: team color with depth
+        // High (facemask/highlights): lerp toward white so bars read clearly
+        const norm = Math.pow(br / 255, 0.75);
+
+        // How much to push toward white (0 at br=40, 1 at br=255)
+        const whitePush = Math.pow((br - 40) / 215, 2.0);
+
+        const cr = Math.round(tc.r * norm);
+        const cg = Math.round(tc.g * norm);
+        const cb = Math.round(tc.b * norm);
+
+        od[i]   = Math.min(255, Math.round(cr + (255 - cr) * whitePush * 0.7));
+        od[i+1] = Math.min(255, Math.round(cg + (255 - cg) * whitePush * 0.7));
+        od[i+2] = Math.min(255, Math.round(cb + (255 - cb) * whitePush * 0.7));
+        od[i+3] = a;
+      }
+    }
+
+    ctx.putImageData(out, 0, 0);
+
+    // Drop shadow — draw helmet silhouette offset, blurred, behind
+    // We do this by compositing: save current, draw shadow behind it
+    const shadow = document.createElement('canvas');
+    shadow.width = W; shadow.height = H;
+    const sctx = shadow.getContext('2d');
+    // Draw current tinted helmet onto shadow canvas
+    sctx.drawImage(canvas, 0, 0);
+    // Now draw shadow + stroke on main canvas below current pixels
+    const final = document.createElement('canvas');
+    final.width = W; final.height = H;
+    const fctx = final.getContext('2d');
+    // Shadow layer
+    fctx.shadowColor = 'rgba(0,0,0,0.45)';
+    fctx.shadowBlur = 18;
+    fctx.shadowOffsetX = 4;
+    fctx.shadowOffsetY = 6;
+    fctx.drawImage(shadow, 0, 0);
+    fctx.shadowColor = 'transparent';
+    // Stroke — draw helmet outline
+    fctx.globalCompositeOperation = 'source-over';
+    ctx.clearRect(0, 0, W, H);
+    ctx.drawImage(final, 0, 0);
+
+    // Abbreviation on crown — secondary color with stroke
+    const sc = hexToRgb(secondaryColor);
+    const scLum = (sc.r * 0.299 + sc.g * 0.587 + sc.b * 0.114) / 255;
+    // Use secondary color for fill, contrast color for stroke
+    const fillCol = `rgb(${sc.r},${sc.g},${sc.b})`;
+    const strokeCol = scLum > 0.5 ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.9)';
+    const fontSize = Math.round(H * 0.14);
+    ctx.font = `${fontSize}px Cowboys, 'Bebas Neue', Arial, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    // Stroke first
+    ctx.strokeStyle = strokeCol;
+    ctx.lineWidth = 4;
+    ctx.lineJoin = 'round';
+    ctx.strokeText(abbr, W * 0.43, H * 0.23);
+    // Fill on top
+    ctx.fillStyle = fillCol;
+    ctx.fillText(abbr, W * 0.43, H * 0.23);
+  };
+
+  if (helmetImg.complete && helmetImg.naturalWidth > 0) {
+    doTint();
+  } else {
+    helmetImg.onload = doTint;
+  }
+}
+
+function render(dir) {
+  const t = TEAMS[current];
+  document.getElementById('bgBleed').style.background =
+    `radial-gradient(ellipse 60% 70% at 50% 50%, ${t.primary}14 0%, ${t.primary}06 55%, transparent 75%)`;
+
+  tintHelmet(t.primary, t.secondary, t.abbr);
+
+  // Banner gradient — subtle, desaturated, helmet is the hero
+  const banner = document.getElementById('cardBanner');
+  banner.style.background = `linear-gradient(145deg, ${t.primary}55 0%, ${t.secondary}33 55%, ${t.primary}44 100%), linear-gradient(180deg, #f0f0ee 0%, #e8e8e6 100%)`;
+
+  document.getElementById('bannerCity').textContent = t.city.toUpperCase();
+  document.getElementById('teamCounter').textContent = `${String(current+1).padStart(2,'0')} / ${String(TEAMS.length).padStart(2,'0')}`;
+  document.getElementById('cardTopBar').style.background = t.primary;
+  document.getElementById('teamCard').style.borderColor = t.primary+'25';
+  ['ccTL','ccTR','ccBL','ccBR'].forEach(id => document.getElementById(id).style.borderColor = t.primary+'40');
+  document.getElementById('selectedHint').textContent = t.city.toUpperCase() + ' IS ON THE CLOCK';
+  document.querySelectorAll('.dd-item').forEach((el,i) => el.classList.toggle('active', i===current));
+  document.getElementById('pickBtnLabel').textContent = t.city;
+
+  const wrap = document.getElementById('cardWrap');
+  wrap.classList.remove('slide-left','slide-right');
+  void wrap.offsetWidth;
+  if(dir==='left')  wrap.classList.add('slide-left');
+  if(dir==='right') wrap.classList.add('slide-right');
+}
+
+// Dropdown
+const menu = document.getElementById('dropdownMenu');
+TEAMS.forEach((t,i) => {
+  const item = document.createElement('div');
+  item.className = 'dd-item';
+  item.innerHTML = `<span class="dd-swatch" style="background:${t.primary};border:1px solid ${t.secondary}55"></span>${t.abbr} — ${t.city}`;
+  item.addEventListener('click', () => {
+    current = i; render('left');
+    menu.classList.remove('open');
+    document.getElementById('pickBtn').classList.remove('open');
+  });
+  menu.appendChild(item);
+});
+document.getElementById('pickBtn').addEventListener('click', e => {
+  e.stopPropagation();
+  menu.classList.toggle('open');
+  document.getElementById('pickBtn').classList.toggle('open');
+});
+document.addEventListener('click', () => {
+  menu.classList.remove('open');
+  document.getElementById('pickBtn').classList.remove('open');
+});
+
+document.getElementById('randomBtn').onclick = function() {
+  const prev = current;
+  let next;
+  do { next = Math.floor(Math.random() * TEAMS.length); } while (next === prev);
+  current = next;
+  render('left');
+};
+
+document.getElementById('prevBtn').addEventListener('click', () => { current=(current-1+TEAMS.length)%TEAMS.length; render('right'); });
+document.getElementById('nextBtn').addEventListener('click', () => { current=(current+1)%TEAMS.length; render('left'); });
+document.addEventListener('keydown', e => {
+  if(document.getElementById('screenTeamSelect').classList.contains('active')) {
+    if(e.key==='ArrowLeft')  { current=(current-1+TEAMS.length)%TEAMS.length; render('right'); }
+    if(e.key==='ArrowRight') { current=(current+1)%TEAMS.length; render('left'); }
+  }
+});
+
+// Screen history stack for back navigation
+const screenHistory = [];
+const screenTitles = {
+  screenWelcome: null,      // no back on welcome
+  screenTeamSelect: 'screenWelcome',
+  screenGame: 'screenTeamSelect',
+};
+
+function updateBackBtn(targetId) {
+  const btn = document.getElementById('backBtn');
+  if (targetId === 'screenWelcome') {
+    btn.classList.add('hidden');
+  } else {
+    btn.classList.remove('hidden');
+  }
+}
+
+function fadeToScreen(targetId, afterFade) {
+  const overlay = document.getElementById('fadeOverlay');
+  overlay.classList.add('covering');
+  setTimeout(() => {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(targetId).classList.add('active');
+    updateBackBtn(targetId);
+    if(afterFade) afterFade();
+    setTimeout(() => overlay.classList.remove('covering'), 60);
+  }, 460);
+}
+
+document.getElementById('backBtn').addEventListener('click', () => {
+  const active = document.querySelector('.screen.active');
+  if (!active) return;
+  const prev = screenTitles[active.id];
+  if (prev) fadeToScreen(prev);
+});
+
+document.getElementById('selectTeamBtn').addEventListener('click', () => {
+  fadeToScreen('screenTeamSelect', () => render());
+});
+document.getElementById('startGameBtn').addEventListener('click', () => {
+  const t = TEAMS[current];
+  gameState.selectedTeam = t;
+  fadeToScreen('screenGame', () => {
+    // Set end zone colors to team primary
+    document.getElementById('ezLeft').setAttribute('fill', t.primary);
+    document.getElementById('ezRight').setAttribute('fill', t.primary);
+    // Set end zone text to team city
+    document.getElementById('ezTextLeft').textContent  = t.city.toUpperCase();
+    document.getElementById('ezTextRight').textContent = t.city.toUpperCase();
+    // Text color contrast
+    const tc = hexToRgb(t.primary);
+    const lum = (tc.r * 0.299 + tc.g * 0.587 + tc.b * 0.114) / 255;
+    const textCol = lum > 0.45 ? '#000000' : '#ffffff';
+    document.getElementById('ezTextLeft').setAttribute('fill', textCol);
+    document.getElementById('ezTextRight').setAttribute('fill', textCol);
+    // EZ text stroke = team secondary for contrast against primary bg
+    document.getElementById('ezTextLeft').setAttribute('stroke', t.secondary);
+    document.getElementById('ezTextRight').setAttribute('stroke', t.secondary);
+    document.getElementById('ezTextLeft').setAttribute('stroke-width', '5');
+    document.getElementById('ezTextRight').setAttribute('stroke-width', '5');
+    // Yard number strokes also pull team secondary
+    document.getElementById('yardNumsUpper').setAttribute('stroke', t.secondary);
+    document.getElementById('yardNumsLower').setAttribute('stroke', t.secondary);
+    document.getElementById('yardNumsUpper').setAttribute('stroke-width', '3');
+    document.getElementById('yardNumsLower').setAttribute('stroke-width', '3');
+    // Midfield logo — team colors
+    const fieldCircle = document.getElementById('fieldLogoCircle');
+    const fieldRing = document.getElementById('fieldLogoRing');
+    const fieldText = document.getElementById('fieldLogoText');
+    fieldCircle.setAttribute('fill', t.primary);
+    fieldCircle.setAttribute('stroke', t.secondary);
+    fieldCircle.setAttribute('stroke-width', '4');
+    fieldRing.setAttribute('stroke', t.secondary);
+    fieldText.textContent = t.abbr;
+    const ftc = hexToRgb(t.primary);
+    const flum = (ftc.r * 0.299 + ftc.g * 0.587 + ftc.b * 0.114) / 255;
+    fieldText.setAttribute('fill', flum > 0.45 ? '#000' : t.secondary);
+
+    // Popup — gradient header, show overlay
+    document.getElementById('gamePopupHeader').style.background =
+      `linear-gradient(135deg, ${t.primary} 0%, ${t.secondary}88 60%, ${t.primary}cc 100%)`;
+    document.getElementById('gameBeginBtn').style.background = t.primary;
+    document.getElementById('gamePopupTitle').textContent = t.city.toUpperCase() + ' — GAME BRIEFING';
+    document.getElementById('gamePopupOverlay').classList.remove('hidden');
+  });
+});
+
+document.getElementById('gameBeginBtn').addEventListener('click', () => {
+  document.getElementById('gamePopupOverlay').classList.add('hidden');
+  initGame();
+});
+
+// ══════════════════════════════════════════
+// GAME DATA — placeholder modules
+// ══════════════════════════════════════════
+const MODULES = [
+  {
+    id: 1,
+    title: "Phishing: The One-Click Catastrophe",
+    topic: "PHISHING",
+    visual: { icon: "🎣", label: "ATTACK VECTOR: EMAIL / SOCIAL MEDIA" },
+    stats: [
+      { number: "91%", label: "of cyberattacks start with phishing" },
+      { number: "1", label: "click to compromise an entire network" },
+      { number: "$15M+", label: "Sony's estimated total damage" }
+    ],
+    content: `<p>On September 25, 2014, a Sony Pictures employee received an email from someone calling themselves <strong>Nathan Gonsalez</strong> — purportedly a business contact seeking a connection. The email contained a link with the words <em>"Adobe Flash"</em> embedded in it, designed to make the recipient think they were opening a routine media file. They clicked. <strong>Malware dropped silently onto their computer.</strong></p>
+    <p>What followed was two months of invisible infiltration. The attackers — later attributed to North Korea's Lazarus Group — crawled through Sony's entire network, stealing confidential data, mapping thousands of individual workstations, and building the tools they'd use to detonate the attack. <strong>Sony had no idea any of this was happening.</strong></p>
+    <div class="callout-box">"The same story happened across the company — thousands of employees received similar phishing messages. At least a few clicking was enough to hand the attackers control of the entire corporate network."</div>
+    <p>This is the fundamental danger of phishing: <strong>the consequences are wildly disproportionate to the action</strong>. One employee. One click. One PDF, link, or fake login page. The attack surface is every human in your organization.</p>
+    <p><strong>Spear phishing</strong> is the targeted variant — attackers research their victim first, personalizing the message so it feels impossible to ignore. <strong>Spray phishing</strong> is the volume play — thousands of messages sent knowing statistically that someone will click. Sony's attackers used both. They also created fake Facebook profiles offering celebrity nude photos to trick people connected to The Interview film, and sent emails disguised as job applications from a USC student.</p>
+    <p>Critically, AMC Theatres was targeted with the same tactics at the same time — and <em>nothing happened</em>. Their employees had cybersecurity awareness training. They recognized it. <strong>The attack that defined a generation was stopped at one company and not the other entirely because of whether people knew what to look for.</strong></p>`,
+    practices: [
+      "Hover over any link before clicking — verify the actual destination URL, not just the display text.",
+      "When in doubt about an email's legitimacy, call the sender directly using a number you already have — never reply to the suspicious email itself."
+    ],
+    questions: [
+      {
+        q: "A Sony employee received an email from 'Nathan Gonsalez' with a link containing the words 'Adobe Flash.' What was the email actually designed to do?",
+        choices: ["Update their media player software", "Download malware onto their computer", "Connect them with a legitimate business partner", "Verify their company login credentials"],
+        correct: 0,
+        feedback: ["That's exactly the trap — it looked like a routine software prompt.", "Correct. The moment the link was clicked, malicious software dropped silently onto the machine.", "That's how it appeared. The professional framing was the weapon.", "Credential phishing is real, but this attack used a malicious file download."]
+      },
+      {
+        q: "AMC Theatres was targeted with the same phishing attack as Sony Pictures. What was the key difference in outcome?",
+        choices: ["AMC had better antivirus software", "AMC employees had cybersecurity awareness training and recognized the attack", "AMC's IT department detected the malware before it could spread", "AMC wasn't a target — they received the emails by accident"],
+        correct: 0,
+        feedback: ["Software alone doesn't stop someone from clicking a link.", "Correct. Trained employees recognized the attack before it could take hold.", "The detection happened at the human level — before the malware ever reached IT.", "AMC was a deliberate target. Training is what made the difference."]
+      }
+    ]
+  },
+  {
+    id: 2,
+    title: "Social Engineering: The Long Con",
+    topic: "SOCIAL ENGINEERING",
+    visual: { icon: "🎭", label: "ATTACK VECTOR: RELATIONSHIP / TRUST" },
+    stats: [
+      { number: "98%", label: "of cyberattacks rely on social engineering" },
+      { number: "$25M", label: "lost in one AI deepfake video call" },
+      { number: "8mo", label: "average pig butchering relationship before the ask" }
+    ],
+    content: `<p>Not every attack starts with malware. Some start with a message: <em>"Hello, how are you?"</em> <strong>Social engineering exploits human psychology</strong> — trust, curiosity, loneliness, urgency, and the fundamental desire to be helpful. No exploit code required.</p>
+    <p>In <strong>pig butchering scams</strong> — named after the practice of fattening a pig before slaughter — attackers spend weeks or months methodically building a relationship before making any financial ask. They appear on LinkedIn, Tinder, or Instagram. They're warm, attentive, and consistent. By the time they introduce an "investment opportunity," the victim has already emotionally committed. <em>The trap was set long before the bait appeared.</em></p>
+    <div class="callout-box">"Throughout the phase, I will instill this little notion — I had this investment opportunity, and I make a lot of money. I will just very gently mention it without going too deep." — former scam center worker</div>
+    <p>These operations run like <strong>industrial call centers</strong> — trafficked workers around the globe forced to run 15–25 simultaneous "relationships," working 16–17 hour days. Behind every fake profile is a criminal enterprise generating billions annually, comparable in scale to the global drug trade.</p>
+    <p>In corporate settings, social engineering looks different but follows the same logic: a caller claiming to be IT support needing your credentials to fix an urgent issue; a "vendor" requesting a change to payment account details; a new colleague asking for temporary system access. <strong>The attack is always the conversation, never the code.</strong></p>
+    <p>Urgency is a red flag. Legitimate systems and colleagues rarely demand immediate action without verification. <em>The pressure to act fast is a manipulation technique</em> — it's designed to short-circuit rational thinking.</p>`,
+    practices: [
+      "Verify identities through official channels before sharing any sensitive information — even with people who seem familiar.",
+      "Be suspicious of any unsolicited contact that creates urgency, offers unexpected rewards, or requests credentials or money transfers."
+    ],
+    questions: [
+      {
+        q: "In 'pig butchering' scams, why do attackers spend weeks or months building a relationship before making their ask?",
+        choices: ["To give victims time to accumulate more savings", "To build emotional trust and investment, making the victim far less likely to question them", "Because regulations require a cooling-off period for financial solicitations", "To test whether the victim has received cybersecurity training"],
+        correct: 0,
+        feedback: ["The timing is strategic, not patient — they're building a psychological trap.", "Correct. Emotional investment is the primary weapon — it overrides rational suspicion.", "There are no such regulations, and scammers operate outside any legal framework.", "Ironically, trained people are exactly what they're trying to bypass."]
+      },
+      {
+        q: "A caller claims to be from your company's IT department and needs your login credentials to fix an urgent system issue. What is the correct response?",
+        choices: ["Provide them — it's your own IT team and the issue sounds urgent", "Hang up and call your IT department directly using a number from the company directory", "Ask for their employee ID number before complying", "Only provide your username, not your password"],
+        correct: 0,
+        feedback: ["Legitimate IT departments will never ask for your password — that's policy, not flexibility.", "Correct. Hang up and initiate contact yourself through a verified, independent channel.", "An employee ID can be stated over the phone just as easily as a fake name.", "No portion of your credentials should be shared over an unsolicited call."]
+      }
+    ]
+  },
+  {
+    id: 3,
+    title: "Password Hygiene: Your First Line of Defense",
+    topic: "PASSWORDS",
+    visual: { icon: "🔑", label: "THREAT: CREDENTIAL STUFFING / BRUTE FORCE" },
+    stats: [
+      { number: "123M", label: "people use '123456' as their password" },
+      { number: "2sec", label: "to crack an 8-character simple password" },
+      { number: "3B+", label: "credentials available on the dark web" }
+    ],
+    content: `<p>Passwords are the lock on the front door of every account you own. <strong>Using the same password across multiple accounts is the single most dangerous password habit</strong> — and the most common. It's called <em>credential stuffing</em>, and attackers do it automatically: when one service is breached, the stolen credentials are tested against hundreds of other sites within hours.</p>
+    <p>Your password from a 2019 breach of a retail site you barely remember? <strong>It's being tried against your work email, your bank, and your personal accounts right now.</strong> Automated tools run millions of attempts per second across credential lists that are freely traded on dark web forums.</p>
+    <div class="callout-box">"Length beats complexity. A four-word passphrase like 'correct-horse-battery-staple' has more combinations than a scrambled 8-character string — and it's actually possible to remember."</div>
+    <p>Common complexity requirements — capital letters, numbers, special characters — sound rigorous but don't address the real problem. <strong>Hackers know to try P@ssw0rd before password.</strong> The substitutions are so predictable they're in every cracking dictionary.</p>
+    <p>A <strong>password manager</strong> is the complete solution: it generates long, random, unique passwords for every account and stores them securely. You need to remember exactly one master password. The barrier to entry is low and the security improvement is dramatic — this is one of the highest-return security habits available.</p>`,
+    practices: [
+      "Use a password manager (Bitwarden, 1Password, Dashlane) to generate and store unique passwords for every single account.",
+      "Never reuse passwords across accounts — a breach at one site should never have the ability to compromise another."
+    ],
+    questions: [
+      {
+        q: "Why is reusing the same password across multiple accounts particularly dangerous?",
+        choices: ["It makes individual passwords easier for attackers to guess", "A breach at one site gives attackers working credentials to try against every other site you use", "It violates most companies' password policies and triggers account lockouts", "Reused passwords expire faster and create more frequent resets"],
+        correct: 0,
+        feedback: ["The issue isn't guessing — attackers already have the password from another breach.", "Correct. Credential stuffing automates this across hundreds of sites in minutes.", "Policy violations are a secondary concern — the actual security risk is the real issue.", "Password expiration has nothing to do with reuse vulnerability."]
+      },
+      {
+        q: "Which of the following is the strongest password?",
+        choices: ["P@ssw0rd!", "correct-horse-battery-staple", "M1ch@el1985!", "qwerty123456"],
+        correct: 0,
+        feedback: ["Common substitutions like @ for 'a' are literally in every password cracking dictionary.", "Correct. Four random words create hundreds of billions of possible combinations and are memorable.", "Personal information like birth years makes passwords dramatically weaker — attackers check those first.", "Sequential keyboard patterns are cracked in under a second by automated tools."]
+      }
+    ]
+  },
+  {
+    id: 4,
+    title: "Software Updates: The Patch You Skipped",
+    topic: "PATCHING",
+    visual: { icon: "🔄", label: "THREAT: KNOWN VULNERABILITY EXPLOITATION" },
+    stats: [
+      { number: "150+", label: "countries hit by WannaCry in 24 hours" },
+      { number: "2mo", label: "before WannaCry, Microsoft released the patch" },
+      { number: "60days", label: "average time from patch release to exploit" }
+    ],
+    content: `<p>In May 2017, <strong>WannaCry ransomware</strong> tore through over 200,000 computers across 150 countries in a single day — paralyzing hospitals, banks, telecommunications companies, and government agencies. The UK's National Health Service was hit so hard that <em>operations were cancelled and patients were turned away</em>. The total economic damage exceeded $4 billion.</p>
+    <p>Here is the critical detail: <strong>Microsoft had released a patch for the exact vulnerability WannaCry exploited two months before the attack</strong>. Every machine that ran the update in time was protected. Every machine that didn't was an open door.</p>
+    <div class="callout-box">"Once a vulnerability is publicly disclosed — which happens the moment a patch is released — attackers have a roadmap. The patch announcement is simultaneously a 'there's a hole here' announcement to the world."</div>
+    <p>This is why the instinct to delay updates is so dangerous. <strong>Security patches aren't optional maintenance</strong> — they're emergency repairs to known, documented weaknesses. Attackers actively scan for unpatched systems because exploiting a known vulnerability is far easier than discovering a new one.</p>
+    <p>The attack surface extends beyond your operating system. <strong>Browsers, browser plugins, mobile apps, and firmware</strong> all carry vulnerabilities. A fully patched Windows machine with an outdated browser plugin is still a target. The weakest link in the update chain is the one that gets exploited.</p>`,
+    practices: [
+      "Enable automatic updates on your operating system, browser, and all software — the patch you delay today may be the vector for tomorrow's breach.",
+      "Treat update notifications as security-critical, not optional — apply them promptly, especially security patches."
+    ],
+    questions: [
+      {
+        q: "The WannaCry attack in 2017 infected over 200,000 computers across 150 countries. What made it particularly preventable?",
+        choices: ["The vulnerability it exploited had only just been discovered when the attack began", "Microsoft had released a security patch for the vulnerability two months before the attack", "It only affected computers running software that could no longer receive updates", "The attack required users to actively download and run a malicious file"],
+        correct: 0,
+        feedback: ["The vulnerability was known and patched before the attack — unpatched systems were the problem.", "Correct. Every machine running the update in time was protected. The patch existed. People just hadn't applied it.", "Many affected systems were fully capable of updating. They simply hadn't.", "WannaCry spread automatically across networks with no user action required."]
+      },
+      {
+        q: "Why does releasing a security patch simultaneously alert attackers to a vulnerability?",
+        choices: ["Patch release announcements are posted on hacker forums by security researchers", "The patch documentation describes what was fixed, effectively publishing the location of the vulnerability", "Attackers can reverse-engineer the patch to understand what flaw it corrects", "Both B and C are correct"],
+        correct: 0,
+        feedback: ["That's a separate phenomenon — patch documentation and reverse engineering are the core mechanisms.", "This is correct, but it's not the only reason.", "This is correct, but patch notes also explicitly describe what was fixed.", "Correct. Both the patch documentation and reverse engineering give attackers a precise map of the vulnerability."]
+      }
+    ]
+  },
+  {
+    id: 5,
+    title: "Multi-Factor Authentication: The Second Lock",
+    topic: "MFA",
+    visual: { icon: "🔐", label: "DEFENSE: ACCOUNT TAKEOVER PREVENTION" },
+    stats: [
+      { number: "99.9%", label: "of automated attacks blocked by MFA (Microsoft)" },
+      { number: "1.2B", label: "accounts protected by MFA at Google" },
+      { number: "30sec", label: "average time to complete MFA verification" }
+    ],
+    content: `<p>A password is <em>something you know</em>. <strong>Multi-factor authentication adds a second layer</strong> — something you <em>have</em> (a code on your phone, a hardware key) or something you <em>are</em> (biometric). Even if an attacker has your exact password, they cannot log in without the second factor.</p>
+    <p>Microsoft's internal data shows MFA blocks over <strong>99.9% of automated account compromise attempts</strong>. It's not a perfect defense — sophisticated attackers can intercept SMS codes through SIM swapping, or use real-time phishing proxies that capture MFA codes mid-session. But it raises the bar dramatically. <em>Most attackers will simply move on to easier targets.</em></p>
+    <div class="callout-box">"The small friction of entering a second code takes 30 seconds. The friction of recovering a fully compromised account — notifying affected parties, resetting credentials, auditing access logs, potential legal exposure — can take months."</div>
+    <p>Not all MFA is equal. <strong>SMS-based codes are the weakest form</strong> — phone numbers can be hijacked through SIM swapping, where an attacker convinces your carrier to transfer your number to their device. <strong>Authenticator apps</strong> (Google Authenticator, Authy, Microsoft Authenticator) generate time-based codes locally on your device, making them significantly harder to intercept. <strong>Hardware security keys</strong> (YubiKey) are the strongest option — they require physical possession of the device.</p>
+    <p>Wherever MFA is available, it should be enabled. <strong>Email and work accounts are the highest priority</strong> — access to your email often means password reset access to everything else.</p>`,
+    practices: [
+      "Enable MFA on every account that offers it — prioritize email, banking, and work accounts immediately.",
+      "Use an authenticator app rather than SMS codes where possible — they're significantly more resistant to interception."
+    ],
+    questions: [
+      {
+        q: "An attacker has obtained your email password through a dark web credential dump. You have MFA enabled via an authenticator app. What happens when they try to log in?",
+        choices: ["They gain immediate access using the correct password", "They are blocked — the password alone is insufficient without the time-based code from your app", "Your account is automatically locked and requires an identity reset", "They receive an error and your password is automatically changed"],
+        correct: 0,
+        feedback: ["The password alone is never enough when MFA is active — that's the entire security model.", "Correct. Without physical access to your phone and the authenticator app, the password is useless.", "Accounts don't auto-lock on failed MFA attempts — MFA simply prevents the login from completing.", "Passwords don't auto-change on failed login attempts."]
+      },
+      {
+        q: "Why is an authenticator app more secure than receiving MFA codes via SMS text message?",
+        choices: ["Authenticator apps generate longer numeric codes", "SMS codes can be intercepted through SIM swapping attacks, while app-generated codes cannot", "SMS codes expire after only 10 seconds, making them harder to use", "Authenticator apps don't require cellular network access"],
+        correct: 0,
+        feedback: ["Code length isn't the security differentiator.", "Correct. SIM swapping — convincing a carrier to transfer your number — lets attackers receive your SMS codes. App codes are generated locally.", "Both code types expire in similar timeframes — that's not the security difference.", "Offline capability is a benefit, but it's not the primary security advantage."]
+      }
+    ]
+  },
+  {
+    id: 6,
+    title: "Public Wi-Fi: The Open Door",
+    topic: "PUBLIC WI-FI",
+    visual: { icon: "📶", label: "THREAT: MAN-IN-THE-MIDDLE / ROGUE HOTSPOT" },
+    stats: [
+      { number: "25%", label: "of public hotspots have no encryption" },
+      { number: "40%", label: "of people have had information compromised on public Wi-Fi" },
+      { number: "$10/mo", label: "average cost of a VPN subscription" }
+    ],
+    content: `<p>That free Wi-Fi at the airport, hotel, or coffee shop is <em>also free for everyone else in the building</em> — including attackers. On an unencrypted public network, your internet traffic can be <strong>intercepted, read, and in some cases modified</strong> without your knowledge.</p>
+    <p>A <strong>man-in-the-middle (MITM) attack</strong> places an attacker between you and the internet, silently relaying your traffic while reading everything that passes through — login credentials, session cookies, form submissions. Because HTTPS encrypts individual site connections, sophisticated MITM attacks now focus on <em>stripping encryption</em> or intercepting the connection before it's established.</p>
+    <div class="callout-box">"A rogue hotspot requires nothing more than a laptop and a Wi-Fi adapter. An attacker names their network 'Airport_Free_WiFi' or 'Hotel_Guest_Network' and waits. Devices often connect automatically to familiar-sounding networks."</div>
+    <p>The more brazen attack is a <strong>rogue hotspot</strong> — an attacker creates a convincingly named Wi-Fi network and waits for people to connect. Once connected to the attacker's network, all traffic flows through their device first. Credentials, session tokens, and unencrypted data are all exposed.</p>
+    <p>A <strong>VPN (Virtual Private Network)</strong> is the clearest solution. It creates an encrypted tunnel between your device and a VPN server, making your traffic unreadable even to someone on the same network. Even on a compromised hotspot, an attacker sees only encrypted gibberish. <em>HTTPS alone is not sufficient protection</em> — a VPN protects the entire connection, not just individual websites.</p>`,
+    practices: [
+      "Use a VPN whenever connecting to public Wi-Fi — it encrypts your entire traffic stream, not just individual site connections.",
+      "Avoid accessing sensitive accounts (banking, work email, anything requiring login) on public networks without a VPN active."
+    ],
+    questions: [
+      {
+        q: "You connect to 'Free_Airport_WiFi' at an airport. An attacker has set up this rogue hotspot. What are they positioned to do?",
+        choices: ["Access files stored locally on your laptop", "Intercept and read any unencrypted traffic passing through their network", "Install malware directly onto your device without any action on your part", "Access your device's camera and microphone remotely"],
+        correct: 0,
+        feedback: ["Local files aren't accessible just by being on the same network — that requires a separate attack.", "Correct. All traffic flows through the attacker's device first, making unencrypted data fully visible.", "Network access doesn't automatically provide malware installation capability.", "Camera/mic access requires malware, not just network positioning."]
+      },
+      {
+        q: "Why is using HTTPS websites on public Wi-Fi insufficient protection on its own?",
+        choices: ["HTTPS is easily bypassed and provides no real encryption", "A VPN protects your entire connection, while HTTPS only encrypts traffic to individual websites", "HTTPS websites are not supported on public networks", "HTTPS slows down your connection, making it easier to intercept"],
+        correct: 0,
+        feedback: ["HTTPS does provide real encryption — but it has limits in scope.", "Correct. HTTPS secures individual site connections. A VPN encrypts everything — DNS queries, metadata, all traffic.", "HTTPS works everywhere — it's a protocol, not a network feature.", "Connection speed has no bearing on interception vulnerability."]
+      }
+    ]
+  },
+  {
+    id: 7,
+    title: "Data Handling: Know What You're Carrying",
+    topic: "DATA HANDLING",
+    visual: { icon: "📂", label: "THREAT: DATA EXPOSURE / INSIDER RISK" },
+    stats: [
+      { number: "47K+", label: "Sony employees had personal data publicly exposed" },
+      { number: "$8M", label: "Sony settlement for employee data breach" },
+      { number: "277days", label: "average time to identify a data breach" }
+    ],
+    content: `<p>When the Sony hack data hit the internet, it didn't just leak movies and celebrity gossip. It exposed <strong>social security numbers, salary information, medical records, performance reviews, and private email inboxes</strong> — for tens of thousands of current and former employees. Years later, those people are still living with the consequences.</p>
+    <p>Celina Chavanette, a Sony employee: <em>"Almost every other week I get a little ping saying that my email address has been exposed or my social security or my passwords. Everything about me has been exposed. Forever I'm paying for it."</em> The data was stored. It was breached. The fallout is permanent.</p>
+    <div class="callout-box">"The principle of least privilege: only grant people access to the specific data they need to do their job. Every unnecessary access point is a potential breach vector."</div>
+    <p><strong>Data classification</strong> is the practice of categorizing information by sensitivity and treating it accordingly. Not every file needs the same protection — but sensitive data (personal information, financial data, credentials, health records) requires encryption at rest and in transit, strict access controls, and careful handling from creation to disposal.</p>
+    <p>The most common data handling failures are mundane: <em>emailing sensitive documents without encryption, storing passwords in plain text notes files, sharing login credentials with colleagues for convenience, leaving sensitive spreadsheets in unsecured shared drives.</em> <strong>Most data breaches don't happen because of sophisticated exploits — they happen because of careless handling of data that was already inside the organization.</strong></p>`,
+    practices: [
+      "Never send sensitive data — social security numbers, passwords, financial details, health information — via unencrypted standard email.",
+      "Apply the principle of least privilege: grant people access only to the specific data their job requires, and revoke it when no longer needed."
+    ],
+    questions: [
+      {
+        q: "A colleague asks you to email a spreadsheet containing employee salary information. What is the safest approach?",
+        choices: ["Email it immediately — the information stays within company systems", "Use an encrypted file transfer or secure sharing platform instead of standard email", "Change the file extension to obscure the file type before emailing", "CC your manager to create a paper trail of the transfer"],
+        correct: 0,
+        feedback: ["Internal doesn't mean secure — company email systems can be breached and email can be intercepted.", "Correct. Standard email is not a secure transfer method for sensitive data.", "Changing a file extension is security theater — it offers zero real protection.", "A paper trail documents the transfer but doesn't make it any more secure."]
+      },
+      {
+        q: "What does the 'principle of least privilege' mean in data security?",
+        choices: ["All employees should have read-only access to all company data", "People should only be granted access to the specific data they need to perform their role", "Data access should be restricted to senior management and IT staff only", "Sensitive data should be automatically deleted after a defined retention period"],
+        correct: 0,
+        feedback: ["Read-only is one form of restriction — but least privilege is about necessity, not level.", "Correct. Limiting access reduces the potential blast radius of any breach or insider threat.", "Seniority isn't the right criterion for data access — job function and need are.", "Data retention policies are real but are a separate concept from access control."]
+      }
+    ]
+  },
+  {
+    id: 8,
+    title: "Ransomware: When They Lock the Door",
+    topic: "RANSOMWARE",
+    visual: { icon: "🔒", label: "THREAT: RANSOMWARE / DESTRUCTIVE MALWARE" },
+    stats: [
+      { number: "$1.1B", label: "ransomware payments in 2023 alone" },
+      { number: "4.91M", label: "ransomware attacks in first half of 2023" },
+      { number: "22days", label: "average downtime after a ransomware attack" }
+    ],
+    content: `<p>Ransomware is malicious software that <strong>encrypts your files and demands payment — typically in cryptocurrency — to restore access</strong>. When WannaCry hit in May 2017, it encrypted over 200,000 computers in 150 countries in a single day, targeting hospitals where patients were actively being treated, manufacturing plants, and telecommunications networks. The Lazarus Group was later implicated.</p>
+    <p>Ransomware doesn't announce itself. It enters through a phishing email, an unpatched vulnerability, or compromised credentials — then <em>moves silently through the network</em> before triggering. By the time the ransom screen appears, <strong>the attackers have often been inside the network for weeks</strong>, identifying and encrypting backups to maximize leverage.</p>
+    <div class="callout-box">"The Sony Wiper malware didn't just encrypt — it deleted. The malware had the names of thousands of Sony workstations hard-coded into it, meaning attackers had mapped the entire network in advance before pulling the trigger."</div>
+    <p>The ransom payment question has a clear answer from security professionals: <strong>don't pay</strong>. Roughly 80% of organizations that pay are hit again, often by the same group. Attackers may take the payment and send a broken decryption key, demand more, or both. Paying funds the development of the next attack — potentially against you again.</p>
+    <p>The only reliable defense is a <strong>tested, offline or immutable backup strategy</strong>. If you can restore clean data from a backup that attackers cannot reach or encrypt, the ransom demand becomes irrelevant. Organizations without this are at the mercy of whoever holds the key.</p>`,
+    practices: [
+      "Maintain regular, tested backups — offline or immutable cloud backups that ransomware cannot reach or encrypt.",
+      "Never pay the ransom — it funds criminal operations, provides no guarantee of recovery, and marks you as a target for repeat attacks."
+    ],
+    questions: [
+      {
+        q: "Why is maintaining tested offline backups the most effective defense against ransomware?",
+        choices: ["Backups detect and prevent ransomware from encrypting files in the first place", "With clean backups, you can restore your data without paying the ransom, making the demand irrelevant", "Ransomware cannot infect systems that have backup software installed", "Backups log attacker activity and help law enforcement identify the criminals"],
+        correct: 0,
+        feedback: ["Backups are a recovery mechanism, not a prevention mechanism.", "Correct. A clean, accessible backup removes the attacker's leverage entirely.", "Backup software provides no protection against ransomware infection.", "Backups store data, not forensic attack logs — that's a different tool."]
+      },
+      {
+        q: "Security professionals generally advise against paying a ransomware demand. Which of the following is the strongest reason?",
+        choices: ["Cryptocurrency payments are illegal in most jurisdictions", "Roughly 80% of organizations that pay are attacked again, and payment funds the development of future attacks", "The FBI can decrypt ransomware without payment in most cases", "Paying the ransom automatically doubles the demanded amount"],
+        correct: 0,
+        feedback: ["Cryptocurrency is legal — the extortion is not, but that's not the reason to avoid paying.", "Correct. Payment provides no guarantee, funds criminal infrastructure, and makes you a repeat target.", "The FBI has cracked specific ransomware variants in limited cases — it's not a universal capability.", "Payment amounts don't auto-escalate — that's not how the mechanic works."]
+      }
+    ]
+  },
+  {
+    id: 9,
+    title: "Social Media & OSINT: What You Post Can Be Used Against You",
+    topic: "SOCIAL MEDIA / OSINT",
+    visual: { icon: "🔍", label: "THREAT: RECONNAISSANCE / IDENTITY FRAUD" },
+    stats: [
+      { number: "93%", label: "of attackers use OSINT in target research" },
+      { number: "500M+", label: "LinkedIn profiles available for reconnaissance" },
+      { number: "32%", label: "of spear phishing uses publicly available data" }
+    ],
+    content: `<p><strong>OSINT — Open Source Intelligence</strong> — is information gathered from publicly available sources. Before a single line of exploit code is written, threat actors routinely spend hours or days researching targets through LinkedIn, Instagram, Twitter, Facebook, and company websites. The reconnaissance phase often determines whether an attack succeeds.</p>
+    <p>What does your public presence reveal? <em>Your LinkedIn job title tells attackers what systems you likely have access to.</em> A photo from the office reveals building layout and badge design. A vacation post signals when your home is empty. A work event photo with a visible screen shows what software you use. <strong>Each piece of information is individually harmless. Combined, they build a targeting profile.</strong></p>
+    <div class="callout-box">"In the Sony investigation, the FBI found that hackers had been Facebook messaging people connected with The Interview, using fake profiles with stolen photos, attempting to trick them into downloading malware disguised as leaked celebrity content."</div>
+    <p>In pig butchering scams, <strong>attackers lifted profile photos from real influencers</strong> to build convincing fake identities. Reverse image searches, scraped social profiles, and purchased data from Telegram channels created personas indistinguishable from real people. Your public presence is their raw material.</p>
+    <p><strong>Oversharing in a professional context carries specific risks</strong>: posting about a major deal before it's announced, sharing client names, discussing internal tools or systems, or revealing frustrations about specific colleagues or processes. Each of these can be weaponized — for targeted attacks, for blackmail, or for corporate espionage.</p>`,
+    practices: [
+      "Audit your public social media profiles — restrict anything that could help someone impersonate you, identify your role, or map your physical environment.",
+      "Never post photos that inadvertently reveal security-sensitive details: badge designs, building access points, visible screens, or internal system interfaces."
+    ],
+    questions: [
+      {
+        q: "An attacker reviews a target's LinkedIn profile showing their job title (IT Systems Administrator), employer, recent projects, and tools used. How is this information most likely to be weaponized?",
+        choices: ["It cannot be weaponized — LinkedIn profiles are public by design", "To craft a highly convincing spear phishing email referencing their specific role, tools, and projects", "To gain direct system access through LinkedIn's platform", "To identify the target's home address for physical intimidation"],
+        correct: 0,
+        feedback: ["Public by design doesn't mean safe from misuse — that's the entire OSINT threat model.", "Correct. Specific, accurate references to your real work make fake emails nearly impossible to question.", "LinkedIn profile data doesn't provide system access — it provides social engineering ammunition.", "Home addresses require different OSINT techniques — LinkedIn professional data has different primary uses."]
+      },
+      {
+        q: "Which of these social media behaviors represents the most significant security risk?",
+        choices: ["A photo from a company event that shows your office building's exterior and access point locations", "Following a competitor's company page on LinkedIn", "Commenting on a public industry news article", "Using your full real name on a professional network"],
+        correct: 0,
+        feedback: ["Correct. Building exteriors, entrance locations, and access points are valuable intelligence for physical security attacks and targeted impersonation.", "Engaging with public competitor content creates no meaningful security vulnerability.", "Public industry discussions are standard professional behavior — no security risk.", "Real names on professional networks are expected and create minimal marginal risk."]
+      }
+    ]
+  },
+  {
+    id: 10,
+    title: "Cybersecurity in the AI Age",
+    topic: "AI & SECURITY",
+    visual: { icon: "🤖", label: "EMERGING THREAT: AI-AUGMENTED ATTACKS" },
+    stats: [
+      { number: "$25M", label: "lost in a single AI deepfake video call (2024)" },
+      { number: "4,151%", label: "increase in phishing emails since ChatGPT launch" },
+      { number: "3sec", label: "of audio needed to clone a voice convincingly" }
+    ],
+    content: `<p>AI has fundamentally changed the economics of cyberattacks. <strong>Capabilities that once required skilled operatives are now available to anyone with a laptop and a subscription.</strong> Convincing phishing emails in any language, flawless grammar, personalized to your specific role and organization — generated at scale in seconds. The barrier to sophisticated social engineering has collapsed.</p>
+    <p>In 2024, a finance employee at a multinational company was invited to a video call with what appeared to be multiple colleagues, including the CFO. Everyone on the call looked and sounded completely authentic. At the end of the call, the employee was asked to authorize a wire transfer. <em>Every person on that call was AI-generated.</em> <strong>$25 million was transferred before the fraud was detected.</strong></p>
+    <div class="callout-box">"Voice cloning requires as little as 3 seconds of audio from a public source — a podcast appearance, a YouTube video, a voicemail greeting. Deepfake video can now be generated in real-time on consumer hardware."</div>
+    <p><strong>Vishing</strong> (voice phishing) has become dramatically more dangerous — a call from what sounds exactly like your CEO, your parent, or your bank's fraud department is no longer detectable by ear alone. <strong>Verification now has to happen out-of-band</strong> — through an independent channel you initiate, not the one the attacker controls.</p>
+    <p>For defenders, AI offers real-time behavioral analysis, automated threat detection, and faster incident response. But the <em>fundamental human vulnerabilities remain unchanged</em> — trust, urgency, authority, and fear are still the primary attack surface. AI makes existing attacks faster, cheaper, and more convincing. The playbook is the same. The production quality has increased dramatically.</p>`,
+    practices: [
+      "Establish a verbal codeword or out-of-band verification protocol with close colleagues for any unusual request — especially money transfers or access changes.",
+      "Treat any contact that creates urgency with heightened suspicion regardless of how authentic the voice, face, or writing appears — verify through an independent channel you initiate."
+    ],
+    questions: [
+      {
+        q: "A finance employee receives a video call from what appears to be their CFO and several colleagues requesting an urgent wire transfer. Everyone looks and sounds authentic. What is the safest response?",
+        choices: ["Process the transfer — a live video call provides strong identity verification", "End the call and verify the request by calling the CFO directly using a known, independently verified number", "Ask the CFO on the call to provide their employee ID and a recent transaction number to verify identity", "Process half the transfer now and await written confirmation for the remainder"],
+        correct: 0,
+        feedback: ["Deepfake video can now be generated in real-time — visual verification is no longer reliable.", "Correct. End the call and initiate contact yourself through an independently verified channel. Never verify through the channel the potential attacker controls.", "Information provided during a potentially fraudulent call cannot be used for verification — it's all controlled by the attacker.", "No portion of a potentially fraudulent transfer should be processed before independent verification is complete."]
+      },
+      {
+        q: "How has AI most significantly changed the threat landscape for phishing attacks?",
+        choices: ["AI allows attackers to automatically bypass email spam filters and security systems", "AI enables attackers to generate convincing, highly personalized phishing content at massive scale with minimal cost or skill", "AI-generated phishing content is always detectable by current security software", "AI has made phishing more targeted but significantly slower to execute"],
+        correct: 0,
+        feedback: ["Spam filters have also improved significantly — it's an ongoing arms race.", "Correct. Volume, personalization, language quality, and targeting accuracy have all increased dramatically while cost and skill requirements have dropped to near zero.", "AI-generated content is increasingly indistinguishable from human-written content — detection is a major unsolved challenge.", "AI makes attacks faster, cheaper, and easier — not slower."]
+      }
+    ]
+  }
+];
+
+// ══════════════════════════════════════════
+// GAME STATE
+// ══════════════════════════════════════════
+let gameState = {
+  moduleIndex: 0,
+  down: 1,           // 1, 2, 3
+  phase: 'idle',     // idle | content | questions | down-state | punt | touchdown
+  q1answered: false,
+  q2answered: false,
+  q1correct: false,
+  q2correct: false,
+  selectedTeam: null,
+  completedModules: [],
+};
+
+// Ball X positions per module (10yd line to touchdown)
+const BALL_X_POSITIONS = [146, 226, 306, 386, 466, 546, 626, 706, 786, 866, 900];
+// Flag X positions (where completed markers go)
+const FLAG_X_POSITIONS = [180, 260, 340, 420, 500, 580, 660, 740, 820];
+
+function initGame() {
+  gameState.moduleIndex = 0;
+  gameState.down = 1;
+  gameState.phase = 'idle';
+  gameState.completedModules = [];
+  applyTeamTheme();
+  updateFieldHUD();
+  showFirstDownBtn();
+}
+
+window.addEventListener('resize', () => {
+  if (gameState.phase === 'idle') positionFirstDownBtn();
+});
+
+function updateFieldHUD() {
+  const mod = MODULES[gameState.moduleIndex];
+  document.getElementById('hudModule').textContent = `MODULE ${String(mod.id).padStart(2,'0')}`;
+  const downLabels = ['1ST DOWN','2ND DOWN','3RD DOWN'];
+  document.getElementById('hudDown').textContent = downLabels[gameState.down-1] || '1ST DOWN';
+  if (gameState.selectedTeam) {
+    document.getElementById('hudTeam').textContent = gameState.selectedTeam.abbr;
+  }
+}
+
+function showFirstDownBtn() {
+  gameState.phase = 'idle';
+  document.getElementById('firstDownWrap').style.display = 'flex';
+  document.getElementById('resumeWrap').style.display = 'none';
+  document.getElementById('gameOverlay').classList.add('hidden');
+  updateFieldHUD();
+  positionFirstDownBtn();
+}
+
+function positionFirstDownBtn() {
+  const wrap = document.getElementById('firstDownWrap');
+  const svg = document.getElementById('fieldSVG');
+  const fieldWrap = document.getElementById('fieldWrap');
+  if (!svg || !fieldWrap) return;
+
+  const svgRect = svg.getBoundingClientRect();
+  const fieldRect = fieldWrap.getBoundingClientRect();
+
+  // Ball SVG coords — ball image: x = BALL_X_POSITIONS[i]-34, y=216, w=68, h=68
+  // Place button at bottom-right of ball, offset so it doesn't overlap
+  const ballSvgX = BALL_X_POSITIONS[gameState.moduleIndex] - 34 + 68; // right edge
+  const ballSvgY = 216 + 68; // bottom edge of ball
+
+  const scaleX = svgRect.width / 1000;
+  const scaleY = svgRect.height / 500;
+
+  // Button sits to the right of ball, aligned with its bottom edge
+  const screenX = svgRect.left - fieldRect.left + ballSvgX * scaleX + 6;
+  const screenY = svgRect.top - fieldRect.top + ballSvgY * scaleY - 8;
+
+  wrap.style.left = screenX + 'px';
+  wrap.style.top = screenY + 'px';
+}
+
+function openOverlay() {
+  document.getElementById('firstDownWrap').style.display = 'none';
+  document.getElementById('gameOverlay').classList.remove('hidden');
+}
+
+function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+function applyTeamTheme() {
+  if (!gameState.selectedTeam) return;
+  const t = gameState.selectedTeam;
+  const root = document.documentElement;
+  root.style.setProperty('--team-primary', t.primary);
+  root.style.setProperty('--team-secondary', t.secondary);
+  root.style.setProperty('--team-callout-bg', hexToRgba(t.primary, 0.07));
+  root.style.setProperty('--team-btn-gradient',
+    `linear-gradient(135deg, ${t.primary} 0%, ${t.secondary}cc 55%, ${t.primary}ee 100%)`);
+}
+
+function updateOverlayHeader() {
+  const mod = MODULES[gameState.moduleIndex];
+  const downLabels = ['1ST DOWN','2ND DOWN','3RD DOWN'];
+  document.getElementById('overlayModuleLabel').textContent = `MODULE ${String(mod.id).padStart(2,'0')}`;
+  document.getElementById('overlayTitle').textContent = `Module ${String(mod.id).padStart(2,'0')}: ${mod.topic}`;
+  document.getElementById('overlayDownBadge').textContent = downLabels[gameState.down-1] || '1ST DOWN';
+  // Gradient header using team colors
+  if (gameState.selectedTeam) {
+    const t = gameState.selectedTeam;
+    document.getElementById('overlayHdr').style.background =
+      `linear-gradient(135deg, ${t.primary} 0%, ${t.secondary}88 60%, ${t.primary}cc 100%)`;
+    applyTeamTheme();
+  }
+}
+
+// ── CONTENT SCREEN ──
+function showContentScreen() {
+  gameState.phase = 'content';
+  openOverlay();
+  updateOverlayHeader();
+  const mod = MODULES[gameState.moduleIndex];
+
+  // Stats bar HTML
+  const statsHTML = mod.stats ? `
+    <div class="content-stat-bar">
+      ${mod.stats.map(s => `
+        <div class="stat-pill">
+          <span class="stat-pill-number">${s.number}</span>
+          <span class="stat-pill-label">${s.label}</span>
+        </div>
+      `).join('')}
+    </div>
+  ` : '';
+
+  // Visual placeholder HTML
+  const visualHTML = mod.visual ? `
+    <div class="content-visual">
+      <div class="content-visual-icon">${mod.visual.icon}</div>
+      <div class="content-visual-label">${mod.visual.label}</div>
+    </div>
+  ` : '';
+
+  document.getElementById('overlayBody').innerHTML = `
+    <h2 class="content-module-title">${mod.title}</h2>
+    ${visualHTML}
+    ${statsHTML}
+    ${mod.content}
+    <div class="best-practices">
+      <span class="best-practices-label">BEST PRACTICES</span>
+      ${mod.practices.map((p, i) => `
+        <div class="bp-item">
+          <div class="bp-icon">${i + 1}</div>
+          <span>${p}</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  document.getElementById('overlayFooterLeft').textContent = 'Read carefully — questions follow.';
+  document.getElementById('overlayBackBtn').style.display = 'none';
+  const btn = document.getElementById('overlayNextBtn');
+  btn.style.display = 'flex';
+  btn.innerHTML = 'TO THE QUESTIONS <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5h12M9 1l4 4-4 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  btn.onclick = () => showQuestionsScreen();
+}
+
+// ── QUESTIONS SCREEN ──
+function showQuestionsScreen() {
+  gameState.phase = 'questions';
+  gameState.q1answered = false;
+  gameState.q2answered = false;
+  gameState.q1correct = false;
+  gameState.q2correct = false;
+  openOverlay();
+  updateOverlayHeader();
+  const mod = MODULES[gameState.moduleIndex];
+
+  document.getElementById('overlayBody').innerHTML = `
+    <!-- Q1 -->
+    <div class="question-block" id="q1block">
+      <span class="question-number">QUESTION 1 OF 2</span>
+      <div class="question-text">${mod.questions[0].q}</div>
+      <div class="answer-choices" id="q1choices">
+        ${mod.questions[0].choices.map((c,i) => `
+          <button class="answer-btn" onclick="answerQ(1,${i})">${c}</button>
+        `).join('')}
+      </div>
+      <div class="feedback-msg" id="q1feedback"></div>
+    </div>
+    <!-- Q2 -->
+    <div class="question-block locked" id="q2block">
+      <span class="question-number">QUESTION 2 OF 2</span>
+      <div class="question-text">${mod.questions[1].q}</div>
+      <div class="answer-choices" id="q2choices">
+        ${mod.questions[1].choices.map((c,i) => `
+          <button class="answer-btn" onclick="answerQ(2,${i})">${c}</button>
+        `).join('')}
+      </div>
+      <div class="feedback-msg" id="q2feedback"></div>
+    </div>
+  `;
+
+  document.getElementById('overlayFooterLeft').textContent = 'Answer both questions to advance.';
+  document.getElementById('overlayBackBtn').style.display = 'inline-flex';
+  const btn = document.getElementById('overlayNextBtn');
+  btn.style.display = 'none';
+}
+
+function answerQ(qNum, choiceIndex) {
+  const mod = MODULES[gameState.moduleIndex];
+  const qData = mod.questions[qNum - 1];
+  const isCorrect = choiceIndex === qData.correct;
+  const choicesEl = document.getElementById(`q${qNum}choices`);
+  const feedbackEl = document.getElementById(`q${qNum}feedback`);
+  const btns = choicesEl.querySelectorAll('.answer-btn');
+
+  // Disable all choices
+  btns.forEach(b => b.disabled = true);
+  btns[qData.correct].classList.add('correct');
+  if (!isCorrect) btns[choiceIndex].classList.add('wrong');
+
+  // Feedback
+  feedbackEl.textContent = isCorrect ? '✓ ' + qData.feedback[qData.correct] : '✗ ' + qData.feedback[choiceIndex];
+  feedbackEl.className = 'feedback-msg ' + (isCorrect ? 'correct' : 'wrong');
+
+  if (qNum === 1) {
+    gameState.q1answered = true;
+    gameState.q1correct = isCorrect;
+    // Unlock Q2 after a beat
+    setTimeout(() => {
+      document.getElementById('q2block').classList.remove('locked');
+    }, 800);
+  } else {
+    gameState.q2answered = true;
+    gameState.q2correct = isCorrect;
+    // Both answered — evaluate after a beat
+    setTimeout(() => evaluateRound(), 1000);
+  }
+}
+
+function evaluateRound() {
+  const bothCorrect = gameState.q1correct && gameState.q2correct;
+  if (bothCorrect) {
+    // Advance
+    showAdvanceState();
+  } else {
+    // Down used
+    if (gameState.down >= 3) {
+      showPuntState();
+    } else {
+      gameState.down++;
+      showDownState();
+    }
+  }
+}
+
+// ── ADVANCE STATE ──
+function showAdvanceState() {
+  gameState.phase = 'advance';
+  const mod = MODULES[gameState.moduleIndex];
+  updateOverlayHeader();
+  document.getElementById('overlayBody').innerHTML = `
+    <div class="state-body">
+      <div class="state-icon">🏈</div>
+      <div class="state-title">FIRST DOWN!</div>
+      <div class="state-sub">Excellent read. You've advanced 10 yards and completed <strong>${mod.topic}</strong>.</div>
+      <button class="state-action-btn" onclick="advanceModule()">
+        ${gameState.moduleIndex >= MODULES.length - 1 ? 'TOUCHDOWN →' : 'NEXT MODULE →'}
+      </button>
+    </div>
+  `;
+  document.getElementById('overlayFooter').style.display = 'none';
+  document.getElementById('overlayBackBtn').style.display = 'none';
+
+  // Move ball on field
+  moveBall();
+  dropFlag();
+}
+
+function moveBall() {
+  const nextPos = BALL_X_POSITIONS[gameState.moduleIndex + 1];
+  const ball = document.getElementById('ballMarker');
+  ball.setAttribute('x', String(nextPos - 34));
+}
+
+function dropFlag() {
+  const flagX = FLAG_X_POSITIONS[gameState.moduleIndex];
+  if (!flagX) return;
+  const mod = MODULES[gameState.moduleIndex];
+  const svg = document.getElementById('fieldSVG');
+  const completedIdx = gameState.moduleIndex;
+
+  const flag = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  flag.setAttribute('class', 'field-flag');
+  flag.style.cursor = 'pointer';
+  flag.innerHTML = `
+    <line x1="${flagX}" y1="175" x2="${flagX}" y2="215" stroke="white" stroke-width="2"/>
+    <polygon points="${flagX},175 ${flagX+14},182 ${flagX},189" fill="#FFD700" stroke="white" stroke-width="1"/>
+    <text x="${flagX+2}" y="230"
+      font-family="'Bebas Neue', Arial, sans-serif"
+      font-size="11" fill="white" text-anchor="middle"
+      paint-order="stroke" stroke="rgba(0,0,0,0.6)" stroke-width="2"
+      opacity="0.9">${mod.topic}</text>
+    <rect x="${flagX-22}" y="165" width="50" height="75" fill="transparent"/>
+  `;
+  flag.addEventListener('click', () => {
+    gameState.savedPhase = 'content';
+    const savedIndex = gameState.moduleIndex;
+    gameState.moduleIndex = completedIdx;
+    openOverlay();
+    updateOverlayHeader();
+    showContentScreen();
+    // After viewing, restore to current module
+    gameState.moduleIndex = savedIndex;
+  });
+  svg.appendChild(flag);
+  gameState.completedModules.push(gameState.moduleIndex);
+}
+
+function advanceModule() {
+  document.getElementById('overlayFooter').style.display = 'flex';
+  document.getElementById('overlayHdr').style.display = 'flex';
+  gameState.moduleIndex++;
+  gameState.down = 1;
+  if (gameState.moduleIndex >= MODULES.length) {
+    showTouchdown();
+  } else {
+    showFirstDownBtn();
+  }
+}
+
+// ── DOWN STATE ──
+function showDownState() {
+  gameState.phase = 'down-state';
+  updateOverlayHeader();
+  const downLabels = ['', '2ND DOWN','3RD DOWN'];
+  const downLabel = downLabels[gameState.down - 1] || '2ND DOWN';
+  document.getElementById('overlayBody').innerHTML = `
+    <div class="state-body">
+      <div class="state-icon">😤</div>
+      <div class="state-title">${downLabel}</div>
+      <div class="state-sub">Not quite. You need both answers correct to advance. Review the material and try again.</div>
+      <button class="state-action-btn" onclick="retryModule()">REVIEW & RETRY</button>
+    </div>
+  `;
+  document.getElementById('overlayFooter').style.display = 'none';
+  document.getElementById('overlayBackBtn').style.display = 'none';
+}
+
+function retryModule() {
+  document.getElementById('overlayFooter').style.display = 'flex';
+  updateOverlayHeader();
+  showContentScreen();
+}
+
+function overlayBack() {
+  // Back from questions → content screen only
+  if (gameState.phase === 'questions') {
+    document.getElementById('overlayFooter').style.display = 'flex';
+    showContentScreen();
+  }
+  // Content → no further back within overlay (use Close button)
+}
+
+function closeOverlay() {
+  // Save current phase so we can resume
+  gameState.savedPhase = gameState.phase;
+  document.getElementById('gameOverlay').classList.add('hidden');
+  document.getElementById('firstDownWrap').style.display = 'none';
+  // Show resume button on field
+  document.getElementById('resumeWrap').style.display = 'flex';
+}
+
+function resumeOverlay() {
+  document.getElementById('resumeWrap').style.display = 'none';
+  document.getElementById('gameOverlay').classList.remove('hidden');
+  // Restore to where we were
+  if (gameState.savedPhase === 'questions') {
+    showQuestionsScreen();
+  } else {
+    showContentScreen();
+  }
+}
+
+// ── PUNT STATE ──
+function showPuntState() {
+  gameState.phase = 'punt';
+  updateOverlayHeader();
+  document.getElementById('overlayBody').innerHTML = `
+    <div class="state-body">
+      <div class="state-icon">😬</div>
+      <div class="state-title">4TH DOWN — PUNT</div>
+      <div class="state-sub">Incomplete pass. You've used all three downs on this module. The ball resets to the 10 yard line — take another run at it from the start.</div>
+      <button class="state-action-btn punt" onclick="puntModule()">🏈 PUNT & RETRY</button>
+    </div>
+  `;
+  document.getElementById('overlayFooter').style.display = 'none';
+  document.getElementById('overlayBackBtn').style.display = 'none';
+}
+
+function puntModule() {
+  document.getElementById('overlayFooter').style.display = 'flex';
+  gameState.down = 1;
+  // Reset ball to 10 yard line
+  const ball = document.getElementById('ballMarker');
+  ball.setAttribute('x', '146');
+  showFirstDownBtn();
+}
+
+// ── TOUCHDOWN ──
+function showTouchdown() {
+  gameState.phase = 'touchdown';
+  const team = gameState.selectedTeam;
+  document.getElementById('overlayHdr').style.display = 'none';
+  document.getElementById('overlayBody').innerHTML = `
+    <div class="touchdown-body" style="background: linear-gradient(135deg, ${team ? team.primary : '#0c4230'}, ${team ? team.secondary : '#1a6648'})">
+      <div class="td-emoji">🏆</div>
+      <div class="td-title">TOUCHDOWN!</div>
+      <div class="td-sub">TRAINING COMPLETE</div>
+      <div class="td-team">${team ? team.city.toUpperCase() + ' WINS' : 'GAME COMPLETE'}</div>
+      <button class="state-action-btn" style="margin-top:32px;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);" onclick="location.reload()">PLAY AGAIN</button>
+    </div>
+  `;
+  document.getElementById('overlayFooter').style.display = 'none';
+  document.getElementById('gameOverlay').classList.remove('hidden');
+  document.getElementById('firstDownWrap').style.display = 'none';
+}
+
+// ── WIRE UP FIRST DOWN BTN ──
+document.getElementById('firstDownBtn').addEventListener('click', () => {
+  showContentScreen();
+});
+
+const words = ['FIRST & LEARN','10 YARDS · 10 MODULES','3 DOWNS TO PASS','PUNT = RESTART','SCORE = ADVANCE','SELECT YOUR TEAM','GAME ON','TRAINING IN SESSION','FIRST & LEARN','10 YARDS · 10 MODULES','3 DOWNS TO PASS','PUNT = RESTART','SCORE = ADVANCE','SELECT YOUR TEAM','GAME ON','TRAINING IN SESSION'];
+const tickHTML = words.map(w=>`<span class="ticker-item">${w} ·</span>`).join('');
+['welcomeTicker','teamTicker','gameTicker'].forEach(id => document.getElementById(id).innerHTML = tickHTML);
+</script>
+</body>
+</html>

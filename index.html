@@ -332,6 +332,12 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
   letter-spacing: 2px;
   color: #fff;
   line-height: 1.1;
+  text-shadow:
+    -1px -1px 0 rgba(0,0,0,0.7),
+     1px -1px 0 rgba(0,0,0,0.7),
+    -1px  1px 0 rgba(0,0,0,0.7),
+     1px  1px 0 rgba(0,0,0,0.7),
+     0 2px 6px rgba(0,0,0,0.4);
 }
 
 .game-popup-body {
@@ -524,6 +530,12 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
   letter-spacing: 2px;
   color: #fff;
   line-height: 1.1;
+  text-shadow:
+    -1px -1px 0 rgba(0,0,0,0.7),
+     1px -1px 0 rgba(0,0,0,0.7),
+    -1px  1px 0 rgba(0,0,0,0.7),
+     1px  1px 0 rgba(0,0,0,0.7),
+     0 2px 6px rgba(0,0,0,0.4);
 }
 .overlay-hdr-right {
   display: flex;
@@ -812,8 +824,7 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 .content-visual {
   width: 100%;
   height: 140px;
-  background: linear-gradient(135deg, rgba(12,66,48,0.08) 0%, rgba(12,66,48,0.04) 100%);
-  border: 1px solid rgba(12,66,48,0.1);
+  background: linear-gradient(135deg, rgba(0,0,0,0.03) 0%, rgba(0,0,0,0.01) 100%);
   border-radius: 2px;
   display: flex;
   align-items: center;
@@ -822,7 +833,19 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
   flex-direction: column;
   gap: 8px;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
+}
+.content-visual::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
+  padding: 2px;
+  background: var(--team-btn-gradient, linear-gradient(135deg, #0c4230, #1a6648, #0c4230));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
 .content-visual-icon { font-size: 40px; }
 .content-visual-label {
@@ -838,10 +861,21 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 }
 .stat-pill {
   flex: 1;
-  background: rgba(12,66,48,0.06);
-  border: 1px solid rgba(12,66,48,0.1);
+  background: rgba(0,0,0,0.02);
   padding: 10px 12px;
   text-align: center;
+  position: relative;
+}
+.stat-pill::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1.5px;
+  background: var(--team-btn-gradient, linear-gradient(135deg, #0c4230, #1a6648, #0c4230));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
 .stat-pill-number {
   font-family: 'Bebas Neue', sans-serif;

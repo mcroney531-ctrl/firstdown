@@ -449,25 +449,25 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 }
 .first-down-btn {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 16px;
-  letter-spacing: 4px;
-  padding: 9px 20px;
-  background: linear-gradient(135deg, #0c4230 0%, #1a6648 50%, #0c4230 100%);
-  color: #fff;
+  font-size: 13px;
+  letter-spacing: 3px;
+  padding: 6px 14px;
+  background: linear-gradient(135deg, #c8960a 0%, #FFD700 50%, #c8960a 100%);
+  color: #000;
   border: none;
   cursor: pointer;
   position: relative;
   overflow: hidden;
   transition: all 0.2s;
-  box-shadow: 0 3px 14px rgba(0,0,0,0.45);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.4);
   white-space: nowrap;
   animation: pulse-btn 2s ease-in-out infinite;
 }
 @keyframes pulse-btn {
-  0%,100% { box-shadow: 0 3px 14px rgba(0,0,0,0.45); }
-  50%      { box-shadow: 0 3px 24px rgba(12,66,48,0.6), 0 0 0 3px rgba(12,66,48,0.2); }
+  0%,100% { box-shadow: 0 2px 10px rgba(0,0,0,0.4); }
+  50%      { box-shadow: 0 2px 18px rgba(255,215,0,0.5), 0 0 0 2px rgba(255,215,0,0.3); }
 }
-.first-down-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+.first-down-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
 .first-down-btn:active { transform: translateY(0); }
 .first-down-hint {
   font-family: 'Barlow Condensed', sans-serif;
@@ -816,19 +816,9 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
   line-height: 1.1;
   margin-bottom: 20px;
   padding-bottom: 16px;
-  /* Bevel/emboss: light highlight top-left, dark shadow bottom-right, stroke outline */
-  text-shadow:
-    -1px -1px 0 rgba(0,0,0,0.75),
-     1px -1px 0 rgba(0,0,0,0.75),
-    -1px  1px 0 rgba(0,0,0,0.75),
-     1px  1px 0 rgba(0,0,0,0.75),
-    -2px -2px 0 rgba(0,0,0,0.3),
-     2px  2px 0 rgba(0,0,0,0.3),
-     1px  1px 2px rgba(255,255,255,0.4),
-    -1px -1px 2px rgba(255,255,255,0.2);
   position: relative;
 }
-/* Gradient line under the title */
+/* Gradient line under the body title */
 .content-module-title::after {
   content: '';
   position: absolute;
@@ -2025,21 +2015,20 @@ function positionFirstDownBtn() {
   const fieldWrap = document.getElementById('fieldWrap');
   if (!svg || !fieldWrap) return;
 
-  // Get SVG viewport info
   const svgRect = svg.getBoundingClientRect();
   const fieldRect = fieldWrap.getBoundingClientRect();
 
-  // Ball SVG coords: x = BALL_X_POSITIONS[moduleIndex] - 34, y = 216, width=68
-  // SVG viewBox is 0 0 1000 500
-  const ballSvgX = BALL_X_POSITIONS[gameState.moduleIndex] - 34 + 68; // right edge of ball
-  const ballSvgY = 216 + 34; // center of ball vertically
+  // Ball SVG coords — ball image: x = BALL_X_POSITIONS[i]-34, y=216, w=68, h=68
+  // Place button at bottom-right of ball, offset so it doesn't overlap
+  const ballSvgX = BALL_X_POSITIONS[gameState.moduleIndex] - 34 + 68; // right edge
+  const ballSvgY = 216 + 68; // bottom edge of ball
 
-  // Convert to screen coords
   const scaleX = svgRect.width / 1000;
   const scaleY = svgRect.height / 500;
 
-  const screenX = svgRect.left - fieldRect.left + ballSvgX * scaleX + 10;
-  const screenY = svgRect.top - fieldRect.top + ballSvgY * scaleY - 20;
+  // Button sits to the right of ball, aligned with its bottom edge
+  const screenX = svgRect.left - fieldRect.left + ballSvgX * scaleX + 6;
+  const screenY = svgRect.top - fieldRect.top + ballSvgY * scaleY - 8;
 
   wrap.style.left = screenX + 'px';
   wrap.style.top = screenY + 'px';

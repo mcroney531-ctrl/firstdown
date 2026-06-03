@@ -1338,17 +1338,6 @@ body.tecmo-mode .question-text {
   </div>
   <div class="bottom-bar">
     <div class="bottom-hint">ARROWS OR QUICK PICK TO SELECT YOUR TEAM</div>
-    <div class="bottom-hint" id="selectedHint">— CHOOSE YOUR CITY —</div>
-    <label class="practice-toggle" id="practiceToggleWrap" title="Skip questions during navigation">
-      <input type="checkbox" id="practiceModeCheck">
-      <span class="practice-toggle-track"></span>
-      <span class="practice-toggle-label">PRACTICE MODE</span>
-    </label>
-    <label class="practice-toggle" id="tecmoToggleWrap" title="Tecmo Bowl Mode">
-      <input type="checkbox" id="tecmoModeCheck" onchange="toggleTecmoMode(this.checked)">
-      <span class="practice-toggle-track" style="background:rgba(0,0,255,0.15);border-color:rgba(0,0,255,0.3);"></span>
-      <span class="practice-toggle-label">TECMO BOWL MODE</span>
-    </label>
   </div>
   <div class="ticker"><div class="ticker-inner" id="teamTicker"></div></div>
 </div>
@@ -2356,7 +2345,7 @@ let gameState = {
   q2correct: false,
   selectedTeam: null,
   completedModules: [],
-  practiceMode: false,
+  practiceMode: true,
 };
 
 // Ball X positions per module (10yd line to touchdown)
@@ -2865,7 +2854,6 @@ function toggleTecmoMode(on) {
 
 // Mode dropdown logic
 let currentMode = 'practice'; // default practice
-gameState.practiceMode = true;
 
 function setMode(mode) {
   currentMode = mode;

@@ -1830,7 +1830,7 @@ function render(dir) {
   document.getElementById('cardTopBar').style.background = t.primary;
   document.getElementById('teamCard').style.borderColor = t.primary+'25';
   ['ccTL','ccTR','ccBL','ccBR'].forEach(id => document.getElementById(id).style.borderColor = t.primary+'40');
-  document.getElementById('selectedHint').textContent = t.city.toUpperCase() + ' IS ON THE CLOCK';
+  // selectedHint removed from UI
   document.querySelectorAll('.dd-item').forEach((el,i) => el.classList.toggle('active', i===current));
   document.getElementById('pickBtnLabel').textContent = t.city;
 

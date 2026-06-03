@@ -104,19 +104,74 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 
 .left-panel {
   position: absolute;
-  left: 40px;
+  left: 36px;
   top: 50%;
   transform: translateY(-50%);
   z-index: 50;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 .dropdown-label {
   font-size: 10px;
   letter-spacing: 4px;
   color: rgba(12,66,48,0.5);
   text-transform: uppercase;
+}
+
+/* TMode float */
+.tmode-float {
+  position: absolute;
+  right: -88px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+.tmode-float-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: rgba(12,66,48,0.5);
+  white-space: nowrap;
+}
+.tmode-float-sub {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: rgba(12,66,48,0.6);
+}
+.tmode-switch { cursor: pointer; }
+.tmode-switch input { display: none; }
+.tmode-track {
+  display: block;
+  width: 42px;
+  height: 22px;
+  background: rgba(12,66,48,0.12);
+  border: 1.5px solid rgba(12,66,48,0.2);
+  border-radius: 11px;
+  position: relative;
+  transition: background 0.2s;
+}
+.tmode-track::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 14px; height: 14px;
+  background: rgba(12,66,48,0.35);
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+.tmode-switch input:checked + .tmode-track {
+  background: #c0392b;
+  border-color: #8B0000;
+}
+.tmode-switch input:checked + .tmode-track::after {
+  left: 23px;
+  background: #fff;
 }
 .dropdown-wrapper { position: relative; }
 .pick-btn { font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 2px; padding: 10px 14px; background: var(--white); border: 1px solid rgba(12,66,48,0.22); color: var(--green); cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; white-space: nowrap; flex: 1; }
@@ -353,7 +408,7 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
   font-family: 'Barlow', sans-serif;
   font-size: 14px;
   line-height: 1.75;
-  color: rgba(12,66,48,0.7);
+  color: #111;
   margin-bottom: 16px;
 }
 
@@ -371,7 +426,7 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
   gap: 14px;
   font-family: 'Barlow', sans-serif;
   font-size: 13px;
-  color: rgba(12,66,48,0.65);
+  color: #111;
   line-height: 1.4;
 }
 .popup-rule-icon {
@@ -400,13 +455,14 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
   font-size: 22px;
   letter-spacing: 6px;
   padding: 14px 64px;
-  background: var(--green);
+  background: var(--team-btn-gradient, linear-gradient(135deg, #0c4230, #1a6648));
   color: #fff;
   border: none;
   cursor: pointer;
   position: relative;
   overflow: hidden;
   transition: all 0.2s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.18);
 }
 .game-begin-btn::before {
   content: '';
@@ -447,6 +503,38 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 .hud-pill.down-active {
   background: var(--green);
   border-color: rgba(255,255,255,0.4);
+}
+
+/* Down marker icon */
+.hud-down-marker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 4px;
+}
+.down-marker-pole {
+  width: 3px;
+  height: 12px;
+  background: #c0c0c0;
+  border-radius: 1px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+.down-marker-board {
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(145deg, #f47f20, #d4630a);
+  border: 2px solid #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 2px 0 #1a1a1a, inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.down-marker-number {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  color: #fff;
+  line-height: 1;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.6);
 }
 
 /* First Down Button — anchors next to ball */
@@ -1179,9 +1267,9 @@ body.tecmo-mode .question-text {
     <div class="bg-bleed" id="bgBleed"></div>
     <div class="field-hashes"></div>
 
-    <!-- SELECT DROPDOWN — left panel -->
+    <!-- LEFT PANEL — team select + mode -->
     <div class="left-panel">
-      <span class="dropdown-label">SELECT</span>
+      <span class="dropdown-label">SELECT TEAM</span>
       <div class="dropdown-wrapper">
         <button class="pick-btn" id="pickBtn">
           <span id="pickBtnLabel">Browse Teams</span>
@@ -1189,9 +1277,36 @@ body.tecmo-mode .question-text {
         </button>
         <div class="dropdown-menu" id="dropdownMenu"></div>
       </div>
+      <span class="dropdown-label" style="margin-top:10px;">MODE</span>
+      <div class="dropdown-wrapper">
+        <button class="pick-btn" id="modeBtn">
+          <span id="modeBtnLabel">Practice</span>
+          <svg width="11" height="7" viewBox="0 0 11 7" fill="none"><path d="M1 1L5.5 6L10 1" stroke="#0c4230" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <div class="dropdown-menu" id="modeMenu">
+          <div class="dd-item" id="modePractice" onclick="setMode('practice')">
+            <span class="dd-swatch" style="background:#FFD700;border:1px solid #c8960a"></span>
+            Practice — skip questions to explore
+          </div>
+          <div class="dd-item" id="modeGame" onclick="setMode('game')">
+            <span class="dd-swatch" style="background:#0c4230;border:1px solid #0c4230"></span>
+            Game — answer to advance
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="team-card-wrap" id="cardWrap">
+
+    <!-- TMODE TOGGLE — floating right of card -->
+    <div class="tmode-float" id="tmodeFloat">
+      <div class="tmode-float-label">✦ TRY IT</div>
+      <label class="tmode-switch">
+        <input type="checkbox" id="tecmoModeCheck">
+        <span class="tmode-track"></span>
+      </label>
+      <div class="tmode-float-sub">T-MODE</div>
+    </div>
       <div class="team-card-col">
       <div class="team-card" id="teamCard">
         <div class="card-top-bar" id="cardTopBar"></div>
@@ -1203,8 +1318,10 @@ body.tecmo-mode .question-text {
           <button class="banner-arrow banner-arrow-left" id="prevBtn">&#8592;</button>
           <button class="banner-arrow banner-arrow-right" id="nextBtn">&#8594;</button>
           <button class="banner-random" id="randomBtn" title="Random team">
-            <svg width="16" height="16" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M1 4h2.5l6.5 6H13M13 4h-3l-2-2M7 7l2 3h4M1 10h2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <svg width="18" height="14" viewBox="0 0 24 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 5h3.5l9 8H20M20 5h-4.5l-3-3M12 9l3 4.5h5M2 13h3.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <polyline points="17,2 20,5 17,8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <polyline points="17,10 20,13 17,16" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
           <div class="helmet-stage">
@@ -1246,9 +1363,9 @@ body.tecmo-mode .question-text {
         <h2 class="game-popup-title" id="gamePopupTitle">READY TO TAKE THE FIELD</h2>
       </div>
       <div class="game-popup-body">
-        <p style="font-size:15px;font-weight:600;color:var(--green);line-height:1.7;">The best defense is a good offense. In cybersecurity, staying proactive isn't optional — it's the only play that works. You're on offense, and the field is yours.</p>
-        <p>You have <strong>10 modules</strong> to move the ball from the 10 yard line to the end zone. Each module puts a real cybersecurity threat in front of you — how it works, what it looks like, and what to do about it. Study the material, then answer <strong>2 questions</strong> to advance 10 yards.</p>
-        <p>Get both right and you earn a <strong>First Down</strong> — the ball moves and you pick up a yard marker. Miss one and you're back to try again. You've got <strong>3 downs</strong> to get it right before it's time to punt and reset.</p>
+        <p style="font-size:15px;font-weight:600;color:var(--green);line-height:1.7;" id="briefingHook">The best defense is a good offense. In cybersecurity, staying proactive isn't optional — it's the only play that works. You're on offense, and the field is yours.</p>
+        <p id="briefingBody1">You have <strong>10 modules</strong> to move the ball from the 10 yard line to the end zone. Each module puts a real cybersecurity threat in front of you — how it works, what it looks like, and what to do about it. Study the material, then answer <strong>2 questions</strong> to advance 10 yards.</p>
+        <p id="briefingBody2">Get both right and you earn a <strong>First Down</strong> — the ball moves and you pick up a yard marker. Miss one and you're back to try again. You've got <strong>3 downs</strong> to get it right before it's time to punt and reset.</p>
         <div class="game-popup-rules">
           <div class="popup-rule-item">
             <span class="popup-rule-icon">10</span>
@@ -1275,6 +1392,12 @@ body.tecmo-mode .question-text {
     <div class="hud-pill" id="hudModule">MODULE 01</div>
     <div class="hud-pill down-active" id="hudDown">1ST DOWN</div>
     <div class="hud-pill" id="hudTeam">—</div>
+    <div class="hud-down-marker" id="hudDownMarker">
+      <div class="down-marker-pole"></div>
+      <div class="down-marker-board" id="downMarkerBoard">
+        <span class="down-marker-number" id="downMarkerNumber">1</span>
+      </div>
+    </div>
   </div>
 
   <!-- FIRST DOWN BUTTON — positioned next to ball -->
@@ -1318,7 +1441,7 @@ body.tecmo-mode .question-text {
           </button>
         </div>
         <div class="overlay-footer-right" style="display:flex;align-items:center;gap:10px;">
-          <span class="overlay-footer-hint" id="overlayFooterLeft" style="font-size:11px;letter-spacing:2px;color:rgba(12,66,48,0.3);"></span>
+          <span class="overlay-footer-hint" id="overlayFooterLeft" style="font-size:11px;letter-spacing:2px;color:#111;"></span>
           <button class="next-arrow-btn" id="overlayNextBtn">
             CONTINUE
             <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5h12M9 1l4 4-4 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -1811,7 +1934,7 @@ document.getElementById('selectTeamBtn').addEventListener('click', () => {
 document.getElementById('startGameBtn').addEventListener('click', () => {
   const t = TEAMS[current];
   gameState.selectedTeam = t;
-  gameState.practiceMode = document.getElementById('practiceModeCheck').checked;
+  gameState.practiceMode = (currentMode === 'practice');
   fadeToScreen('screenGame', () => {
     // Set end zone colors to team primary
     document.getElementById('ezLeft').setAttribute('fill', t.primary);
@@ -1851,9 +1974,19 @@ document.getElementById('startGameBtn').addEventListener('click', () => {
     // Popup — gradient header, show overlay
     document.getElementById('gamePopupHeader').style.background =
       `linear-gradient(135deg, ${t.primary} 0%, ${t.secondary}88 60%, ${t.primary}cc 100%)`;
-    document.getElementById('gameBeginBtn').style.background = t.primary;
+    // begin btn uses CSS gradient — no override needed
     document.getElementById('gamePopupTitle').textContent = t.city.toUpperCase() + ' — GAME BRIEFING';
     document.getElementById('gamePopupOverlay').classList.remove('hidden');
+    // Update briefing language based on mode
+    if (gameState.practiceMode) {
+      document.getElementById('briefingHook').innerHTML = 'You're in <strong>Practice Mode</strong> — a safe space to explore the material at your own pace. Skip through questions freely, browse the modules, get comfortable with the field.';
+      document.getElementById('briefingBody1').innerHTML = 'Each of the <strong>10 modules</strong> covers a real cybersecurity threat. Read the material, then move through at your own pace. When you're game-ready, switch to <strong>Game Mode</strong> from the team selector and run it for real.';
+      document.getElementById('briefingBody2').innerHTML = 'In practice, the <strong>Skip button</strong> is always available on questions — no pressure, no penalty. Use this run to learn the material. The real challenge waits.';
+    } else {
+      document.getElementById('briefingHook').innerHTML = 'The best defense is a good offense. In cybersecurity, staying proactive isn't optional — it's the only play that works. You're on offense, and the field is yours.';
+      document.getElementById('briefingBody1').innerHTML = 'You have <strong>10 modules</strong> to move the ball from the 10 yard line to the end zone. Each module puts a real cybersecurity threat in front of you — how it works, what it looks like, and what to do about it. Study the material, then answer <strong>2 questions</strong> to advance 10 yards.';
+      document.getElementById('briefingBody2').innerHTML = 'Get both right and you earn a <strong>First Down</strong> — the ball moves and you pick up a yard marker. Miss one and you're back to try again. You've got <strong>3 downs</strong> to get it right before it's time to punt and reset.';
+    }
   });
 });
 
@@ -2238,7 +2371,41 @@ function initGame() {
   gameState.completedModules = [];
   applyTeamTheme();
   updateFieldHUD();
+  renderTopicLabels();
   showFirstDownBtn();
+}
+
+function renderTopicLabels() {
+  const svg = document.getElementById('fieldSVG');
+  // Remove any existing topic labels
+  svg.querySelectorAll('.topic-label-g').forEach(el => el.remove());
+
+  // Yard line X positions match FLAG_X_POSITIONS
+  // Each corresponds to a module
+  const labelPositions = [180, 260, 340, 420, 500, 580, 660, 740, 820];
+
+  MODULES.forEach((mod, i) => {
+    if (i >= labelPositions.length) return;
+    const x = labelPositions[i];
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.setAttribute('class', 'topic-label-g');
+
+    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    text.setAttribute('x', String(x));
+    text.setAttribute('y', '395');
+    text.setAttribute('font-family', "'Bebas Neue', Arial, sans-serif");
+    text.setAttribute('font-size', '11');
+    text.setAttribute('fill', 'rgba(255,255,255,0.55)');
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('letter-spacing', '1');
+    text.setAttribute('paint-order', 'stroke');
+    text.setAttribute('stroke', 'rgba(0,0,0,0.4)');
+    text.setAttribute('stroke-width', '2');
+    text.textContent = mod.topic;
+
+    g.appendChild(text);
+    svg.appendChild(g);
+  });
 }
 
 window.addEventListener('resize', () => {
@@ -2253,6 +2420,8 @@ function updateFieldHUD() {
   if (gameState.selectedTeam) {
     document.getElementById('hudTeam').textContent = gameState.selectedTeam.abbr;
   }
+  // Update down marker number
+  document.getElementById('downMarkerNumber').textContent = String(gameState.down);
 }
 
 function showFirstDownBtn() {
@@ -2506,9 +2675,22 @@ function showAdvanceState() {
 }
 
 function moveBall() {
-  const nextPos = BALL_X_POSITIONS[gameState.moduleIndex + 1];
+  const startPos = BALL_X_POSITIONS[gameState.moduleIndex] - 34;
+  const endPos   = BALL_X_POSITIONS[gameState.moduleIndex + 1] - 34;
   const ball = document.getElementById('ballMarker');
-  ball.setAttribute('x', String(nextPos - 34));
+  const duration = 900; // ms
+  const startTime = performance.now();
+
+  function step(now) {
+    const elapsed = now - startTime;
+    const t = Math.min(elapsed / duration, 1);
+    // Ease out cubic
+    const eased = 1 - Math.pow(1 - t, 3);
+    const currentX = Math.round(startPos + (endPos - startPos) * eased);
+    ball.setAttribute('x', String(currentX));
+    if (t < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
 }
 
 function dropFlag() {
@@ -2617,8 +2799,10 @@ function positionResumeBtn() {
 
 function resumeOverlay() {
   document.getElementById('resumeWrap').style.display = 'none';
+  // Restore footer to visible before re-rendering
+  document.getElementById('overlayFooter').style.display = 'flex';
+  document.getElementById('overlayHdr').style.display = 'flex';
   document.getElementById('gameOverlay').classList.remove('hidden');
-  // Restore to where we were
   if (gameState.savedPhase === 'questions') {
     showQuestionsScreen();
   } else {
@@ -2679,10 +2863,32 @@ function toggleTecmoMode(on) {
   document.body.classList.toggle('tecmo-mode', on);
 }
 
+// Mode dropdown logic
+let currentMode = 'practice'; // default practice
+gameState.practiceMode = true;
+
+function setMode(mode) {
+  currentMode = mode;
+  gameState.practiceMode = (mode === 'practice');
+  document.getElementById('modeBtnLabel').textContent = mode === 'practice' ? 'Practice' : 'Game';
+  document.getElementById('modeMenu').classList.remove('open');
+  document.getElementById('modeBtn').classList.remove('open');
+  document.getElementById('modePractice').classList.toggle('active', mode === 'practice');
+  document.getElementById('modeGame').classList.toggle('active', mode === 'game');
+}
+
+document.getElementById('modeBtn').addEventListener('click', e => {
+  e.stopPropagation();
+  document.getElementById('modeMenu').classList.toggle('open');
+  document.getElementById('modeBtn').classList.toggle('open');
+});
+
+// Init practice as active
+document.getElementById('modePractice').classList.add('active');
+
 // Tecmo Bowl Mode toggle
 document.getElementById('tecmoModeCheck').addEventListener('change', function() {
   document.body.classList.toggle('tecmo-mode', this.checked);
-  // Re-render helmet in new style
   const t = TEAMS[current];
   tintHelmet(t.primary, t.secondary, t.abbr);
 });

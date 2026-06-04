@@ -989,6 +989,15 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
   overflow: hidden;
   position: relative;
 }
+.content-banner-tint {
+  width: 100%;
+}
+.content-banner-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  mix-blend-mode: screen;
+}
 .content-banner-wrap::before {
   content: '';
   position: absolute;
@@ -2597,7 +2606,9 @@ function showContentScreen() {
   // Banner image (canvas tinted to team primary at runtime)
   const bannerHTML = `
     <div class="content-banner-wrap" id="moduleBannerWrap">
-      <canvas class="content-banner-canvas" id="moduleBannerCanvas"></canvas>
+      <div class="content-banner-tint" id="moduleBannerTint">
+        <img class="content-banner-img" id="moduleBannerImg">
+      </div>
       <div class="content-banner-label">${mod.visual ? mod.visual.label : ''}</div>
     </div>
   `;
@@ -2618,13 +2629,15 @@ function showContentScreen() {
     </div>
   `;
 
-  // Set banner wrap background + tint canvas to team primary
-  const bannerCanvas = document.getElementById('moduleBannerCanvas');
-  const bannerWrap   = document.getElementById('moduleBannerWrap');
-  if (bannerCanvas && bannerWrap && gameState.selectedTeam) {
+  // CSS screen-blend tinting: dark lines → team primary, white → white
+  const bannerWrap = document.getElementById('moduleBannerWrap');
+  const bannerTint = document.getElementById('moduleBannerTint');
+  const bannerImg  = document.getElementById('moduleBannerImg');
+  if (bannerWrap && bannerTint && bannerImg && gameState.selectedTeam) {
+    bannerImg.src = MODULE_BANNERS[gameState.moduleIndex];
+    bannerTint.style.background = gameState.selectedTeam.primary;
     const sc = hexToRgb(gameState.selectedTeam.secondary);
-    bannerWrap.style.background = `linear-gradient(135deg, rgba(,,,0.10) 0%, rgba(255,255,255,0.4) 60%, rgba(,,,0.06) 100%)`;
-    tintBannerCanvas(bannerCanvas, MODULE_BANNERS[gameState.moduleIndex], gameState.selectedTeam.primary);
+    bannerWrap.style.background = `linear-gradient(135deg, rgba(${sc.r},${sc.g},${sc.b},0.10) 0%, rgba(255,255,255,0.3) 100%)`;
   }
   document.getElementById('overlayFooterLeft').textContent = 'Read carefully — questions follow.';
   document.getElementById('overlayBackBtn').style.display = 'none';

@@ -2669,13 +2669,9 @@ function showAdvanceState() {
   `;
   document.getElementById('overlayFooter').style.display = 'none';
   document.getElementById('overlayBackBtn').style.display = 'none';
-
-  // Move ball on field
-  moveBall();
-  dropFlag();
 }
 
-function moveBall() {
+function moveBall(onComplete) {
   const startPos = BALL_X_POSITIONS[gameState.moduleIndex] - 34;
   const endPos   = BALL_X_POSITIONS[gameState.moduleIndex + 1] - 34;
   const ball = document.getElementById('ballMarker');
@@ -2689,7 +2685,8 @@ function moveBall() {
     const eased = 1 - Math.pow(1 - t, 3);
     const currentX = Math.round(startPos + (endPos - startPos) * eased);
     ball.setAttribute('x', String(currentX));
-    if (t < 1) requestAnimationFrame(step);
+    if (t < 1) { requestAnimationFrame(step); }
+    else if (onComplete) { onComplete(); }
   }
   requestAnimationFrame(step);
 }
@@ -2731,13 +2728,24 @@ function dropFlag() {
 function advanceModule() {
   document.getElementById('overlayFooter').style.display = 'flex';
   document.getElementById('overlayHdr').style.display = 'flex';
-  gameState.moduleIndex++;
   gameState.down = 1;
-  if (gameState.moduleIndex >= MODULES.length) {
-    showTouchdown();
-  } else {
-    showFirstDownBtn();
-  }
+  // Close overlay so field is visible before ball moves
+  document.getElementById('gameOverlay').classList.add('hidden');
+  document.getElementById('firstDownWrap').style.display = 'none';
+  document.getElementById('resumeWrap').style.display = 'none';
+  // Animate ball (uses current moduleIndex for start/end), then advance state
+  moveBall(() => {
+    dropFlag();
+    gameState.moduleIndex++;
+    if (gameState.moduleIndex >= MODULES.length) {
+      showTouchdown();
+    } else {
+      gameState.phase = 'idle';
+      updateFieldHUD();
+      document.getElementById('firstDownWrap').style.display = 'flex';
+      positionFirstDownBtn();
+    }
+  });
 }
 
 // ── DOWN STATE ──

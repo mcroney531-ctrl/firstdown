@@ -9,7 +9,6 @@
 
 - **Live URL:** https://mcroney531-ctrl.github.io/firstdown/
 - **Repo:** GitHub → GitHub Pages auto-deploy
-- **Local repo:** `C:\Users\Trevor Newsome\OneDrive\Documents\firstdown\`
 - **Stack:** Vanilla HTML + CSS + JS, single file (`index.html`)
 
 ---
@@ -18,13 +17,13 @@
 
 ```
 /
-├── index.html              ← entire app (HTML + CSS + JS, single file)
-├── helmet.png              ← AI-generated grey-shell helmet, transparent bg (canvas pixel-tinted per team)
-├── ball.png                ← real football PNG, transparent bg (normal mode only)
-├── Cowboys_2_0_D.otf       ← used for EZ text, midfield logo abbreviation, yard numbers
-├── Tecmo_Bowl.ttf          ← used in T-Mode for all heading-level text
-├── Game Paused DEMO.otf    ← used in T-Mode for module banner titles (.overlay-title)
-└── CONTEXT.md              ← this file
+├── index.html          ← entire app (HTML + CSS + JS, single file)
+├── helmet.png          ← AI-generated grey-shell helmet, transparent bg (canvas pixel-tinted per team)
+├── ball.png            ← real football PNG, transparent bg (normal mode only)
+├── pixelhelmet.png     ← pixel helmet template for T-Mode (extracted from inline base64; canvas pixel-tinted per team)
+├── Cowboys_2_0_D.otf   ← used for EZ text, midfield logo abbreviation, yard numbers
+├── Tecmo_Bowl.ttf      ← used in T-Mode for all heading-level text
+└── CONTEXT.md          ← this file
 ```
 
 **Coming assets:** additional fonts, icons, images — all drop into repo root.
@@ -84,11 +83,16 @@ Toggled from team select screen (floating right of card).
 
 - Swaps body fonts → `Press Start 2P` (Google Fonts)
 - Swaps heading fonts → `Tecmo Bowl.ttf`
-- Swaps realistic `helmet.png` → pixel-tinted version of a separate pixel helmet template (same canvas tinting logic)
+- Swaps realistic `helmet.png` → pixel-tinted version of `pixelhelmet.png` (separate file, same canvas tinting logic; referenced via `pixelHelmetImg.src = 'pixelhelmet.png'`)
 - EZ text, midfield logo abbreviation, yard numbers, topic labels → Tecmo Bowl font
-- `ball.png` → **canvas-drawn pixel football** (`drawPixelFootball()` in JS, no image file, transparent bg)
-- Module banner title (`.overlay-title`) → `Game Paused DEMO.otf` (`GamePaused` family)
+- `ball.png` → **canvas-drawn pixel football** (programmatically drawn, no image file, guaranteed transparent bg)
 - Abbreviation on helmet: upper-left dome area (~42% across, 30% down), smaller size
+
+### ⚠️ Last Open Item — Pixel Football
+The canvas-drawn pixel football for T-Mode was **in progress when the last session ended**. Plan:
+- Draw entirely in canvas (no image file) to avoid remove.bg/alpha channel problems from earlier attempts
+- Normal mode keeps `ball.png` as-is
+- This is the first thing to pick up on resuming
 
 ---
 
@@ -110,9 +114,8 @@ Toggled from team select screen (floating right of card).
 - Special (EZ, midfield, field): Cowboys 2.0 (`Cowboys_2_0_D.otf`)
 - T-Mode heading: Tecmo Bowl (`Tecmo_Bowl.ttf`)
 - T-Mode body: Press Start 2P (Google Fonts)
-- T-Mode module banner title: Game Paused DEMO (`Game Paused DEMO.otf`) — `.overlay-title` only
 
-**Rejected:** Asphalt Sports font (tried, rejected — Bebas Neue confirmed for banner module titles in normal mode)
+**Rejected:** Asphalt Sports font (tried, rejected — Bebas Neue confirmed for banner module titles)
 
 ---
 
@@ -122,7 +125,7 @@ Canvas pixel-tinting logic:
 - Source: `helmet.png` — grey-shell, transparent background
 - Brightness-based colorization + white lerp for facemask
 - Per-team using NFL primary/secondary hex
-- T-Mode: same logic applied to a separate pixel helmet template
+- T-Mode: same logic applied to `pixelhelmet.png` (NOTE: this was previously embedded as inline base64 in index.html — extracted to a file to cut token size by ~60%. Do NOT re-embed assets as base64; keep them as referenced files.)
 
 ---
 
@@ -161,20 +164,10 @@ Each module contains: icon + threat label visual, 3-stat bar with real statistic
 
 ---
 
-## File Safety — PowerShell Writing Rules
-
-**Always write files using `[System.IO.File]::WriteAllText` with `(New-Object System.Text.UTF8Encoding $false)` — never `Set-Content -Encoding UTF8` (adds BOM) or `Out-File` (adds BOM).**
-
-When doing regex replacements on file content:
-- Use `[regex]::Replace()` not `-replace` for complex patterns
-- Never use `.Replace(string, char)` — PowerShell resolves to `Replace(Char,Char)` and errors; always pass a string as second arg
-- Always verify the replacement matched before writing: `if ($newContent -eq $content) { "NO MATCH" }`
-
----
-
 ## Session Protocol
 
 At the start of each session:
 1. Read this file
 2. Check `index.html` for current state (especially JS game state and T-Mode canvas code)
-3. Ask what we're working on today before touching any code
+3. Confirm the pixel football canvas item is either done or still open
+4. Ask what we're working on today before touching any code

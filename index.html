@@ -987,8 +987,21 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
   margin-bottom: 20px;
   border-radius: 2px;
   overflow: hidden;
-  border: 1px solid rgba(0,0,0,0.06);
   background: #fff;
+  position: relative;
+}
+.content-banner-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
+  padding: 2px;
+  background: var(--team-btn-gradient, linear-gradient(135deg, #0c4230, #1a6648, #0c4230));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 1;
 }
 .content-banner-canvas {
   display: block;
@@ -2574,17 +2587,6 @@ function showContentScreen() {
   updateOverlayHeader();
   const mod = MODULES[gameState.moduleIndex];
 
-  // Stats bar HTML
-  const statsHTML = mod.stats ? `
-    <div class="content-stat-bar">
-      ${mod.stats.map(s => `
-        <div class="stat-pill">
-          <span class="stat-pill-number">${s.number}</span>
-          <span class="stat-pill-label">${s.label}</span>
-        </div>
-      `).join('')}
-    </div>
-  ` : '';
 
   // Banner image (canvas tinted to team primary at runtime)
   const bannerHTML = `
@@ -2597,7 +2599,7 @@ function showContentScreen() {
   document.getElementById('overlayBody').innerHTML = `
     <h2 class="content-module-title">${mod.title}</h2>
     ${bannerHTML}
-    ${statsHTML}
+
     ${mod.content}
     <div class="best-practices">
       <span class="best-practices-label">BEST PRACTICES</span>

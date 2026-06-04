@@ -9,6 +9,7 @@
 
 - **Live URL:** https://mcroney531-ctrl.github.io/firstdown/
 - **Repo:** GitHub → GitHub Pages auto-deploy
+- **Local repo:** `C:\Users\Trevor Newsome\OneDrive\Documents\firstdown\`
 - **Stack:** Vanilla HTML + CSS + JS, single file (`index.html`)
 
 ---

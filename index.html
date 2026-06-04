@@ -551,7 +551,7 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
   flex-direction: column;
   align-items: flex-start;
   gap: 4px;
-  transition: left 0.6s ease, top 0.6s ease;
+  transition: left 0.6s ease, top 0.6s ease, opacity 0.3s ease;
 }
 .first-down-btn {
   font-family: 'Bebas Neue', sans-serif;
@@ -586,7 +586,14 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 }
 
 /* Progress flags on field */
-.field-flag { pointer-events: none; }
+@keyframes flagDrop {
+  from { opacity: 0; transform: translateY(-14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.field-flag {
+  pointer-events: none;
+  animation: flagDrop 0.22s ease-out forwards;
+}
 
 /* Game Overlay — sits over field */
 .game-overlay {
@@ -2735,16 +2742,22 @@ function advanceModule() {
   document.getElementById('resumeWrap').style.display = 'none';
   // Animate ball (uses current moduleIndex for start/end), then advance state
   setTimeout(() => moveBall(() => {
-    dropFlag();
-    gameState.moduleIndex++;
-    if (gameState.moduleIndex >= MODULES.length) {
-      showTouchdown();
-    } else {
-      gameState.phase = 'idle';
-      updateFieldHUD();
-      document.getElementById('firstDownWrap').style.display = 'flex';
-      positionFirstDownBtn();
-    }
+    // Staggered entrance: flag at +80ms, button at +250ms
+    setTimeout(() => dropFlag(), 80);
+    setTimeout(() => {
+      gameState.moduleIndex++;
+      if (gameState.moduleIndex >= MODULES.length) {
+        showTouchdown();
+      } else {
+        gameState.phase = 'idle';
+        updateFieldHUD();
+        const wrap = document.getElementById('firstDownWrap');
+        wrap.style.opacity = '0';
+        wrap.style.display = 'flex';
+        positionFirstDownBtn();
+        requestAnimationFrame(() => requestAnimationFrame(() => { wrap.style.opacity = '1'; }));
+      }
+    }, 250);
   }), 150);
 }
 

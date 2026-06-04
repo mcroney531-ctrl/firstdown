@@ -991,13 +991,13 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 }
 .content-banner-tint {
   width: 100%;
-  isolation: isolate;
 }
 .content-banner-img {
   display: block;
   width: 100%;
   height: auto;
-  mix-blend-mode: screen;
+  mix-blend-mode: multiply;
+  filter: contrast(1.4) brightness(0.88);
 }
 .content-banner-wrap::before {
   content: '';
@@ -2638,7 +2638,9 @@ function showContentScreen() {
   if (bannerWrap && bannerTint && bannerImg && gameState.selectedTeam) {
     bannerImg.src = MODULE_BANNERS[gameState.moduleIndex];
     bannerWrap.style.background = '';
-    bannerTint.style.background = gameState.selectedTeam.primary;
+    const bpc = hexToRgb(gameState.selectedTeam.primary);
+    const bsc = hexToRgb(gameState.selectedTeam.secondary);
+    bannerTint.style.background = `linear-gradient(135deg, rgba(${bpc.r},${bpc.g},${bpc.b},0.07) 0%, rgba(255,255,255,0.15) 50%, rgba(${bsc.r},${bsc.g},${bsc.b},0.05) 100%)`;
   }
   document.getElementById('overlayFooterLeft').textContent = 'Read carefully — questions follow.';
   document.getElementById('overlayBackBtn').style.display = 'none';

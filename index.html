@@ -2734,7 +2734,7 @@ function advanceModule() {
   document.getElementById('firstDownWrap').style.display = 'none';
   document.getElementById('resumeWrap').style.display = 'none';
   // Animate ball (uses current moduleIndex for start/end), then advance state
-  moveBall(() => {
+  setTimeout(() => moveBall(() => {
     dropFlag();
     gameState.moduleIndex++;
     if (gameState.moduleIndex >= MODULES.length) {
@@ -2745,7 +2745,7 @@ function advanceModule() {
       document.getElementById('firstDownWrap').style.display = 'flex';
       positionFirstDownBtn();
     }
-  });
+  }), 150);
 }
 
 // ── DOWN STATE ──

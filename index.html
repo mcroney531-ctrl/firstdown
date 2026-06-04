@@ -987,7 +987,6 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
   margin-bottom: 20px;
   border-radius: 2px;
   overflow: hidden;
-  background: #fff;
   position: relative;
 }
 .content-banner-wrap::before {
@@ -2524,6 +2523,7 @@ function tintBannerCanvas(canvas, src, primaryHex) {
     canvas.width  = img.naturalWidth;
     canvas.height = img.naturalHeight;
     const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     const off = document.createElement('canvas');
     off.width = img.naturalWidth; off.height = img.naturalHeight;
     const octx = off.getContext('2d');
@@ -2535,12 +2535,21 @@ function tintBannerCanvas(canvas, src, primaryHex) {
     for (let i = 0; i < sd.length; i += 4) {
       const a = sd[i+3];
       if (a < 10) { od[i+3] = 0; continue; }
-      const br  = (sd[i]*0.299 + sd[i+1]*0.587 + sd[i+2]*0.114) / 255;
-      const ink = Math.max(0, Math.min(1, (1 - br) * 1.5));
-      od[i]   = Math.round(255*(1-ink) + pc.r*ink);
-      od[i+1] = Math.round(255*(1-ink) + pc.g*ink);
-      od[i+2] = Math.round(255*(1-ink) + pc.b*ink);
-      od[i+3] = a;
+      const br = (sd[i]*0.299 + sd[i+1]*0.587 + sd[i+2]*0.114) / 255;
+      if (br > 0.88) {
+        // Near-white background → transparent so CSS gradient shows through
+        od[i+3] = 0;
+      } else if (br < 0.14) {
+        // Very dark (text) → keep dark
+        od[i] = 28; od[i+1] = 28; od[i+2] = 28; od[i+3] = a;
+      } else {
+        // Icon lines → tint to team primary, stronger weight
+        const ink = Math.max(0, Math.min(1, (1 - br) * 2.2));
+        od[i]   = Math.round(255*(1-ink) + pc.r*ink);
+        od[i+1] = Math.round(255*(1-ink) + pc.g*ink);
+        od[i+2] = Math.round(255*(1-ink) + pc.b*ink);
+        od[i+3] = a;
+      }
     }
     ctx.putImageData(out, 0, 0);
   };
@@ -2590,7 +2599,7 @@ function showContentScreen() {
 
   // Banner image (canvas tinted to team primary at runtime)
   const bannerHTML = `
-    <div class="content-banner-wrap">
+    <div class="content-banner-wrap" id="moduleBannerWrap">
       <canvas class="content-banner-canvas" id="moduleBannerCanvas"></canvas>
       <div class="content-banner-label">${mod.visual ? mod.visual.label : ''}</div>
     </div>
@@ -2612,9 +2621,12 @@ function showContentScreen() {
     </div>
   `;
 
-  // Tint banner canvas to team primary
+  // Set banner wrap background + tint canvas to team primary
   const bannerCanvas = document.getElementById('moduleBannerCanvas');
-  if (bannerCanvas && gameState.selectedTeam) {
+  const bannerWrap   = document.getElementById('moduleBannerWrap');
+  if (bannerCanvas && bannerWrap && gameState.selectedTeam) {
+    const sc = hexToRgb(gameState.selectedTeam.secondary);
+    bannerWrap.style.background = `linear-gradient(135deg, rgba(,,,0.10) 0%, rgba(255,255,255,0.4) 60%, rgba(,,,0.06) 100%)`;
     tintBannerCanvas(bannerCanvas, MODULE_BANNERS[gameState.moduleIndex], gameState.selectedTeam.primary);
   }
   document.getElementById('overlayFooterLeft').textContent = 'Read carefully — questions follow.';

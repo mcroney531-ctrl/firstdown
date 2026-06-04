@@ -2536,15 +2536,12 @@ function tintBannerCanvas(canvas, src, primaryHex) {
       const a = sd[i+3];
       if (a < 10) { od[i+3] = 0; continue; }
       const br = (sd[i]*0.299 + sd[i+1]*0.587 + sd[i+2]*0.114) / 255;
-      if (br > 0.88) {
-        // Near-white background → transparent so CSS gradient shows through
+      if (br > 0.85) {
+        // Near-white → transparent, CSS gradient background shows through
         od[i+3] = 0;
-      } else if (br < 0.14) {
-        // Very dark (text) → keep dark
-        od[i] = 28; od[i+1] = 28; od[i+2] = 28; od[i+3] = a;
       } else {
-        // Icon lines → tint to team primary, stronger weight
-        const ink = Math.max(0, Math.min(1, (1 - br) * 2.2));
+        // All line-work → tint to team primary, 2x weight for boldness
+        const ink = Math.max(0, Math.min(1, (1 - br) * 2.0));
         od[i]   = Math.round(255*(1-ink) + pc.r*ink);
         od[i+1] = Math.round(255*(1-ink) + pc.g*ink);
         od[i+2] = Math.round(255*(1-ink) + pc.b*ink);

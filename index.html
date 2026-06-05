@@ -1672,7 +1672,7 @@ body.tecmo-mode .question-text {
 
 <script>
 const TEAMS = [
-  {city:"Arizona",       abbr:"ARI", primary:"#97233F", secondary:"#000000"},
+  {city:"Arizona",       abbr:"AZ",  primary:"#97233F", secondary:"#000000"},
   {city:"Atlanta",       abbr:"ATL", primary:"#A71930", secondary:"#000000"},
   {city:"Baltimore",     abbr:"BAL", primary:"#241773", secondary:"#9E7C0C"},
   {city:"Buffalo",       abbr:"BUF", primary:"#00338D", secondary:"#C60C30"},
@@ -3074,7 +3074,7 @@ document.getElementById('tecmoModeCheck').addEventListener('change', function() 
     _sub.style.fontSize   = this.checked ? '10px' : '';
   }
   const t = TEAMS[current];
-  tintHelmet(t.primary, t.secondary, t.abbr);
+  document.fonts.load('20px TecmoBowl').then(() => tintHelmet(t.primary, t.secondary, t.abbr));
   // Swap ball asset
   const ball = document.getElementById('ballMarker');
   if (ball) {

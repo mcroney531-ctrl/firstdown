@@ -231,8 +231,8 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
   background: rgba(0,0,0,0.25);
   border: 1px solid rgba(255,255,255,0.3);
   color: #fff;
-  width: 34px;
   height: 34px;
+  padding: 0 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -260,8 +260,8 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
   background: rgba(0,0,0,0.25);
   border: 1px solid rgba(255,255,255,0.3);
   color: #fff;
-  width: 34px;
   height: 34px;
+  padding: 0 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2468,7 +2468,8 @@ function renderTopicLabels() {
     const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     text.setAttribute('x', String(x));
     text.setAttribute('y', '183');
-    text.setAttribute('font-family', "'Bebas Neue', Arial, sans-serif");
+    const _isTmode = document.body.classList.contains('tecmo-mode');
+    text.setAttribute('font-family', _isTmode ? "TecmoBowl, 'Press Start 2P', monospace" : "'Bebas Neue', Arial, sans-serif");
     text.setAttribute('font-size', '11');
     text.setAttribute('fill', isDone ? 'rgba(255,255,255,0.92)' : 'rgba(255,255,255,0.28)');
     text.setAttribute('text-anchor', 'middle');

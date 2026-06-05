@@ -1292,6 +1292,11 @@ body.tecmo-mode .question-text {
 /* ══ MOBILE ══ */
 @media (max-width: 768px) {
 
+  /* Allow vertical scroll on mobile */
+  body { overflow-x: hidden; overflow-y: auto; height: auto; min-height: 100dvh; }
+  .screen { overflow-y: auto; overflow-x: hidden; }
+  .welcome-stage { overflow-y: auto; overflow-x: hidden; }
+
   /* Welcome */
   .welcome-content { flex-direction: column; align-items: center; padding: 0 20px 24px; gap: 16px; }
   .welcome-title-block { padding-top: 6vh; margin-left: 0; align-self: center; }

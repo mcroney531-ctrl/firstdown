@@ -69,7 +69,7 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 .fade-overlay.covering { opacity: 1; pointer-events: all; }
 
 /* WELCOME */
-.welcome-stage { flex: 1; position: relative; display: flex; align-items: flex-end; justify-content: center; overflow: hidden; background: url('hero_stadium.png') center center / cover no-repeat; padding-top: 32vh; }
+.welcome-stage { flex: 1; position: relative; display: flex; align-items: flex-end; justify-content: center; overflow: hidden; background: url('hero_stadium.png') center center / cover no-repeat; padding-top: 50vh; }
 .welcome-bg { position: absolute; inset: 0; background: rgba(0,0,0,0.52); z-index: 0; }
 .yard-lines { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
 .yard-lines::before, .yard-lines::after { content: ''; position: absolute; left: -10%; right: -10%; height: 1px; background: rgba(12,66,48,0.09); }
@@ -96,7 +96,7 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 .rule-icon { font-family: 'Bebas Neue', sans-serif; font-size: 13px; color: #fff; background: rgba(12,66,48,0.85); width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .rule-text { font-family: 'Barlow', sans-serif; font-size: 13px; color: rgba(255,255,255,0.80); line-height: 1.4; }
 .rule-text strong { color: #fff !important; font-weight: 600; }
-.select-team-btn { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 5px; padding: 15px 48px; background: linear-gradient(135deg, #c8960a 0%, #FFD700 50%, #c8960a 100%); color: #000; border: none; cursor: pointer; position: relative; overflow: hidden; transition: all 0.2s; display: inline-block; }
+.select-team-btn { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 5px; padding: 15px 48px; background: linear-gradient(135deg, #c8960a 0%, #FFD700 50%, #c8960a 100%); color: #000; border: none; cursor: pointer; position: relative; overflow: hidden; transition: all 0.2s; display: block; width: 100%; text-align: center; margin-top: 16px; }
 .select-team-btn::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent); transform: translateX(-100%); transition: transform 0.4s; }
 .select-team-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(12,66,48,0.22); }
 .select-team-btn:hover::before { transform: translateX(100%); }

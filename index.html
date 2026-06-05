@@ -1316,6 +1316,11 @@ body.tecmo-mode .question-text {
   .bottom-hint { display: none; }
   .start-game-btn { width: 100%; padding: 14px 20px; }
 
+  /* Game screen — anchor to viewport so SVG has room to scale */
+  #screenGame { min-height: 100dvh; }
+  .field-wrap { padding: 8px; align-items: center; justify-content: center; }
+  #fieldSVG { width: 100% !important; height: auto !important; }
+
   /* Game field HUD */
   .field-hud { gap: 4px; }
   .hud-pill { font-size: 10px; letter-spacing: 1px; padding: 4px 8px; }

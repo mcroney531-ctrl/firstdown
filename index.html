@@ -1671,7 +1671,7 @@ body.tecmo-mode .question-text {
 </div>
 
 <script>
-const WHITE_HELMET_TEXT = new Set(['AZ','ATL','CAR','DAL','LV','NYJ','PHI','TB','TEN']);
+const WHITE_HELMET_TEXT = new Set(['AZ','ATL','CAR','DAL','DET','IND','LV','NYJ','PHI','TB','TEN']);
 
 const TEAMS = [
   {city:"Arizona",       abbr:"AZ",  primary:"#97233F", secondary:"#000000"},
@@ -1688,7 +1688,7 @@ const TEAMS = [
   {city:"Green Bay",     abbr:"GB",  primary:"#203731", secondary:"#FFB612"},
   {city:"Houston",       abbr:"HOU", primary:"#03202F", secondary:"#A71930"},
   {city:"Indianapolis",  abbr:"IND", primary:"#002C5F", secondary:"#A2AAAD"},
-  {city:"Jacksonville",  abbr:"JAC", primary:"#101820", secondary:"#D7A22A"},
+  {city:"Jacksonville",  abbr:"JAX", primary:"#101820", secondary:"#D7A22A"},
   {city:"Kansas City",   abbr:"KC",  primary:"#E31837", secondary:"#FFB81C"},
   {city:"Las Vegas",     abbr:"LV",  primary:"#000000", secondary:"#A5ACAF"},
   {city:"Los Angeles",   abbr:"LA",  primary:"#003594", secondary:"#FFA300"},
@@ -1814,8 +1814,8 @@ function drawPixelHelmet(ctx, W, H, primary, secondary, abbr) {
     const textX = W * 0.438 + 6;
     const textY = H * 0.30;
     const useWhite = WHITE_HELMET_TEXT.has(abbr);
-    const fillCol = useWhite ? '#ffffff' : (scLum > 0.5 ? '#111' : `rgb(${sc.r},${sc.g},${sc.b})`);
-    const strokeCol = useWhite ? 'rgba(0,0,0,0.8)' : (scLum > 0.5 ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.8)');
+    const fillCol = useWhite ? '#ffffff' : `rgb(${sc.r},${sc.g},${sc.b})`;
+    const strokeCol = useWhite ? 'rgba(0,0,0,0.8)' : (scLum > 0.5 ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.9)');
     ctx.strokeStyle = strokeCol;
     ctx.lineWidth = 5;
     ctx.lineJoin = 'round';

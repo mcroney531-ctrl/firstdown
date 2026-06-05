@@ -134,14 +134,14 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 /* TMode float */
 .tmode-float {
   position: absolute;
-  right: -88px;
+  right: -172px;
   top: 50%;
   transform: translateY(-50%);
   z-index: 50;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
 }
 .tmode-float-label {
   font-family: 'Bebas Neue', sans-serif;
@@ -231,8 +231,11 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
   background: rgba(0,0,0,0.25);
   border: 1px solid rgba(255,255,255,0.3);
   color: #fff;
-  height: 34px;
-  padding: 0 12px;
+  height: 24px;
+  padding: 0 8px;
+  font-size: 10px;
+  bottom: 8px;
+  right: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -260,8 +263,11 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
   background: rgba(0,0,0,0.25);
   border: 1px solid rgba(255,255,255,0.3);
   color: #fff;
-  height: 34px;
-  padding: 0 12px;
+  height: 24px;
+  padding: 0 8px;
+  font-size: 10px;
+  bottom: 8px;
+  right: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1376,12 +1382,12 @@ body.tecmo-mode .question-text {
 
     <!-- TMODE TOGGLE — floating right of card -->
     <div class="tmode-float" id="tmodeFloat">
-      <div class="tmode-float-label">✦ TRY IT</div>
+      
       <label class="tmode-switch">
         <input type="checkbox" id="tecmoModeCheck">
         <span class="tmode-track"></span>
       </label>
-      <div class="tmode-float-sub">T-MODE</div>
+      <div class="tmode-float-sub">Try Tecmo Bowl Mode</div>
     </div>
       <div class="team-card-col">
       <div class="team-card" id="teamCard">

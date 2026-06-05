@@ -25,8 +25,14 @@
   font-style: normal;
 }
 @font-face {
-  font-family: 'AsphaltSports';
+  font-family: 'HeavySport';
   src: url('Asphalt_Sports.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'HeavySport';
+  src: url('HeavySport-Regular.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
 }
@@ -83,7 +89,7 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 .welcome-content { position: relative; z-index: 10; display: flex; align-items: flex-end; gap: 60px; max-width: 1100px; width: 100%; padding: 0 48px 40px; }
 .welcome-title-block { flex-shrink: 0; text-align: center; animation: fadeUp 0.6s ease both; }
 .welcome-eyebrow { font-size: 11px; letter-spacing: 6px; color: rgba(255,255,255,0.65); text-transform: uppercase; margin-bottom: 12px; display: block; }
-.welcome-title { font-family: 'Bebas Neue', sans-serif; color: #fff !important; font-size: clamp(72px, 10vw, 110px); line-height: 0.88; letter-spacing: 4px; color: #fff !important; }
+.welcome-title { font-family: 'HeavySport', 'Bebas Neue', sans-serif; color: #fff !important; font-size: clamp(72px, 10vw, 110px); line-height: 0.88; letter-spacing: 4px; color: #fff !important; }
 .welcome-title .accent { color: #7effd4; }
 .welcome-rule { width: 60px; height: 3px; background: var(--green); margin: 20px auto; opacity: 0.2; }
 .welcome-tagline { font-size: 13px; letter-spacing: 4px; color: rgba(255,255,255,0.7); text-transform: uppercase; }
@@ -95,7 +101,10 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 .rule-item { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; flex: 1; }
 .rule-icon { font-family: 'Bebas Neue', sans-serif; font-size: 12px; letter-spacing: 1px; color: #fff; background: rgba(12,66,48,0.85); height: 20px; padding: 0 10px; width: auto; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; border-radius: 2px; margin-bottom: 4px; }
 .rule-text { font-family: 'Barlow', sans-serif; font-size: 12px; color: rgba(255,255,255,0.75); line-height: 1.4; }
-.rule-text strong { display: block; font-size: 13px; color: #fff; margin-bottom: 2px; }
+.rule-header { display: flex; align-items: center; gap: 8px; background: rgba(12,66,48,0.85); padding: 5px 10px; border-radius: 2px; width: 100%; margin-bottom: 6px; }
+.rule-num { font-family: 'Bebas Neue', sans-serif; font-size: 13px; color: #fff; flex-shrink: 0; }
+.rule-title { font-size: 12px; font-weight: 700; color: #fff; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.5px; }
+.rule-body { font-size: 12px; color: rgba(255,255,255,0.75); line-height: 1.4; }
 .rule-text strong { color: #fff !important; font-weight: 600; }
 .select-team-btn { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 5px; padding: 15px 48px; background: linear-gradient(135deg, #c8960a 0%, #FFD700 50%, #c8960a 100%); color: #000; border: none; cursor: pointer; position: relative; overflow: hidden; transition: all 0.2s; display: block; width: 100%; text-align: center; margin-top: 16px; }
 .select-team-btn::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent); transform: translateX(-100%); transition: transform 0.4s; }
@@ -136,7 +145,7 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 .tmode-float {
   position: absolute;
   right: -210px;
-  top: 72%;
+  top: 58%;
   transform: translateY(-50%);
   z-index: 50;
   display: flex;
@@ -255,7 +264,7 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
   letter-spacing: 2px;
   color: #fff;
   position: absolute;
-  bottom: 10px;
+  bottom: 16px;
   right: 10px;
   z-index: 20;
   background: rgba(0,0,0,0.35);
@@ -1172,7 +1181,7 @@ body.tecmo-mode .content-module-title {
   line-height: 1.6 !important;
 }
 body.tecmo-mode .overlay-title {
-  font-family: 'AsphaltSports', 'TecmoBowl', monospace !important;
+  font-family: 'HeavySport', 'TecmoBowl', monospace !important;
   letter-spacing: 1px;
 }
 body.tecmo-mode .overlay-body p,

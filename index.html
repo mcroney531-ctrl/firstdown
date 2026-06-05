@@ -1671,6 +1671,8 @@ body.tecmo-mode .question-text {
 </div>
 
 <script>
+const WHITE_HELMET_TEXT = new Set(['AZ','ATL','CAR','DAL','LV','NYJ','PHI','TB','TEN']);
+
 const TEAMS = [
   {city:"Arizona",       abbr:"AZ",  primary:"#97233F", secondary:"#000000"},
   {city:"Atlanta",       abbr:"ATL", primary:"#A71930", secondary:"#000000"},
@@ -1811,8 +1813,9 @@ function drawPixelHelmet(ctx, W, H, primary, secondary, abbr) {
     ctx.textBaseline = 'middle';
     const textX = W * 0.438 + 6;
     const textY = H * 0.30;
-    const fillCol = scLum > 0.5 ? '#111' : `rgb(${sc.r},${sc.g},${sc.b})`;
-    const strokeCol = scLum > 0.5 ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.8)';
+    const useWhite = WHITE_HELMET_TEXT.has(abbr);
+    const fillCol = useWhite ? '#ffffff' : (scLum > 0.5 ? '#111' : `rgb(${sc.r},${sc.g},${sc.b})`);
+    const strokeCol = useWhite ? 'rgba(0,0,0,0.8)' : (scLum > 0.5 ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.8)');
     ctx.strokeStyle = strokeCol;
     ctx.lineWidth = 5;
     ctx.lineJoin = 'round';
@@ -1878,8 +1881,9 @@ function drawRealisticHelmet(ctx, W, H, primary, secondary, abbr) {
     ctx.drawImage(final, 0, 0);
     const sc = hexToRgb(secondary);
     const scLum = (sc.r * 0.299 + sc.g * 0.587 + sc.b * 0.114) / 255;
-    const fillCol = `rgb(${sc.r},${sc.g},${sc.b})`;
-    const strokeCol = scLum > 0.5 ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.9)';
+    const useWhite = WHITE_HELMET_TEXT.has(abbr);
+    const fillCol = useWhite ? '#ffffff' : `rgb(${sc.r},${sc.g},${sc.b})`;
+    const strokeCol = useWhite ? 'rgba(0,0,0,0.8)' : (scLum > 0.5 ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.9)');
     const fontSize = Math.round(H * 0.14);
     ctx.font = `${fontSize}px Cowboys, 'Bebas Neue', Arial, sans-serif`;
     ctx.textAlign = 'center';

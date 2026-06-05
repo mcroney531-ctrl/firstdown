@@ -1463,9 +1463,9 @@ body.tecmo-mode .question-text {
 
   <!-- FIELD HUD -->
   <div class="field-hud" id="fieldHud">
+    <div class="hud-pill" id="hudTeam">—</div>
     <div class="hud-pill" id="hudModule">MODULE 01</div>
     <div class="hud-pill down-active" id="hudDown">1ST DOWN</div>
-    <div class="hud-pill" id="hudTeam">—</div>
     <div class="hud-down-marker" id="hudDownMarker">
       <div class="down-marker-pole"></div>
       <div class="down-marker-board" id="downMarkerBoard">
@@ -2522,7 +2522,14 @@ function updateFieldHUD() {
   const downLabels = ['1ST DOWN','2ND DOWN','3RD DOWN'];
   document.getElementById('hudDown').textContent = downLabels[gameState.down-1] || '1ST DOWN';
   if (gameState.selectedTeam) {
-    document.getElementById('hudTeam').textContent = gameState.selectedTeam.abbr;
+    const _tp = gameState.selectedTeam;
+    const _teamPill = document.getElementById('hudTeam');
+    _teamPill.textContent = _tp.abbr;
+    _teamPill.style.background = _tp.primary;
+    _teamPill.style.borderColor = _tp.secondary;
+    const _tc = hexToRgb(_tp.primary);
+    const _tlum = (_tc.r*0.299 + _tc.g*0.587 + _tc.b*0.114) / 255;
+    _teamPill.style.color = _tlum > 0.45 ? '#000' : '#fff';
   }
   // Update down marker number
   document.getElementById('downMarkerNumber').textContent = String(gameState.down);

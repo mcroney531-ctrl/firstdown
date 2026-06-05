@@ -3130,7 +3130,7 @@ function applyTmodeSVGFonts(on) {
   });
 }
 
-const words = ['FIRST & LEARN','10 YARDS · 10 MODULES','3 DOWNS TO ADVANCE','PUNT = RESTART','SELECT YOUR TEAM','GAME ON','TRAINING IN SESSION','FIRST & LEARN','10 YARDS · 10 MODULES','3 DOWNS TO ADVANCE','PUNT = RESTART','SELECT YOUR TEAM','GAME ON','TRAINING IN SESSION'];
+const words = ['FIRST & LEARN','10 YARDS · 10 MODULES','3 DOWNS TO ADVANCE','PUNT = RESTART','GAME ON','TRAINING IN SESSION','FIRST & LEARN','10 YARDS · 10 MODULES','3 DOWNS TO ADVANCE','PUNT = RESTART','GAME ON','TRAINING IN SESSION'];
 const tickHTML = words.map(w=>`<span class="ticker-item">${w} ·</span>`).join('');
 ['welcomeTicker','teamTicker','gameTicker'].forEach(id => document.getElementById(id).innerHTML = tickHTML);
 </script>

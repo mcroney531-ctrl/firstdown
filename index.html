@@ -1339,11 +1339,11 @@ body.tecmo-mode .question-text {
   .game-overlay { backdrop-filter: none; -webkit-backdrop-filter: none; position: fixed; inset: 0; }
 
   /* Game popup */
-  .game-popup { width: 90%; max-height: 88vh; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+  .game-popup-overlay { backdrop-filter: none; -webkit-backdrop-filter: none; position: fixed; inset: 0; }
+  .game-popup { width: 90%; max-height: 88vh; }
+  .game-popup-body { padding: 16px 20px; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
   .game-popup-header { padding: 18px 20px 14px; }
-  .game-popup-body { padding: 16px 20px; }
   .game-popup-rules { flex-direction: column; gap: 8px; }
-  .game-popup-overlay { backdrop-filter: none; -webkit-backdrop-filter: none; }
 
   /* MCQ answer buttons */
   .answer-btn { width: 100%; }

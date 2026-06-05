@@ -3056,6 +3056,12 @@ const normalBallSrc = 'ball.png';
 // Tecmo Bowl Mode toggle
 document.getElementById('tecmoModeCheck').addEventListener('change', function() {
   document.body.classList.toggle('tecmo-mode', this.checked);
+  const _sub = document.getElementById('tmodeLabel');
+  if (_sub) {
+    _sub.textContent = this.checked ? 'Return to Normal Mode' : 'Try Tecmo Bowl Mode';
+    _sub.style.fontFamily = this.checked ? "TecmoBowl, 'Press Start 2P', monospace" : '';
+    _sub.style.fontSize   = this.checked ? '10px' : '';
+  }
   const t = TEAMS[current];
   tintHelmet(t.primary, t.secondary, t.abbr);
   // Swap ball asset

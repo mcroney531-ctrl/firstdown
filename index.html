@@ -2498,10 +2498,11 @@ function renderTopicLabels() {
     text.setAttribute('y', '183');
     const _isTmode = document.body.classList.contains('tecmo-mode');
     text.setAttribute('font-family', _isTmode ? "TecmoBowl, 'Press Start 2P', monospace" : "'Bebas Neue', Arial, sans-serif");
-    text.setAttribute('font-size', '11');
+    const _tSize = _isTmode ? (mod.topic.length <= 8 ? 6 : mod.topic.length <= 13 ? 5 : 4) : 11;
+    text.setAttribute('font-size', String(_tSize));
     text.setAttribute('fill', isDone ? 'rgba(255,255,255,0.92)' : 'rgba(255,255,255,0.28)');
     text.setAttribute('text-anchor', 'middle');
-    text.setAttribute('letter-spacing', '1');
+    text.setAttribute('letter-spacing', _isTmode ? '0' : '1');
     text.setAttribute('paint-order', 'stroke');
     text.setAttribute('stroke', isDone ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.15)');
     text.setAttribute('stroke-width', '2');
@@ -3105,7 +3106,10 @@ function applyTmodeSVGFonts(on) {
   });
   ['yardNumsUpper','yardNumsLower'].forEach(id => {
     const el = document.getElementById(id);
-    if (el) el.setAttribute('font-family', on ? tecmoFont : "'Bebas Neue', Arial, sans-serif");
+    if (el) {
+      el.setAttribute('font-family', on ? tecmoFont : "'Bebas Neue', Arial, sans-serif");
+      el.setAttribute('font-size', on ? '18' : '26');
+    }
   });
   document.querySelectorAll('.topic-label-g text').forEach(el => {
     el.setAttribute('font-family', on ? tecmoFont : "'Bebas Neue', Arial, sans-serif");

@@ -69,7 +69,7 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 .fade-overlay.covering { opacity: 1; pointer-events: all; }
 
 /* WELCOME */
-.welcome-stage { flex: 1; position: relative; display: flex; align-items: flex-end; justify-content: center; overflow: hidden; background: url('hero_stadium.png') center center / cover no-repeat; padding-top: 32%; }
+.welcome-stage { flex: 1; position: relative; display: flex; align-items: flex-end; justify-content: center; overflow: hidden; background: url('hero_stadium.png') center center / cover no-repeat; padding-top: 42%; }
 .welcome-bg { position: absolute; inset: 0; background: rgba(0,0,0,0.52); z-index: 0; }
 .yard-lines { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
 .yard-lines::before, .yard-lines::after { content: ''; position: absolute; left: -10%; right: -10%; height: 1px; background: rgba(12,66,48,0.09); }
@@ -80,7 +80,7 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 .hashes { position: absolute; inset: 0; z-index: 1; pointer-events: none; display: flex; justify-content: space-between; padding: 0 12%; }
 .hash-col { display: flex; flex-direction: column; justify-content: space-evenly; }
 .hash { width: 18px; height: 2px; background: rgba(12,66,48,0.07); }
-.welcome-content { position: relative; z-index: 10; display: flex; align-items: flex-end; gap: 60px; max-width: 1100px; width: 100%; padding: 0 48px 48px; }
+.welcome-content { position: relative; z-index: 10; display: flex; align-items: flex-end; gap: 60px; max-width: 1100px; width: 100%; padding: 0 48px 40px; max-height: 56vh; overflow: visible; }
 .welcome-title-block { flex-shrink: 0; text-align: center; animation: fadeUp 0.6s ease both; }
 .welcome-eyebrow { font-size: 11px; letter-spacing: 6px; color: rgba(255,255,255,0.65); text-transform: uppercase; margin-bottom: 12px; display: block; }
 .welcome-title { font-family: 'Bebas Neue', sans-serif; color: #fff !important; font-size: clamp(72px, 10vw, 110px); line-height: 0.88; letter-spacing: 4px; color: #fff !important; }
@@ -88,7 +88,7 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 .welcome-rule { width: 60px; height: 3px; background: var(--green); margin: 20px auto; opacity: 0.2; }
 .welcome-tagline { font-size: 13px; letter-spacing: 4px; color: rgba(255,255,255,0.7); text-transform: uppercase; }
 .welcome-divider { width: 1px; height: 220px; background: linear-gradient(180deg, transparent, rgba(12,66,48,0.18), transparent); flex-shrink: 0; animation: fadeUp 0.6s 0.1s ease both; }
-.welcome-desc-block { flex: 1; max-width: 560px; animation: fadeUp 0.6s 0.18s ease both; background: rgba(0,0,0,0.50); border-radius: 8px; padding: 20px 28px; }
+.welcome-desc-block { flex: 1; max-width: 560px; animation: fadeUp 0.6s 0.18s ease both; background: rgba(0,0,0,0.50); border-radius: 8px; padding: 16px 24px; }
 .desc-label { font-size: 10px; letter-spacing: 5px; color: rgba(255,255,255,0.55); text-transform: uppercase; margin-bottom: 16px; display: block; }
 .desc-body { font-family: 'Barlow', sans-serif; font-size: 15px; line-height: 1.75; color: rgba(255,255,255,0.85); margin-bottom: 20px; }
 .desc-rules { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }

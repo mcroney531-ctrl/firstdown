@@ -1809,7 +1809,7 @@ function drawPixelHelmet(ctx, W, H, primary, secondary, abbr) {
     ctx.font = `${fontSize}px TecmoBowl, 'Press Start 2P', monospace`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    const textX = W * 0.438;
+    const textX = W * 0.438 + 3;
     const textY = H * 0.30;
     const fillCol = scLum > 0.5 ? '#111' : `rgb(${sc.r},${sc.g},${sc.b})`;
     const strokeCol = scLum > 0.5 ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.8)';

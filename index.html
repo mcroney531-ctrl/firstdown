@@ -33,7 +33,7 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 :root { --green: #0c4230; --green-pale: #e8f2ee; --white: #ffffff; --off-white: #f7f9f8; }
-body { background: var(--white); color: #fff !important; font-family: 'Barlow Condensed', sans-serif; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+body { background: var(--white); color: var(--green); font-family: 'Barlow Condensed', sans-serif; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
 body::after { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.015) 3px, rgba(0,0,0,0.015) 4px); pointer-events: none; z-index: 999; }
 
 .hdr { display: flex; align-items: center; justify-content: space-between; padding: 14px 32px; background: var(--green); border-bottom: 3px solid rgba(255,255,255,0.15); position: relative; z-index: 10; flex-shrink: 0; }
@@ -134,8 +134,8 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 /* TMode float */
 .tmode-float {
   position: absolute;
-  right: -172px;
-  top: 20%;
+  right: -190px;
+  top: 16%;
   transform: translateY(-50%);
   z-index: 50;
   display: flex;
@@ -186,15 +186,15 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
   background: #fff;
 }
 .dropdown-wrapper { position: relative; }
-.pick-btn { font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 2px; padding: 10px 14px; background: var(--white); border: 1px solid rgba(12,66,48,0.22); color: #fff !important; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; white-space: nowrap; flex: 1; }
-.pick-btn:hover { background: var(--green-pale); border-color: #fff !important; }
+.pick-btn { font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 2px; padding: 10px 14px; background: var(--white); border: 1px solid rgba(12,66,48,0.22); color: var(--green); cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; white-space: nowrap; flex: 1; }
+.pick-btn:hover { background: var(--green-pale); border-color: var(--green); }
 .pick-btn svg { transition: transform 0.2s; flex-shrink: 0; margin-left: auto; }
 .pick-btn.open svg { transform: rotate(180deg); }
 .dropdown-menu { position: absolute; top: calc(100% + 5px); left: 0; width: 100%; max-height: 300px; overflow-y: auto; background: var(--white); border: 1px solid rgba(12,66,48,0.18); z-index: 100; display: none; box-shadow: 0 8px 24px rgba(12,66,48,0.1); scrollbar-width: thin; scrollbar-color: rgba(12,66,48,0.2) transparent; }
 .dropdown-menu.open { display: block; }
 .dropdown-menu::-webkit-scrollbar { width: 4px; }
 .dropdown-menu::-webkit-scrollbar-thumb { background: rgba(12,66,48,0.2); }
-.dd-item { padding: 9px 14px; font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: 2px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: background 0.15s; border-bottom: 1px solid rgba(12,66,48,0.05); color: #fff !important; }
+.dd-item { padding: 9px 14px; font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: 2px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: background 0.15s; border-bottom: 1px solid rgba(12,66,48,0.05); color: var(--green); }
 .dd-item:hover { background: var(--green-pale); }
 .dd-item.active { font-weight: 700; }
 .dd-swatch { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
@@ -231,17 +231,15 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
   background: rgba(0,0,0,0.25);
   border: 1px solid rgba(255,255,255,0.3);
   color: #fff;
-  height: 24px;
-  padding: 0 8px;
-  font-size: 10px;
-  bottom: 10px;
-  left: 10px;
+  height: 32px;
+  width: 32px;
+  padding: 0;
+  font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s;
-  font-size: 16px;
   border-radius: 2px;
   backdrop-filter: blur(4px);
 }
@@ -252,23 +250,19 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 
 .banner-random {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 12px;
+  font-size: 10px;
   letter-spacing: 2px;
   color: #fff;
-  padding: 6px 10px;
   position: absolute;
   bottom: 10px;
   right: 10px;
   z-index: 20;
-  background: rgba(0,0,0,0.25);
+  background: rgba(0,0,0,0.35);
   border: 1px solid rgba(255,255,255,0.3);
-  color: #fff;
-  height: 24px;
+  height: 22px;
   padding: 0 8px;
-  font-size: 10px;
-  bottom: 10px;
-  left: 10px;
-  display: flex;
+  width: auto;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;

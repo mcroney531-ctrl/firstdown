@@ -144,8 +144,8 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
 /* TMode float */
 .tmode-float {
   position: absolute;
-  right: -210px;
-  top: 58%;
+  right: -175px;
+  top: 38%;
   transform: translateY(-50%);
   z-index: 50;
   display: flex;
@@ -264,8 +264,8 @@ body::after { content: ''; position: fixed; inset: 0; background: repeating-line
   letter-spacing: 2px;
   color: #fff;
   position: absolute;
-  bottom: 16px;
-  right: 10px;
+  bottom: 6px;
+  right: 8px;
   z-index: 20;
   background: rgba(0,0,0,0.35);
   border: 1px solid rgba(255,255,255,0.3);
@@ -3067,7 +3067,7 @@ document.getElementById('tecmoModeCheck').addEventListener('change', function() 
   document.body.classList.toggle('tecmo-mode', this.checked);
   const _sub = document.getElementById('tmodeLabel');
   if (_sub) {
-    _sub.textContent = this.checked ? 'Return to Normal Mode' : 'Try Tecmo Bowl Mode';
+    _sub.textContent = this.checked ? 'Normal Mode' : 'Try Tecmo Bowl Mode';
     _sub.style.fontFamily = this.checked ? "TecmoBowl, 'Press Start 2P', monospace" : '';
     _sub.style.fontSize   = this.checked ? '10px' : '';
   }

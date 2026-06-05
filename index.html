@@ -2804,10 +2804,10 @@ function dropFlag() {
   flag.setAttribute('class', 'field-flag');
   flag.style.cursor = 'pointer';
   flag.innerHTML = `
-    <line x1="${flagX}" y1="175" x2="${flagX}" y2="215" stroke="white" stroke-width="2"/>
-    <polygon points="${flagX},175 ${flagX+14},182 ${flagX},189" fill="#FFD700" stroke="white" stroke-width="1"/>
+    <line x1="${flagX}" y1="195" x2="${flagX}" y2="235" stroke="white" stroke-width="2"/>
+    <polygon points="${flagX},195 ${flagX+14},202 ${flagX},209" fill="#FFD700" stroke="white" stroke-width="1"/>
 
-    <rect x="${flagX-22}" y="165" width="50" height="75" fill="transparent"/>
+    <rect x="${flagX-22}" y="185" width="50" height="75" fill="transparent"/>
   `;
   flag.addEventListener('click', () => {
     gameState.savedPhase = 'content';

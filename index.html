@@ -2001,7 +2001,16 @@ document.getElementById('startGameBtn').addEventListener('click', () => {
     document.getElementById('ezLeft').setAttribute('fill', t.primary);
     document.getElementById('ezRight').setAttribute('fill', t.primary);
     // Set end zone text to team city
-    document.getElementById('ezTextLeft').textContent  = t.city.toUpperCase();
+    const _city = t.city.toUpperCase();
+    document.getElementById('ezTextLeft').textContent  = _city;
+    document.getElementById('ezTextRight').textContent = _city;
+    const _ezLen = _city.length;
+    const _ezSize = _ezLen <= 8 ? '52' : _ezLen <= 10 ? '42' : _ezLen <= 12 ? '34' : '26';
+    const _ezLS   = _ezLen <= 8 ? '10' : _ezLen <= 10 ? '7'  : _ezLen <= 12 ? '5'  : '3';
+    ['ezTextLeft','ezTextRight'].forEach(_id => {
+      const _el = document.getElementById(_id);
+      if (_el) { _el.setAttribute('font-size', _ezSize); _el.setAttribute('letter-spacing', _ezLS); }
+    });
     document.getElementById('ezTextRight').textContent = t.city.toUpperCase();
     // Text color contrast
     const tc = hexToRgb(t.primary);

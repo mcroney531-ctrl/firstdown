@@ -3105,7 +3105,7 @@ function applyTmodeSVGFonts(on) {
   });
   ['yardNumsUpper','yardNumsLower'].forEach(id => {
     const el = document.getElementById(id);
-    if (el) el.setAttribute('font-family', font);
+    if (el) el.setAttribute('font-family', on ? tecmoFont : "'Bebas Neue', Arial, sans-serif");
   });
   document.querySelectorAll('.topic-label-g text').forEach(el => {
     el.setAttribute('font-family', on ? tecmoFont : "'Bebas Neue', Arial, sans-serif");

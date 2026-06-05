@@ -2442,29 +2442,30 @@ function initGame() {
 
 function renderTopicLabels() {
   const svg = document.getElementById('fieldSVG');
-  // Remove any existing topic labels
   svg.querySelectorAll('.topic-label-g').forEach(el => el.remove());
 
-  // Yard line X positions match FLAG_X_POSITIONS
-  // Each corresponds to a module
   const labelPositions = [180, 260, 340, 420, 500, 580, 660, 740, 820];
+  const completed = gameState.completedModules || [];
 
   MODULES.forEach((mod, i) => {
     if (i >= labelPositions.length) return;
     const x = labelPositions[i];
+    const isDone = completed.includes(i);
+
     const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     g.setAttribute('class', 'topic-label-g');
+    g.setAttribute('data-index', String(i));
 
     const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     text.setAttribute('x', String(x));
-    text.setAttribute('y', '395');
+    text.setAttribute('y', '25');
     text.setAttribute('font-family', "'Bebas Neue', Arial, sans-serif");
     text.setAttribute('font-size', '11');
-    text.setAttribute('fill', 'rgba(255,255,255,0.55)');
+    text.setAttribute('fill', isDone ? 'rgba(255,255,255,0.92)' : 'rgba(255,255,255,0.28)');
     text.setAttribute('text-anchor', 'middle');
     text.setAttribute('letter-spacing', '1');
     text.setAttribute('paint-order', 'stroke');
-    text.setAttribute('stroke', 'rgba(0,0,0,0.4)');
+    text.setAttribute('stroke', isDone ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.15)');
     text.setAttribute('stroke-width', '2');
     text.textContent = mod.topic;
 
@@ -2472,7 +2473,6 @@ function renderTopicLabels() {
     svg.appendChild(g);
   });
 }
-
 window.addEventListener('resize', () => {
   if (gameState.phase === 'idle') positionFirstDownBtn();
 });
@@ -2825,6 +2825,7 @@ function dropFlag() {
   });
   svg.appendChild(flag);
   gameState.completedModules.push(gameState.moduleIndex);
+  renderTopicLabels();
 }
 
 function advanceModule() {

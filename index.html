@@ -2007,6 +2007,7 @@ document.getElementById('startGameBtn').addEventListener('click', () => {
   const t = TEAMS[current];
   gameState.selectedTeam = t;
   gameState.practiceMode = (currentMode === 'practice');
+  applyTeamTheme();
   fadeToScreen('screenGame', () => {
     // Set end zone colors to team primary
     document.getElementById('ezLeft').setAttribute('fill', t.primary);
@@ -2034,11 +2035,7 @@ document.getElementById('startGameBtn').addEventListener('click', () => {
     document.getElementById('ezTextRight').setAttribute('stroke', t.secondary);
     document.getElementById('ezTextLeft').setAttribute('stroke-width', '5');
     document.getElementById('ezTextRight').setAttribute('stroke-width', '5');
-    // Yard number strokes also pull team secondary
-    document.getElementById('yardNumsUpper').setAttribute('stroke', t.secondary);
-    document.getElementById('yardNumsLower').setAttribute('stroke', t.secondary);
-    document.getElementById('yardNumsUpper').setAttribute('stroke-width', '3');
-    document.getElementById('yardNumsLower').setAttribute('stroke-width', '3');
+    // Yard number strokes kept at SVG default (team secondary can be white/light)
     // Midfield logo — team colors
     const fieldCircle = document.getElementById('fieldLogoCircle');
     const fieldRing = document.getElementById('fieldLogoRing');
@@ -2459,6 +2456,9 @@ const BALL_X_POSITIONS = [146, 226, 306, 386, 466, 546, 626, 706, 786, 866, 900]
 const FLAG_X_POSITIONS = [180, 260, 340, 420, 500, 580, 660, 740, 820];
 
 function initGame() {
+  document.querySelectorAll('.field-flag').forEach(el => el.remove());
+  const ball = document.getElementById('ballMarker');
+  if (ball) ball.setAttribute('x', '146');
   gameState.moduleIndex = 0;
   gameState.down = 1;
   gameState.phase = 'idle';

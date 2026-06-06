@@ -1988,8 +1988,7 @@ function render(dir) {
 
   // Banner gradient — subtle, desaturated, helmet is the hero
   const banner = document.getElementById('cardBanner');
-  banner.style.backgroundColor = '#eeeeec';
-  banner.style.backgroundImage = `linear-gradient(145deg, ${t.primary}55 0%, ${t.secondary}33 55%, ${t.primary}44 100%)`;
+  banner.style.background = `linear-gradient(145deg, ${t.primary}55 0%, ${t.secondary}33 55%, ${t.primary}44 100%), linear-gradient(180deg, #f0f0ee 0%, #e8e8e6 100%)`;
 
   const _cityEl = document.getElementById('bannerCity');
   _cityEl.textContent = t.city.toUpperCase();

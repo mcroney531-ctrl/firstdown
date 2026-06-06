@@ -347,6 +347,15 @@ body.tecmo-mode .banner-random { font-size: 7px; height: 16px; padding: 0 5px; b
   outline: none;
 }
 .team-card:hover #helmetCanvas { transform: scale(1.04) rotate(-2deg); }
+/* T-mode pre-rendered helmet (transparent PNG) — replaces the canvas in Tecmo mode to
+   avoid the Android Chrome grey-box bug. Hidden by default; shown by tintHelmet(). */
+#helmetImgTmode {
+  width: 240px;
+  height: 180px;
+  display: none;
+  transition: transform 0.3s ease;
+}
+.team-card:hover #helmetImgTmode { transform: scale(1.04) rotate(-2deg); }
 
 .city-name { font-family: 'Bebas Neue', sans-serif; font-size: 38px; letter-spacing: 3px; line-height: 1; text-align: center; color: #fff !important; margin-bottom: 4px; }
 .team-counter { font-size: 10px; letter-spacing: 3px; color: rgba(12,66,48,0.28); margin-top: 10px; }
@@ -1483,6 +1492,7 @@ body.tecmo-mode .question-text {
           <button class="banner-random" id="randomBtn" title="Random team">RANDOM</button>
           <div class="helmet-stage">
             <canvas id="helmetCanvas" width="480" height="360"></canvas>
+            <img id="helmetImgTmode" alt="" aria-hidden="true">
           </div>
           <div class="banner-city" id="bannerCity"></div>
         </div>
@@ -1784,6 +1794,16 @@ const TEAMS = [
 ];
 
 let current = 0;
+
+// Preload the pre-rendered T-mode helmet PNGs (named by team index 00-31) so switching
+// teams in Tecmo mode is instant. These replace the live pixel-helmet canvas, which hit an
+// Android Chrome grey-box compositing bug.
+const tmodeHelmetCache = TEAMS.map((_, i) => {
+  const im = new Image();
+  im.src = 'tmode-helmets/' + String(i).padStart(2, '0') + '.png';
+  return im;
+});
+
 function hexToRgb(hex) {
   const r = parseInt(hex.slice(1,3),16);
   const g = parseInt(hex.slice(3,5),16);
@@ -1809,16 +1829,27 @@ tecmoFont.load().then(f => document.fonts.add(f)).catch(e => console.warn('Tecmo
 function tintHelmet(color, secondaryColor, abbr) {
   const canvas = document.getElementById('helmetCanvas');
   if (!canvas) return;
+  const img = document.getElementById('helmetImgTmode');
+
+  // T-mode: show the pre-rendered transparent PNG (by team index) instead of drawing on the
+  // canvas. The live pixel-helmet canvas triggered an Android Chrome grey-box bug; a plain
+  // <img> composites correctly. Normal mode keeps the canvas-tinted realistic helmet.
+  if (document.body.classList.contains('tecmo-mode')) {
+    if (img) {
+      img.src = 'tmode-helmets/' + String(current).padStart(2, '0') + '.png';
+      img.style.display = 'block';
+    }
+    canvas.style.display = 'none';
+    return;
+  }
+
+  if (img) img.style.display = 'none';
+  canvas.style.display = 'block';
   const ctx = canvas.getContext('2d', { alpha: true });
   const W = 480, H = 360;
   canvas.width = W; canvas.height = H;
   ctx.clearRect(0, 0, W, H);
-
-  if (document.body.classList.contains('tecmo-mode')) {
-    drawPixelHelmet(ctx, W, H, color, secondaryColor, abbr);
-  } else {
-    drawRealisticHelmet(ctx, W, H, color, secondaryColor, abbr);
-  }
+  drawRealisticHelmet(ctx, W, H, color, secondaryColor, abbr);
 }
 
 function drawPixelHelmet(ctx, W, H, primary, secondary, abbr) {

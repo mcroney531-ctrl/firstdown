@@ -1370,15 +1370,20 @@ body.tecmo-mode .question-text {
   #helmetCanvas { transition: none; }
 
   /* ── T-MODE mobile ──
-     TecmoBowl renders much chunkier than the normal fonts, so T-mode game-screen
-     elements stayed too wide and overflowed the viewport — showing a white gap on the
-     right and making the page load zoomed in. Clamp horizontal overflow at the root and
-     shrink the chunky elements (these !important rules sit inside the media query, after
-     the desktop body.tecmo-mode rules, so they win on source order). */
-  html { overflow-x: hidden; }
-  body.tecmo-mode { max-width: 100vw; overflow-x: hidden; }
-  #screenGame { overflow-x: hidden; max-width: 100vw; }
+     TecmoBowl renders much chunkier than the normal fonts. The real overflow culprit was
+     the HEADER: brand + tag + BACK + LIVE summed wider than the viewport, which expands the
+     mobile layout viewport (page loads zoomed) and shows a white gap / clipped content.
+     Fix = make the header actually fit (not clip it), plus trim the chunky game elements.
+     (These !important rules sit after the desktop body.tecmo-mode rules, so they win.) */
 
+  /* Header: drop the decorative tag, tighten padding, shrink the T-mode brand/controls */
+  .hdr { padding: 10px 14px; }
+  .hdr-tag { display: none; }
+  body.tecmo-mode .brand { font-size: 15px !important; letter-spacing: 2px !important; }
+  body.tecmo-mode .back-btn { font-size: 8px !important; padding: 6px 8px !important; }
+  body.tecmo-mode .live-bug { font-size: 8px !important; letter-spacing: 1px !important; }
+
+  /* Game-screen elements: TecmoBowl is wide, scale them down to fit */
   body.tecmo-mode .first-down-btn {
     font-size: 7px !important;
     letter-spacing: 1px !important;

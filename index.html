@@ -1879,17 +1879,11 @@ function drawPixelHelmet(ctx, W, H, primary, secondary, abbr) {
       }
     }
 
-    // Put the tinted helmet on a temp canvas (it has large fully-transparent margins).
+    // Use drawImage instead of putImageData to fix Android alpha compositing bug
     const tmp = document.createElement('canvas');
     tmp.width = W; tmp.height = H;
     tmp.getContext('2d').putImageData(out, 0, 0);
-    // Fill the visible canvas OPAQUE first, then draw the helmet on top. Android Chrome
-    // renders alpha=0 regions of a GPU-promoted canvas as grey; an opaque fill (same flat
-    // color as the T-mode banner — see applyBannerBg) removes every transparent pixel and
-    // thus the grey box, with no seam against the banner.
     ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = bakeBannerColor(primary, 0.3);
-    ctx.fillRect(0, 0, W, H);
     ctx.drawImage(tmp, 0, 0);
 
     // Abbreviation in Tecmo Bowl font — upper-left dome area
@@ -1988,36 +1982,6 @@ function drawRealisticHelmet(ctx, W, H, primary, secondary, abbr) {
   }
 }
 
-// Alpha-composite a team hex over the light banner base → an OPAQUE rgb() string.
-// Shared by the banner background and the pixel-helmet canvas fill so they match exactly.
-const BANNER_BASE = { r: 236, g: 236, b: 234 };
-function bakeBannerColor(hex, a) {
-  const c = hexToRgb(hex);
-  return `rgb(${Math.round(c.r*a + BANNER_BASE.r*(1-a))},${Math.round(c.g*a + BANNER_BASE.g*(1-a))},${Math.round(c.b*a + BANNER_BASE.b*(1-a))})`;
-}
-
-// Set the team-selector banner background. In T-mode the pixel helmet leaves large
-// fully-transparent canvas margins; Android Chrome renders those alpha=0 regions of a
-// GPU-promoted canvas as opaque grey (the "grey box"). The pixel canvas is therefore
-// filled opaque with bakeBannerColor(primary, 0.3), and here we paint the banner the SAME
-// flat solid so there is no seam where the canvas meets the banner. Normal mode keeps the
-// subtle gradient (its drop-shadowed realistic helmet has no fully-transparent margins).
-function applyBannerBg() {
-  const banner = document.getElementById('cardBanner');
-  if (!banner) return;
-  const t = TEAMS[current];
-  if (document.body.classList.contains('tecmo-mode')) {
-    banner.style.backgroundImage = 'none';
-    banner.style.backgroundColor = bakeBannerColor(t.primary, 0.3);
-  } else {
-    const s0 = bakeBannerColor(t.primary, 0.333);
-    const s1 = bakeBannerColor(t.secondary, 0.2);
-    const s2 = bakeBannerColor(t.primary, 0.267);
-    banner.style.backgroundColor = s1;
-    banner.style.backgroundImage = `linear-gradient(145deg, ${s0} 0%, ${s1} 55%, ${s2} 100%)`;
-  }
-}
-
 function render(dir) {
   const t = TEAMS[current];
   document.getElementById('bgBleed').style.background =
@@ -2025,9 +1989,22 @@ function render(dir) {
 
   tintHelmet(t.primary, t.secondary, t.abbr);
 
-  // Banner background — T-mode = flat solid that matches the opaque pixel-helmet canvas
-  // fill; normal = subtle baked gradient. See applyBannerBg() for the Android grey-box fix.
-  applyBannerBg();
+  // Banner gradient — subtle, desaturated, helmet is the hero.
+  // Single OPAQUE layer with the team tint pre-baked over the grey base. Android Chrome
+  // composites a GPU-promoted canvas against only the bottommost background layer, so two
+  // stacked gradients made the (transparent) helmet canvas show the grey base alone =
+  // grey box around the helmet. One opaque layer = correct color shows through everywhere.
+  const banner = document.getElementById('cardBanner');
+  const _gBase = { r: 236, g: 236, b: 234 };
+  const _bake = (hex, a) => {
+    const c = hexToRgb(hex);
+    return `rgb(${Math.round(c.r*a + _gBase.r*(1-a))},${Math.round(c.g*a + _gBase.g*(1-a))},${Math.round(c.b*a + _gBase.b*(1-a))})`;
+  };
+  const _stop0 = _bake(t.primary, 0.333);
+  const _stop1 = _bake(t.secondary, 0.2);
+  const _stop2 = _bake(t.primary, 0.267);
+  banner.style.backgroundColor = _stop1;
+  banner.style.backgroundImage = `linear-gradient(145deg, ${_stop0} 0%, ${_stop1} 55%, ${_stop2} 100%)`;
 
   const _cityEl = document.getElementById('bannerCity');
   _cityEl.textContent = t.city.toUpperCase();
@@ -3209,7 +3186,6 @@ document.getElementById('tecmoModeCheck').addEventListener('change', function() 
     _sub.style.fontSize   = this.checked ? '10px' : '';
   }
   const t = TEAMS[current];
-  applyBannerBg();
   document.fonts.load('20px TecmoBowl').then(() => tintHelmet(t.primary, t.secondary, t.abbr));
   // Swap ball asset
   const ball = document.getElementById('ballMarker');

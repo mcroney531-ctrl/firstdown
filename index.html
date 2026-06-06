@@ -343,6 +343,8 @@ body.tecmo-mode .banner-random { font-size: 7px; height: 16px; padding: 0 5px; b
   transition: transform 0.3s ease;
   display: block;
   background: transparent;
+  border: none;
+  outline: none;
 }
 .team-card:hover #helmetCanvas { transform: scale(1.04) rotate(-2deg); }
 
@@ -1804,7 +1806,7 @@ tecmoFont.load().then(f => document.fonts.add(f)).catch(e => console.warn('Tecmo
 function tintHelmet(color, secondaryColor, abbr) {
   const canvas = document.getElementById('helmetCanvas');
   if (!canvas) return;
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext('2d', { alpha: true });
   const W = 480, H = 360;
   canvas.width = W; canvas.height = H;
   ctx.clearRect(0, 0, W, H);

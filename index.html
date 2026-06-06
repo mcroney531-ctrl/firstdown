@@ -1356,6 +1356,9 @@ body.tecmo-mode .question-text {
 
   /* Hide card corner decorations on mobile */
   .card-corner { display: none; }
+
+  /* Remove canvas transition to prevent Android GPU layer promotion (grey box bug) */
+  #helmetCanvas { transition: none; }
 }
 </style>
 </head>

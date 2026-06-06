@@ -342,6 +342,7 @@ body.tecmo-mode .banner-random { font-size: 7px; height: 16px; padding: 0 5px; b
   height: 180px;
   transition: transform 0.3s ease;
   display: block;
+  background: transparent;
 }
 .team-card:hover #helmetCanvas { transform: scale(1.04) rotate(-2deg); }
 
@@ -1310,8 +1311,8 @@ body.tecmo-mode .question-text {
   .welcome-desc-block { max-width: 100%; align-self: stretch; }
   .desc-rules { flex-direction: column; gap: 8px; }
 
-  /* Banner arrows — backdrop-filter causes ghost rectangles on mobile */
-  .banner-arrow { backdrop-filter: none; -webkit-backdrop-filter: none; }
+  /* Banner arrows — hide on mobile, SELECT dropdown handles navigation */
+  .banner-arrow { display: none; }
 
   /* Team Select */
   .stage { flex-direction: column; justify-content: flex-start; padding: 12px 0 0; gap: 0; overflow-y: auto; }

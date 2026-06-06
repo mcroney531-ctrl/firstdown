@@ -1989,22 +1989,9 @@ function render(dir) {
 
   tintHelmet(t.primary, t.secondary, t.abbr);
 
-  // Banner gradient — subtle, desaturated, helmet is the hero.
-  // Single OPAQUE layer with the team tint pre-baked over the grey base. Android Chrome
-  // composites a GPU-promoted canvas against only the bottommost background layer, so two
-  // stacked gradients made the (transparent) helmet canvas show the grey base alone =
-  // grey box around the helmet. One opaque layer = correct color shows through everywhere.
+  // Banner gradient — subtle, desaturated, helmet is the hero
   const banner = document.getElementById('cardBanner');
-  const _gBase = { r: 236, g: 236, b: 234 };
-  const _bake = (hex, a) => {
-    const c = hexToRgb(hex);
-    return `rgb(${Math.round(c.r*a + _gBase.r*(1-a))},${Math.round(c.g*a + _gBase.g*(1-a))},${Math.round(c.b*a + _gBase.b*(1-a))})`;
-  };
-  const _stop0 = _bake(t.primary, 0.333);
-  const _stop1 = _bake(t.secondary, 0.2);
-  const _stop2 = _bake(t.primary, 0.267);
-  banner.style.backgroundColor = _stop1;
-  banner.style.backgroundImage = `linear-gradient(145deg, ${_stop0} 0%, ${_stop1} 55%, ${_stop2} 100%)`;
+  banner.style.background = `linear-gradient(145deg, ${t.primary}55 0%, ${t.secondary}33 55%, ${t.primary}44 100%), linear-gradient(180deg, #f0f0ee 0%, #e8e8e6 100%)`;
 
   const _cityEl = document.getElementById('bannerCity');
   _cityEl.textContent = t.city.toUpperCase();

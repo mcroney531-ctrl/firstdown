@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T-Mode Helmet Exporter — First &amp; Learn</title>
+<style>
+  @font-face {
+    font-family: 'TecmoBowl';
+    src: url('Tecmo_Bowl.ttf') format('truetype');
+    font-display: block;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 24px;
+    font-family: -apple-system, Segoe UI, Roboto, sans-serif;
+    background: #0c4230; color: #fff;
+  }
+  h1 { font-size: 20px; margin: 0 0 4px; letter-spacing: 1px; }
+  p.sub { margin: 0 0 18px; opacity: 0.8; font-size: 13px; }
+  .toolbar {
+    position: sticky; top: 0; z-index: 5;
+    background: #0c4230; padding: 12px 0 16px; margin-bottom: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  button {
+    font-size: 15px; font-weight: 700; letter-spacing: 1px;
+    padding: 12px 26px; border: none; border-radius: 4px; cursor: pointer;
+    background: linear-gradient(135deg, #FFD700, #f0b800); color: #1a1a1a;
+  }
+  button:disabled { opacity: 0.5; cursor: default; }
+  #status { font-size: 13px; opacity: 0.9; }
+  .grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  .cell {
+    background:
+      repeating-conic-gradient(#3a3a3a 0% 25%, #555 0% 50%) 50% / 18px 18px;
+    border: 1px solid rgba(255,255,255,0.2); border-radius: 6px;
+    padding: 10px; text-align: center;
+  }
+  .cell canvas { width: 100%; height: auto; display: block; image-rendering: pixelated; }
+  .cell .label {
+    margin-top: 8px; font-size: 12px; color: #fff;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .cell .label a { color: #FFD700; text-decoration: none; font-weight: 700; }
+  .idx { opacity: 0.6; font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+  <h1>T-Mode Helmet Exporter</h1>
+  <p class="sub">Renders all 32 pixel helmets (identical to live T-Mode) and exports them as transparent PNGs.
+     Files are named by team index <code>00.png</code>–<code>31.png</code> (two teams share the "LA" abbreviation, so index is used).</p>
+
+  <div class="toolbar">
+    <button id="downloadAll" disabled>Download All (32 PNGs)</button>
+    <span id="status">Loading font &amp; helmet template…</span>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+<script>
+const WHITE_HELMET_TEXT = new Set(['AZ','ATL','CAR','DAL','DET','IND','LV','NYJ','PHI','TB','TEN']);
+
+const TEAMS = [
+  {city:"Arizona",       abbr:"AZ",  primary:"#97233F", secondary:"#000000"},
+  {city:"Atlanta",       abbr:"ATL", primary:"#A71930", secondary:"#000000"},
+  {city:"Baltimore",     abbr:"BAL", primary:"#241773", secondary:"#9E7C0C"},
+  {city:"Buffalo",       abbr:"BUF", primary:"#00338D", secondary:"#C60C30"},
+  {city:"Carolina",      abbr:"CAR", primary:"#0085CA", secondary:"#101820"},
+  {city:"Chicago",       abbr:"CHI", primary:"#0B162A", secondary:"#C83803"},
+  {city:"Cincinnati",    abbr:"CIN", primary:"#FB4F14", secondary:"#000000"},
+  {city:"Cleveland",     abbr:"CLE", primary:"#311D00", secondary:"#FF3C00"},
+  {city:"Dallas",        abbr:"DAL", primary:"#003594", secondary:"#869397"},
+  {city:"Denver",        abbr:"DEN", primary:"#FB4F14", secondary:"#002244"},
+  {city:"Detroit",       abbr:"DET", primary:"#0076B6", secondary:"#B0B7BC"},
+  {city:"Green Bay",     abbr:"GB",  primary:"#203731", secondary:"#FFB612"},
+  {city:"Houston",       abbr:"HOU", primary:"#03202F", secondary:"#A71930"},
+  {city:"Indianapolis",  abbr:"IND", primary:"#002C5F", secondary:"#A2AAAD"},
+  {city:"Jacksonville",  abbr:"JAX", primary:"#101820", secondary:"#D7A22A"},
+  {city:"Kansas City",   abbr:"KC",  primary:"#E31837", secondary:"#FFB81C"},
+  {city:"Las Vegas",     abbr:"LV",  primary:"#000000", secondary:"#A5ACAF"},
+  {city:"Los Angeles",   abbr:"LA",  primary:"#003594", secondary:"#FFA300"},
+  {city:"Los Angeles",   abbr:"LA",  primary:"#0080C6", secondary:"#FFC20E"},
+  {city:"Miami",         abbr:"MIA", primary:"#008E97", secondary:"#FC4C02"},
+  {city:"Minnesota",     abbr:"MIN", primary:"#4F2683", secondary:"#FFC62F"},
+  {city:"New England",   abbr:"NE",  primary:"#002244", secondary:"#C60C30"},
+  {city:"New Orleans",   abbr:"NO",  primary:"#101820", secondary:"#D3BC8D"},
+  {city:"New York",      abbr:"NYG", primary:"#0B2265", secondary:"#A71930"},
+  {city:"New York",      abbr:"NYJ", primary:"#125740", secondary:"#000000"},
+  {city:"Philadelphia",  abbr:"PHI", primary:"#004C54", secondary:"#A5ACAF"},
+  {city:"Pittsburgh",    abbr:"PIT", primary:"#101820", secondary:"#FFB612"},
+  {city:"San Francisco", abbr:"SF",  primary:"#AA0000", secondary:"#B3995D"},
+  {city:"Seattle",       abbr:"SEA", primary:"#002244", secondary:"#69BE28"},
+  {city:"Tampa Bay",     abbr:"TB",  primary:"#D50A0A", secondary:"#FF7900"},
+  {city:"Tennessee",     abbr:"TEN", primary:"#0C2340", secondary:"#4B92DB"},
+  {city:"Washington",    abbr:"WSH", primary:"#5A1414", secondary:"#FFB612"},
+];
+
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return {r, g, b};
+}
+
+const pixelHelmetImg = new Image();
+pixelHelmetImg.src = 'pixelhelmet.png';
+
+// Exact replica of drawPixelHelmet's doPixelTint from index.html — kept in sync so the
+// exported PNGs are pixel-identical to live T-Mode. Synchronous: image is preloaded first.
+function renderPixelHelmet(ctx, W, H, primary, secondary, abbr) {
+  const pc = hexToRgb(primary);
+  const sc = hexToRgb(secondary);
+  const scLum = (sc.r*0.299 + sc.g*0.587 + sc.b*0.114)/255;
+
+  const off = document.createElement('canvas');
+  off.width = W; off.height = H;
+  const octx = off.getContext('2d');
+
+  const scale = Math.min(W / pixelHelmetImg.width, H / pixelHelmetImg.height) * 0.88;
+  const dw = pixelHelmetImg.width * scale;
+  const dh = pixelHelmetImg.height * scale;
+  const dx = (W - dw) / 2;
+  const dy = (H - dh) / 2 - 10;
+
+  octx.drawImage(pixelHelmetImg, dx, dy, dw, dh);
+
+  const src = octx.getImageData(0, 0, W, H);
+  const sd = src.data;
+  const out = ctx.createImageData(W, H);
+  const od = out.data;
+
+  for (let i = 0; i < sd.length; i += 4) {
+    const a = sd[i+3];
+    if (a < 10) { od[i+3] = 0; continue; }
+
+    const r = sd[i], g = sd[i+1], b = sd[i+2];
+    const br = (r * 0.299 + g * 0.587 + b * 0.114);
+
+    if (br < 12 && a > 200) { od[i+3] = 0; continue; }
+
+    if (br < 30) {
+      od[i] = r; od[i+1] = g; od[i+2] = b; od[i+3] = a;
+    } else if (br > 200) {
+      const tint = 0.15;
+      od[i]   = Math.min(255, Math.round(r * (1-tint) + pc.r * tint));
+      od[i+1] = Math.min(255, Math.round(g * (1-tint) + pc.g * tint));
+      od[i+2] = Math.min(255, Math.round(b * (1-tint) + pc.b * tint));
+      od[i+3] = a;
+    } else {
+      const norm = br / 255;
+      const blend = 0.82;
+      od[i]   = Math.min(255, Math.round(pc.r * norm * blend + r * (1-blend)));
+      od[i+1] = Math.min(255, Math.round(pc.g * norm * blend + g * (1-blend)));
+      od[i+2] = Math.min(255, Math.round(pc.b * norm * blend + b * (1-blend)));
+      od[i+3] = a;
+    }
+  }
+
+  const tmp = document.createElement('canvas');
+  tmp.width = W; tmp.height = H;
+  tmp.getContext('2d').putImageData(out, 0, 0);
+  ctx.clearRect(0, 0, W, H);
+  ctx.drawImage(tmp, 0, 0);
+
+  const fontSize = Math.round(H * 0.085);
+  ctx.font = `${fontSize}px TecmoBowl, 'Press Start 2P', monospace`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  const textX = W * 0.438 + 6;
+  const textY = H * 0.30;
+  const useWhite = WHITE_HELMET_TEXT.has(abbr);
+  const fillCol = useWhite ? '#ffffff' : `rgb(${sc.r},${sc.g},${sc.b})`;
+  const strokeCol = useWhite ? 'rgba(0,0,0,0.8)' : (scLum > 0.5 ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.9)');
+  ctx.strokeStyle = strokeCol;
+  ctx.lineWidth = 5;
+  ctx.lineJoin = 'round';
+  ctx.strokeText(abbr, textX, textY);
+  ctx.fillStyle = fillCol;
+  ctx.fillText(abbr, textX, textY);
+}
+
+const W = 480, H = 360;
+const canvases = [];
+
+function renderAll() {
+  const grid = document.getElementById('grid');
+  TEAMS.forEach((t, i) => {
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+
+    const canvas = document.createElement('canvas');
+    canvas.width = W; canvas.height = H;
+    const ctx = canvas.getContext('2d');
+    renderPixelHelmet(ctx, W, H, t.primary, t.secondary, t.abbr);
+    canvases[i] = canvas;
+
+    const name = String(i).padStart(2, '0') + '.png';
+    const label = document.createElement('div');
+    label.className = 'label';
+    const left = document.createElement('span');
+    left.innerHTML = `<span class="idx">${name}</span> ${t.city} (${t.abbr})`;
+    const dl = document.createElement('a');
+    dl.textContent = 'Save';
+    dl.href = '#';
+    dl.addEventListener('click', e => { e.preventDefault(); downloadOne(i); });
+    label.appendChild(left);
+    label.appendChild(dl);
+
+    cell.appendChild(canvas);
+    cell.appendChild(label);
+    grid.appendChild(cell);
+  });
+}
+
+function downloadOne(i) {
+  const a = document.createElement('a');
+  a.href = canvases[i].toDataURL('image/png');
+  a.download = String(i).padStart(2, '0') + '.png';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+async function downloadAll() {
+  const btn = document.getElementById('downloadAll');
+  const status = document.getElementById('status');
+  btn.disabled = true;
+  for (let i = 0; i < canvases.length; i++) {
+    status.textContent = `Downloading ${i + 1} / ${canvases.length}…`;
+    downloadOne(i);
+    await new Promise(r => setTimeout(r, 180)); // spacing so the browser doesn't drop files
+  }
+  status.textContent = 'Done — 32 PNGs saved to your Downloads folder.';
+  btn.disabled = false;
+}
+
+async function init() {
+  const status = document.getElementById('status');
+  try {
+    // Wait for the TecmoBowl font so the baked abbreviation text is correct.
+    await document.fonts.load(`20px TecmoBowl`);
+    await document.fonts.ready;
+    // Wait for the helmet template image.
+    if (!(pixelHelmetImg.complete && pixelHelmetImg.naturalWidth > 0)) {
+      await new Promise((res, rej) => { pixelHelmetImg.onload = res; pixelHelmetImg.onerror = rej; });
+    }
+    renderAll();
+    status.textContent = `Rendered ${TEAMS.length} helmets. Click "Download All", or "Save" under any helmet.`;
+    document.getElementById('downloadAll').disabled = false;
+  } catch (e) {
+    status.textContent = 'Error: ' + (e && e.message ? e.message : e) +
+      ' — make sure this page is opened from the same folder as pixelhelmet.png and Tecmo_Bowl.ttf (via the GitHub Pages URL).';
+  }
+}
+
+document.getElementById('downloadAll').addEventListener('click', downloadAll);
+init();
+</script>
+</body>
+</html>

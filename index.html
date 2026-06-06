@@ -1876,7 +1876,12 @@ function drawPixelHelmet(ctx, W, H, primary, secondary, abbr) {
       }
     }
 
-    ctx.putImageData(out, 0, 0);
+    // Use drawImage instead of putImageData to fix Android alpha compositing bug
+    const tmp = document.createElement('canvas');
+    tmp.width = W; tmp.height = H;
+    tmp.getContext('2d').putImageData(out, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    ctx.drawImage(tmp, 0, 0);
 
     // Abbreviation in Tecmo Bowl font — upper-left dome area
     const fontSize = Math.round(H * 0.085);
